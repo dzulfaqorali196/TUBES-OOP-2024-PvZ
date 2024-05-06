@@ -34,7 +34,7 @@ public abstract class Zombie {
     public abstract boolean isSlow();
     public abstract boolean isAtGoal();
     
-    // Method to determine if the zombie appears
+    // Ini kayanya perlu buat ngedetermine  random atau tidak
     public static boolean isZombieAppeared() {
         Random random = new Random();
         return random.nextDouble() <= 0.3;
