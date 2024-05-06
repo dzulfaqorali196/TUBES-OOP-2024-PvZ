@@ -15,7 +15,7 @@ public abstract class Player{
       } return false;
    }
 
-   public abstract int attack(int attackDamage);
+   public abstract int attack(int attack_damage);
 
    public void increaseSun(){
       sunScore += 25;
