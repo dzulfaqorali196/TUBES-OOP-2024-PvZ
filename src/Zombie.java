@@ -1,9 +1,11 @@
 package src;
 import java.util.Random;
 import java.util.List;
+import java.util.Iterator;
+// import src.Plant; // Ganti dengan paket yang benar
 
 // Abstract class Zombie
-public abstract class Zombie {
+public abstract class Zombie extends Player {
     protected String name;
     protected int hp;
     protected int attack_damage;
@@ -25,35 +27,35 @@ public abstract class Zombie {
     
     // Getter for name
     public String getName() { 
-        return this.name; 
+        return name; 
     }
     // Getter and Setter for hp
     public void setHp(int newHP){  
         if (newHP >= 0)  
-            this.hp = newHP; 
+            hp = newHP; 
     }
     public int getHp(){  
-        return this.hp;  
+        return hp;  
     }
 
     //getter for attack_damage
     public int getAttackDamage(){
-        return this.attack_damage;
+        return attack_damage;
     }
 
     //getter for attack_speed
     public int getAttackSpeed(){
-        return this.attack_speed;
+        return attack_speed;
     }
 
     //getter for isAquatic
     public boolean getIsAquatic(){
-        return this.isAquatic;
+        return isAquatic;
     }
 
     //getter for speed
     public int getSpeed(){
-        return this.speed;
+        return speed;
     }
 
     // Method untuk menghadle saat zombie memakan tanaman
@@ -63,24 +65,22 @@ public abstract class Zombie {
             Iterator<Plant> i = allPlants.iterator();
             while (i.hasNext()) {
                 Plant p = i.next();
-                // Check if plant is in the same lane
+                // Check apakah tanaman dalam satu lane yang sama dengan zombie
                 if (p.getRow() == getLane()) {
-                    // Check if zombie is close enough to the plant
-                    if (Math.abs(p.getX() - getX()) <= 50) {
+                    // Check apakah zombie sudah dekat dengan tanaman
+                    if (Math.abs(p.getX() - getX()) <= 25) {
                         foundPlant = 1;
-                        // Decrease plant's health
+                        // Mengurangi darah tanaman
                         p.setHp(p.getHp() - this.attack_damage);
-                        // Remove plant if its health reaches 0
+                        // Menghilangkan tanaman jika darah tanaman 0
                         if (p.getHp() <= 0) {
-                            i.remove(); // Remove plant from list
-                            // Print message indicating the plant has been eaten
+                            i.remove(); // Hilangkan tanaman dari list
                             System.out.println("Plant eaten!");
                         }
                     }
                 }
             }
         }
-        // If no plant found or zombie moves away from the plant, stop eating
         if (foundPlant == 0) {
             isEating = false;
         }
