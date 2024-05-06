@@ -10,7 +10,7 @@ public abstract class Player{
    }
 
    public boolean isDead(int health){
-      if (health < 0){
+      if (health <= 0){
          return true;
       } return false;
    }
