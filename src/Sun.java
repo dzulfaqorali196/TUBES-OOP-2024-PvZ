@@ -4,11 +4,11 @@ import java.util.TimerTask;
 public class Sun {
 
     private static Timer timer;
-    private static int cycleDuration = 100; // Duration of each sun score cycle (in seconds)
-    private static int currentCycle = 0; // Current cycle counter
-    private static boolean shouldStopSunScore = false; // Flag to indicate forced stop
-    private static boolean isAfternoon = false; // Flag for stop condition
-    private static Thread sunThread; // Thread for running the sun cycle
+    private static int cycleDuration = 100; // durasi setiap sun cycle
+    private static int currentCycle = 0; 
+    private static boolean shouldStopSunScore = false; // indikasi stop
+    private static boolean isAfternoon = false; // buat kondisi stop
+    private static Thread sunThread; // thread untuk sun cycle
     private static long startTime; 
 
     public Sun() {
@@ -52,9 +52,9 @@ public class Sun {
             timer = null;
         }
         if (sunThread != null) {
-            sunThread.interrupt(); // Signal the thread to stop
+            sunThread.interrupt(); // sinyal thread untuk berhenti
             try {
-                sunThread.join(); // Wait for the thread to finish
+                sunThread.join(); // menunggu buat thread finish
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
