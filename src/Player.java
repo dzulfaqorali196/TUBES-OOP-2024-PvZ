@@ -1,8 +1,8 @@
 public abstract class Player{
-   private int sunScore;
+   private static int sunScore = 25;
 
    public Player(int sunScore){
-      this.sunScore = sunScore;
+      Player.sunScore = sunScore;
    }
 
    public int hit(int damage){
@@ -17,7 +17,7 @@ public abstract class Player{
 
    public abstract int attack(int attack_damage);
 
-   public void increaseSun(){
+   public static void increaseSun(){
       sunScore += 25;
    }
 
