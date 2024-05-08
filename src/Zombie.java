@@ -1,4 +1,3 @@
-package src;
 import java.util.Random;
 import java.util.List;
 import java.util.Iterator;
@@ -14,15 +13,21 @@ public abstract class Zombie extends Player {
     protected int speed;
     protected boolean reachedPlant = false;
     protected boolean isEating = false;
-
+    protected int x;
+    protected int y;
+    protected int lane;
     // Constructor
-    public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int speed) {
+    public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int speed, int x, int y, int lane) {
+        //belum konstruk parent class nya
         this.name = name;
         this.hp = hp;
         this.attack_damage = attack_damage;
         this.attack_speed = attack_speed;
         this.isAquatic = isAquatic;
         this.speed = speed;
+        this.x = x;
+        this.y = y;
+        this.lane = lane;
     }
     
     // Getter for name
@@ -58,6 +63,45 @@ public abstract class Zombie extends Player {
         return speed;
     }
 
+     // Getters for x and y positions
+     public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    // Setter for x position (belum bikin file terpisah untuk throws exceptionnya)
+    public void setX(int newX) throws InvalidPositionException {
+        if (newX >= 1 && newX < 10) {
+          x = newX;
+        } else {
+          throw new InvalidPositionException("Posisi X zombie tidak valid! Batas map adalah 1 sampai 9.");
+        }
+      }
+      
+      public void setY(int newY) throws InvalidPositionException {
+        if (newY >= 1 && newY < 7) {
+          y = newY;
+        } else {
+          throw new InvalidPositionException("Posisi Y zombie tidak valid! Batas map adalah 1 sampai 6.");
+        }
+      }
+      
+      public int getLane() {
+        return lane;
+      }
+    
+      public void setLane(int newLane) {
+        // Validasi lane (opsional)
+        if (newLane >= 0 && newLane < 6) {
+          lane = newLane;
+        } else {
+          System.out.println("Nomor lane zombie tidak valid! Batas lane adalah 0 sampai 5.");
+        }
+      }
+
     // Method untuk menghadle saat zombie memakan tanaman
     public void eatPlant(List<Plant> allPlants) {
         int foundPlant = 0;
@@ -86,10 +130,20 @@ public abstract class Zombie extends Player {
         }
     }
 
-    //menentukan apakah zombie sudah di akhir tile
-    public  boolean isAtGoal(){
-        
-    }
+    //menentukan apakah zombie sudah di akhir tile paling kiri 
+    public boolean isAtGoal() {
+        // Periksa apakah zombie berada di lane paling kiri (lane 0)
+        if (getLane() == 0) {
+          // Periksa apakah posisi X zombie kurang dari atau sama dengan 0
+          if (getX() <= 0) {
+            // Zombie telah mencapai goal
+            return true;
+          }
+        }
+        // Zombie belum mencapai goal
+        return false;
+      }
+      
     // menentukan apakah zombie terkena tembakan snowpea
     public  boolean isSlow(){
 
