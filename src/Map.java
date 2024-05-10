@@ -1,7 +1,7 @@
 public class Map {
     private final int width;
     private final int height;
-    private final static Tile[][] tiles;
+    private final Tile[][] tiles;
 
     public Map(int width, int height) {
         this.width = width;
@@ -32,7 +32,6 @@ public class Map {
             throw new IndexOutOfBoundsException("Invalid coordinates!");
         }
     }
-
     public void placePlant(Plant plant, int x, int y) throws IllegalStateException, IndexOutOfBoundsException {
         if (isValidCoordinate(x, y)) {
             getTile(x, y).setPlant(plant);
@@ -47,21 +46,5 @@ public class Map {
 
     private boolean isValidCoordinate(int x, int y) {
         return 0 <= x && x < width && 0 <= y && y < height;
-    }
-
-    public static void main(String[] args) {
-        Map map = new Map(9, 6);
-        for (Tile[] row : tiles) {
-            for (Tile tile : row) {
-                String type = tile.getTileType();
-                // Use the type variable here
-                if (type=="GRASS") {
-                    System.out.println("+");
-                } else if (type=="WATER") {
-                    System.out.println("~");
-                }
-            }
-        }
-
     }
 }
