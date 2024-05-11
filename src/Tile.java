@@ -59,8 +59,8 @@ public class Tile {
         this.plant = null;
     }
 
-    public void removeZombie() {
-        this.zombieList = null;
+    public void removeZombie(Zombie zombie) {
+        zombieList.remove(zombie);
     }
 
     public char getDisplayChar() {
@@ -100,7 +100,7 @@ public class Tile {
 
             Tile nextTile = map.getTile(zombie.getY(), newCol);
             if (nextTile.isEmpty()) {
-                removeZombie();
+                removeZombie(zombie);
                 nextTile.setZombie(zombie);
                 zombie.setX(newCol);
             } else {
