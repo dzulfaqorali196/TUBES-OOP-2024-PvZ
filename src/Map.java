@@ -47,4 +47,13 @@ public class Map {
     private boolean isValidCoordinate(int x, int y) {
         return 0 <= x && x < width && 0 <= y && y < height;
     }
+
+    public void printMap() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                System.out.print(tiles[height][width].getDisplayChar() + " ");
+            }
+            System.out.println();
+        }
+    }
 }
