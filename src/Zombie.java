@@ -4,11 +4,7 @@ import java.util.Iterator;
 // import src.Plant; // Ganti dengan paket yang benar
 
 // Abstract class Zombie
-public abstract class Zombie extends Player {
-    protected String name;
-    protected int hp;
-    protected int attack_damage;
-    protected int attack_speed;
+public abstract class Zombie extends Organism {
     protected boolean isAquatic;
     protected int speed;
     protected boolean reachedPlant = false;
@@ -19,10 +15,7 @@ public abstract class Zombie extends Player {
     // Constructor
     public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int speed, int x, int y, int lane) {
         //belum konstruk parent class nya
-        this.name = name;
-        this.hp = hp;
-        this.attack_damage = attack_damage;
-        this.attack_speed = attack_speed;
+        super(name, hp, attack_damage, attack_speed);
         this.isAquatic = isAquatic;
         this.speed = speed;
         this.x = x;
