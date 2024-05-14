@@ -1,49 +1,27 @@
 import java.util.Random;
 import java.util.List;
 import java.util.Iterator;
-// import src.Plant; // Ganti dengan paket yang benar
 
-// Abstract class Zombie
+// Class Zombie
 public abstract class Zombie extends Organism {
     protected boolean isAquatic;
     protected int speed;
     protected boolean reachedPlant = false;
     protected boolean isEating = false;
-    protected int x;
-    protected int y;
-    protected int lane;
+    protected boolean isSlow = false;
+    protected int slowEndTime; // waktu berakhirnya efek slow
+    protected int row; // baris tempat zombie berada
+    protected int x; // posisi x zombie
+
     // Constructor
-    public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int speed, int x, int y, int lane) {
-        //belum konstruk parent class nya
+    public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int speed, boolean isSlow, int row, int x) {
         super(name, hp, attack_damage, attack_speed);
         this.isAquatic = isAquatic;
         this.speed = speed;
+        this.isSlow = isSlow;
+        this.slowEndTime = 0; //di awal zombie belum terkena efek slow
+        this.row = row;
         this.x = x;
-        this.y = y;
-        this.lane = lane;
-    }
-    
-    // Getter for name
-    public String getName() { 
-        return name; 
-    }
-    // Getter and Setter for hp
-    public void setHp(int newHP){  
-        if (newHP >= 0)  
-            hp = newHP; 
-    }
-    public int getHp(){  
-        return hp;  
-    }
-
-    //getter for attack_damage
-    public int getAttackDamage(){
-        return attack_damage;
-    }
-
-    //getter for attack_speed
-    public int getAttackSpeed(){
-        return attack_speed;
     }
 
     //getter for isAquatic
@@ -56,90 +34,83 @@ public abstract class Zombie extends Organism {
         return speed;
     }
 
-     // Getters for x and y positions
-     public int getX() {
+    //getter for row
+    public int getRow(){
+        return row;
+    }
+
+    //setter for row
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    //getter for x
+    public int getX(){
         return x;
     }
 
-    public int getY() {
-        return y;
+    //setter for x
+    public void setX(int x) {
+        this.x = x;
     }
 
-    // Setter for x position (belum bikin file terpisah untuk throws exceptionnya)
-    public void setX(int newX) throws InvalidPositionException {
-        if (newX >= 1 && newX < 10) {
-          x = newX;
-        } else {
-          throw new InvalidPositionException("Posisi X zombie tidak valid! Batas map adalah 1 sampai 9.");
-        }
+    // Method untuk mengecek apakah zombie terkena efek slow
+    public boolean isSlow() {
+      int currentTime = (int) (System.currentTimeMillis() / 1000); // konversi ke detik
+      if (currentTime > slowEndTime) {
+          this.isSlow = false;
+          this.speed = getAttackSpeed(); // kembalikan kecepatan normal
       }
-      
-      public void setY(int newY) throws InvalidPositionException {
-        if (newY >= 1 && newY < 7) {
-          y = newY;
-        } else {
-          throw new InvalidPositionException("Posisi Y zombie tidak valid! Batas map adalah 1 sampai 6.");
-        }
+      return this.isSlow;
+    }
+
+    // Method untuk mengatur efek slow pada zombie
+    public void setSlow(boolean isSlow) {
+      this.isSlow = isSlow;
+      if (isSlow) {
+          this.speed = getAttackSpeed() / 2; // kurangi kecepatan sebesar 50%
+          this.slowEndTime = (int) (System.currentTimeMillis() / 1000) + 3; // atur waktu berakhirnya efek slow dalam detik
+      } else {
+          this.speed = getAttackSpeed(); // kembalikan kecepatan normal
       }
-      
-      public int getLane() {
-        return lane;
-      }
-    
-      public void setLane(int newLane) {
-        // Validasi lane (opsional)
-        if (newLane >= 0 && newLane < 6) {
-          lane = newLane;
-        } else {
-          System.out.println("Nomor lane zombie tidak valid! Batas lane adalah 0 sampai 5.");
-        }
-      }
+    }
 
     // Method untuk menghadle saat zombie memakan tanaman
     public void eatPlant(List<Plant> allPlants) {
-        int foundPlant = 0;
-        synchronized (allPlants) {
-            Iterator<Plant> i = allPlants.iterator();
-            while (i.hasNext()) {
-                Plant p = i.next();
-                // Check apakah tanaman dalam satu lane yang sama dengan zombie
-                if (p.getRow() == getLane()) {
-                    // Check apakah zombie sudah dekat dengan tanaman
-                    if (Math.abs(p.getX() - getX()) <= 25) {
-                        foundPlant = 1;
-                        // Mengurangi darah tanaman
-                        p.setHp(p.getHp() - this.attack_damage);
-                        // Menghilangkan tanaman jika darah tanaman 0
-                        if (p.getHp() <= 0) {
-                            i.remove(); // Hilangkan tanaman dari list
-                            System.out.println("Plant eaten!");
-                        }
-                    }
-                }
-            }
-        }
-        if (foundPlant == 0) {
-            isEating = false;
-        }
-    }
-
+      int foundPlant = 0;
+      synchronized (allPlants) {
+          Iterator<Plant> i = allPlants.iterator();
+          while (i.hasNext()) {
+              Plant p = i.next();
+              // Check apakah tanaman dalam satu lane yang sama dengan zombie
+              if (p.getRow() == getLane()) {
+                  // Check apakah zombie sudah dekat dengan tanaman
+                  if (Math.abs(p.getX() - getX()) <= 25) {
+                      foundPlant = 1;
+                      // Mengurangi darah tanaman
+                      p.setHp(p.getHp() - getAttackDamage());
+                      // Menghilangkan tanaman jika darah tanaman 0
+                      if (p.getHp() <= 0) {
+                          i.remove(); // Hilangkan tanaman dari list
+                          System.out.println("Plant eaten!");
+                      }
+                  }
+              }
+          }
+      }
+      if (foundPlant == 0) {
+          isEating = false;
+      }
+  }
     //menentukan apakah zombie sudah di akhir tile paling kiri 
     public boolean isAtGoal() {
-        // Periksa apakah zombie berada di lane paling kiri (lane 0)
-        if (getLane() == 0) {
-          // Periksa apakah posisi X zombie kurang dari atau sama dengan 0
-          if (getX() <= 0) {
+        // Periksa apakah posisi X zombie kurang dari atau sama dengan 0
+        if (getX() <= 0) {
             // Zombie telah mencapai goal
             return true;
-          }
         }
         // Zombie belum mencapai goal
         return false;
-      }
-      
-    // menentukan apakah zombie terkena tembakan snowpea
-    public  boolean isSlow(){
-
     }
 
     // Abstract methods
