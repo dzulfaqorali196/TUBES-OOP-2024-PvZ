@@ -41,6 +41,13 @@ public class Tile {
     public void setPlant(Plant plant) throws IllegalStateException {
         if (isEmpty()) {
             this.plant = plant;
+
+            try {
+                getPlant().setX(getX());
+                getPlant().setY(getY());
+            } catch (InvalidPositionException e) {
+                throw new IllegalStateException("Invalid coordinates!");
+            }
         } else {
             throw new IllegalStateException("Tile already occupied!");
         }
@@ -48,6 +55,15 @@ public class Tile {
 
     public void setZombie(Zombie zombie) {
         zombieList.add(zombie);
+
+        try {
+            for (Zombie currentZombie : new ArrayList<>(zombieList)){
+                currentZombie.setX(getX());
+                currentZombie.setY(getY());
+            }
+        } catch (InvalidPositionException e) {
+            throw new IllegalStateException("Invalid coordinates!");
+        }
     }
 
     public boolean isEmpty() {

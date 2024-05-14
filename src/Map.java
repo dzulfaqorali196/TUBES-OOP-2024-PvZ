@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Map {
     private final int width;
@@ -50,9 +51,44 @@ public class Map {
         getTile(x, y).setZombie(zombie);
     }
 
-    public static String getRandomZombie(ArrayList<Integer> numberZombie, double probability){
+    public Void spawnRandomZombie(/*ArrayList<Integer> numberZombie, double probability*/){
         // BENERIN!!!
-        return "x"; //ubah aja
+        Random randZombie = new Random();
+        int pilihanzombie = randZombie.nextInt(numberZombie.size()) + 1;
+        
+        Random randInt = new Random();
+        int row = randInt.nextInt(6);
+        /* nunggu class zombie zombie lainnya
+        if (pilihanzombie == 1) {
+            NormalZombie zombie = new NormalZombie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 2) {
+            ConeHeadZombie zombie = new ConeHeadZombie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 3) {
+            BucketHeadZombie zombie = new BucketHeadZombie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 4) {
+            PoleVaultingZombie zombie = new PoleVaultingZOmbie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 5) {
+            DuckyTubeZombie zombie = new DuckyTubeZombie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 6) {
+            DolphinRiderZombie zombie = new DolphinRiderZombie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 7) {
+            FootballZombie zombie = new FootballZombie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 8) {
+            ShieldZombie zombie = new ShieldZombie();
+            placeZombie(zombie, row, 9);
+        } else if (pilihanzombie == 9) {
+            JesterZombie zombie = new JesterZombie();
+            placeZombie(zombie, row, 9);
+        } */
+
+
     }
 
     private boolean isValidCoordinate(int x, int y) {
@@ -67,38 +103,76 @@ public class Map {
             System.out.println();
         }
     }
-    // BENERIN!!
-    /*
-     * public void printPlantsInRow(int row) {
-        if (row < 0 || row >= height) {
-            System.out.println("Baris tidak valid!");
-            return;
-        }
-        System.out.print("Tanaman di baris " + row + ": ");
+    
+    public void getPlantsInRow(int row) {
         for (int x = 0; x < width; x++) {
-            Plant plant = tiles[row][x].getPlant();
-            if (plant != null) {
-                System.out.print(plant.getName() + " ");
+            Plant plantinRow = tiles[row][x].getPlant();
+            if (plantinRow != null) {
+                plantinRow.getAttackDamage();
+                plantinRow.getX();
             }
+
         }
-        System.out.println();
+
+
     }
 
-    public void printZombiesInRow(int row) {
-        if (row < 0 || row >= height) {
-            System.out.println("Baris tidak valid!");
-            return;
-        }
-        System.out.print("Zombie di baris " + row + ": ");
+    public void getZombiesInRow(int row) {
         for (int x = 0; x < width; x++) {
-            List<Zombie> zombies = tiles[row][x].getZombies();
+            List<Zombie> zombies = tiles[row][x].getZombie();
             if (!zombies.isEmpty()) {
                 for (Zombie zombie : zombies) {
-                    System.out.print(zombie.getName() + " ");
+                    zombie.getAttackDamage();  
+                    zombie.getX();
                 }
             }
         }
-        System.out.println();
     }
-     */
+
+ 
+/* masih mikirin implementasinya
+    public void applyDamageToClosestZombie(List<Plant> plants, List<Zombie> zombies) {
+        for (Plant plant : plants) {
+            Zombie closestZombie = null;
+            double minDistance = Double.MAX_VALUE;
+    
+            for (Zombie zombie : zombies) {
+                double distance = Math.sqrt(Math.pow(zombie.getX() - plant.getX(), 2) + Math.pow(zombie.getY() - plant.getY(), 2));
+    
+                // Pilih zombie dengan koordinat x terbesar yang masih dalam jarak serang
+                if ((zombie.getX() > plant.getX()) && (distance < minDistance || (distance == minDistance && zombie.getX() > (closestZombie != null ? closestZombie.getX() : Double.MIN_VALUE)))) {
+                    minDistance = distance;
+                    closestZombie = zombie;
+                }
+            }
+    
+            // Terapkan damage jika ada zombie yang cukup dekat
+            if (closestZombie != null && minDistance <= plant.getRange()) {
+                int damage = plant.getAttackDamage();
+                closestZombie.takeDamage(damage); // Pastikan kelas Zombie memiliki metode takeDamage(int damage)
+                System.out.println("Zombie at (" + closestZombie.getX() + ", " + closestZombie.getY() + ") took " + damage + " damage from plant at (" + plant.getX() + ", " + plant.getY() + ")");
+            }
+        }
+    }
+
+    
+    public void applyDamageToZombiesInSameTile(List<Plant> plants, List<Zombie> zombies) {
+        for (Plant plant : plants) {
+            // Iterasi melalui semua zombie untuk menemukan yang berada dalam jangkauan serangan tanaman
+            for (Zombie zombie : zombies) {
+                double distance = Math.sqrt(Math.pow(zombie.getX() - plant.getX(), 2) + Math.pow(zombie.getY() - plant.getY(), 2));
+    
+                // Cek apakah zombie dalam jangkauan serangan
+                if (distance <= plant.getRange()) {
+                    int damage = plant.getAttackDamage();
+                    zombie.takeDamage(damage); // Asumsikan Zombie memiliki metode takeDamage(int damage)
+                    System.out.println("Zombie at (" + zombie.getX() + ", " + zombie.getY() + ") took " + damage + " damage from plant at (" + plant.getX() + ", " + plant.getY() + ")");
+                }
+            }
+        }
+    }
+*/
+    
+    
+    
 }
