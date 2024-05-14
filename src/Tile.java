@@ -16,7 +16,6 @@ public class Tile {
         this.tileType = tileType;
     }
 
-    // Getters
     public int getX() {
         return x;
     }
@@ -102,7 +101,12 @@ public class Tile {
             if (nextTile.isEmpty()) {
                 removeZombie(zombie);
                 nextTile.setZombie(zombie);
-                zombie.setX(newCol);
+                try {
+                    zombie.setX(newCol);
+                } catch (InvalidPositionException e) {
+                    System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
+                }
+                zombie.setJarak(zombie.getJarak() + 1);
             } else {
                 // Attack the plant or wait for the tile to be cleared
             }
@@ -113,6 +117,7 @@ public class Tile {
                 e.printStackTrace();
             }
         }
+        // BENERIN!!
+        // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
     }
-
 }

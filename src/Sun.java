@@ -11,10 +11,6 @@ public class Sun {
     private static Thread sunThread; // thread untuk sun cycle
     private static long startTime; 
 
-    public Sun() {
-        // tidak butuh
-    }
-
     public static void start() {
       if (sunThread == null) { //cek sunThread
           startTime = System.currentTimeMillis(); //mendata waktu pemprosesan
