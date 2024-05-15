@@ -4,7 +4,6 @@ public class Plant extends PlantandZombie {
     private int cost;
     private int range;
     private int cooldown;
-    private PlantStatus status;
     private boolean isStillCooldown = false;
 
     public Plant(String name, int hp, int attack_damage, int attack_speed, int cost, int range, int cooldown, int x, int y){
@@ -12,7 +11,6 @@ public class Plant extends PlantandZombie {
         this.cost = cost;
         this.range = range;
         this.cooldown = cooldown;
-        this.status = PlantStatus.Planted;
     }
 
     public void startCooldown() {
@@ -31,23 +29,12 @@ public class Plant extends PlantandZombie {
         // }, 0, 1000);
     }
 
-    public void takeDamage(){
-        // BENERIN!!
-        // if(){
-        // for(int i = 0; i<= zombieList.size(); i++){
-        //     for(int j = 0; j<= zombieList.size(); j++){
-
-        //     }
-        // }
-        // }
+    public void takeDamage(Zombie zombie){
+        hp -= zombie.getAttackDamage();
     }
 
     public boolean isStillCooldown(){
         return isStillCooldown;
-    }
-
-    public PlantStatus getStatus() {
-        return status;
     }
 
     public int getCostPlant(){
@@ -60,9 +47,5 @@ public class Plant extends PlantandZombie {
 
     public int getCooldown(){
         return cooldown;
-    }
-
-    public enum PlantStatus {
-        WaitCooldown, WaitPlanted, Planted
     }
 }

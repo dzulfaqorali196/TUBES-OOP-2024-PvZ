@@ -2,11 +2,9 @@ import java.util.ArrayList;
 
 public class PlantDeck {
     private ArrayList<Plant> deck;
-    private final Map map;
     
-    public PlantDeck(Map map){
+    public PlantDeck(){
         this.deck = new ArrayList<Plant>(6);
-        this.map = map;
     }
 
     public boolean isPlantExist(Plant plant){
@@ -35,14 +33,19 @@ public class PlantDeck {
 
     public void removePlant(int index) throws InvalidIndexException{
         if (index >= 0 && index < deck.size()) {
-            deck.remove(index);
+            deck.set(index, null);
         } else {
             throw new InvalidIndexException(index);
         }
     }
 
     public boolean isDeckEmpty(){
-        return deck.size() == 0;
+        for(Plant currentPlant : deck){
+            if(!(currentPlant.equals(null))){
+                return true;
+            }
+        }
+        return true;
     }
 
     public void addPlant(Plant plant, int index) throws InvalidDeckException, InvalidIndexException{
@@ -87,19 +90,20 @@ public class PlantDeck {
     }
 
     public void plantPlant(int x, int y){
-        //gatau..
+
     }
 
-    public void digPlant(int x, int y) throws InvalidDeckException {
-        if (!map.getTile(x, y).isEmpty()) {
-            map.getTile(x, y).removePlant();
-        } else {
-            throw new InvalidDeckException("Tidak ada tanaman pada posisi " + x + ", " + y);
-        }
+    public void digPlant(int x, int y){
+
     }
 
     public boolean isDeckFull(){
-        return totalPlant() == 6;
+        for(Plant currenPlant : deck){
+            if(currenPlant.equals(null)){
+                return false;
+            }
+        }
+        return true;
     }
 }
 
