@@ -51,7 +51,7 @@ public class Map {
         getTile(x, y).setZombie(zombie);
     }
 
-    public Void spawnRandomZombie(/*ArrayList<Integer> numberZombie, double probability*/){
+    public void spawnRandomZombie(/*ArrayList<Integer> numberZombie, double probability*/){
         // BENERIN!!!
         Random randZombie = new Random();
         int pilihanzombie = randZombie.nextInt(numberZombie.size()) + 1;

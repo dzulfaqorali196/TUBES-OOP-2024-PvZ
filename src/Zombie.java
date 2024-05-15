@@ -1,6 +1,6 @@
-import java.util.Random;
-import java.util.List;
-import java.util.Iterator;
+// import java.util.Random;
+// import java.util.List;
+// import java.util.Iterator;
 
 
 public abstract class Zombie extends PlantandZombie {
@@ -39,24 +39,24 @@ public abstract class Zombie extends PlantandZombie {
         hp -= zombie.getAttackDamage();
     }
     
-    public void eatPlant(List<Plant> allPlants) {
-        boolean foundPlant = false;
-        synchronized (allPlants) {
-            Iterator<Plant> i = allPlants.iterator();
-            while (i.hasNext()) {
-                Plant p = i.next();
-                if (p.getX() == getX() && Math.abs(p.getY() - getY()) <= 25) {
-                    foundPlant = true;
-                    p.takeDamage(getAttackDamage());
-                    if (p.getHp() <= 0) {
-                        i.remove(); // Hilangkan tanaman dari list
-                        System.out.println("Plant eaten!");
-                    }`
-                }
-            }
-        }
-        isEating = foundPlant;
-    }
+    // public void eatPlant(List<Plant> allPlants) {
+    //     boolean foundPlant = false;
+    //     synchronized (allPlants) {
+    //         Iterator<Plant> i = allPlants.iterator();
+    //         while (i.hasNext()) {
+    //             Plant p = i.next();
+    //             if (p.getX() == getX() && Math.abs(p.getY() - getY()) <= 25) {
+    //                 foundPlant = true;
+    //                 p.takeDamage(getAttackDamage());
+    //                 if (p.getHp() <= 0) {
+    //                     i.remove(); // Hilangkan tanaman dari list
+    //                     System.out.println("Plant eaten!");
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     isEating = foundPlant;
+    // }
 
     //menentukan apakah zombie sudah di akhir tile paling kiri 
     public boolean isAtGoal() {
