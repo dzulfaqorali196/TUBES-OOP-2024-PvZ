@@ -17,13 +17,6 @@ public abstract class Zombie extends PlantandZombie {
         this.isAquatic = isAquatic;
         this.speed = speed;
         jarak = 0;
-        // if(zombieList.isEmpty()){
-        //     zombieList.addList();
-        //     isHead = true;
-        // }
-        // else{
-        //     isHead = false;
-        // }
     }
 
     public int getJarak(){
@@ -58,7 +51,7 @@ public abstract class Zombie extends PlantandZombie {
                     if (p.getHp() <= 0) {
                         i.remove(); // Hilangkan tanaman dari list
                         System.out.println("Plant eaten!");
-                    }
+                    }`
                 }
             }
         }
@@ -77,10 +70,4 @@ public abstract class Zombie extends PlantandZombie {
 
     // Abstract methods untuk move
     public abstract void move();
-    
-    // Ini kayanya perlu buat ngedetermine  random atau tidak
-    public static boolean isZombieAppeared() {
-        Random random = new Random();
-        return random.nextDouble() <= 0.3;
-    }
 }
