@@ -14,19 +14,19 @@ public class Main {
         
         switch(menu){
             case 1:
-                startGame();
+                // startGame();
                 break;
             case 2:
-                helpGame();
+                // helpGame();
                 break;  
             case 3:
-                displayInventory();
+                // displayInventory();
                 break;
             case 4:
-                displayZombieList();
+                // displayZombieList();
                 break;
             case 5:
-                exittGame();
+                // exitGame();
                 break;  
         }
     }   

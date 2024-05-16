@@ -48,12 +48,4 @@ public class Plant extends PlantandZombie {
     public int getCooldown(){
         return cooldown;
     }
-
-    public void displayPlantList(){
-        //ganti kata katanya
-        System.out.println("Berikut merupakan list plant yang tersedia dengan informasinya");
-        for(List<Plant> currentPlant : listPlant){
-            System.out.println((i+1) + ". " + "Nama tanaman : " + .getName());
-        }
-    }
 }
