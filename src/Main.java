@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main {
-    public static void Main(String[] args){
+    public static void main(String[] args){
         //ganti kata katanya
         System.out.println("Pilih menu yang akan dijalankan :");
         System.out.println("1. Start Game");
@@ -14,20 +14,43 @@ public class Main {
         
         switch(menu){
             case 1:
-                // startGame();
+                startGame();
                 break;
             case 2:
-                // helpGame();
+                helpGame();
                 break;  
             case 3:
-                // displayInventory();
+                displayInventory();
                 break;
             case 4:
-                // displayZombieList();
+                displayZombieList();
                 break;
             case 5:
-                // exitGame();
-                break;  
+                exitGame();
+                break;
+            default:
+                System.out.println("Pilihan tidak valid. Silakan pilih menu 1-5.");
         }
+
+        input.close();
+    }
+
+    private static void startGame() {
+        System.out.println("Game dimulai. Selamat bermain!");
+    }
+
+    private static void helpGame() {
+        System.out.println("Help Game :");
+        System.out.println("xxxxx");
+    }
+
+    private static void displayZombieList() {
+        System.out.println("Daftar Zombie:");
+        System.out.println("xxxxx");
+    }
+
+    private static void exitGame() {
+        System.out.println("Terima kasih telah bermain!");
+        System.exit(0);
     }   
 }
