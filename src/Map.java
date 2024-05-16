@@ -91,6 +91,61 @@ public class Map {
 
     }
 
+    public void attackZombieInRange (){
+
+
+        for (int i = tiles.length - 1; i > 0; i--) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                if (!getTile(j, i).isEmpty()) {
+                    Tile tile = tiles[i][j];
+                    Plant plant = tile.getPlant(j, i);
+                    
+                    // benerin
+                    getZombieInRange(plant);
+                }
+            }
+        }
+    }
+
+    public void getZombieInRange(Plant plant) {
+        int plantRange = plant.getRange();
+        int plantX = plant.getX();
+        int plantY = plant.getY();
+
+
+        if (plantRange == -1) {
+            for (int j = plantX; j < tiles.length; j++) {
+                if (getTile(j, plantY).getZombie() != null) {
+                    List<Zombie> zombies = tile.getZombie();
+
+                    plant.setLastAttackTime(System.currentTimeMillis());
+                    for (Zombie zombie : zombies) {
+                        zombie.takeDamage(plant);
+
+                        if (System.currentTimeMillis() - plant.getLastAttackTime() >= plant.getAttackSpeed()) {
+                            zombie.takeDamage(plant);
+                            plant.setLastAttackTime(System.currentTimeMillis());
+                        }
+                    }
+                }
+            }
+        } else if (plantRange == 1) {
+            if (tiles[plantY][plantX].getZombie() != null) {
+                List<Zombie> zombies = tile.getZombie();
+                for (Zombie zombie : zombies) {
+                    zombie.takeDamage(plant);
+                }
+
+            } else if (tiles[plantY][plantX + 1].getZombie() != null) {
+                List<Zombie> zombies = tile.getZombie();
+                for (Zombie zombie : zombies) {
+                    zombie.takeDamage(plant);
+                }
+            }
+        }
+        
+    }
+
     private boolean isValidCoordinate(int x, int y) {
         return 0 <= x && x < width && 0 <= y && y < height;
     }

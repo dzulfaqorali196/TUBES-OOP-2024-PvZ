@@ -5,6 +5,7 @@ public class Plant extends PlantandZombie {
     private int range;
     private int cooldown;
     private boolean isStillCooldown = false;
+    private int lastattackTime;
 
     public Plant(String name, int hp, int attack_damage, int attack_speed, int cost, int range, int cooldown, int x, int y){
         super(name, hp, attack_damage, attack_speed, x, y);
@@ -31,6 +32,14 @@ public class Plant extends PlantandZombie {
 
     public void takeDamage(Zombie zombie){
         hp -= zombie.getAttackDamage();
+    }
+
+    public int setLastAttackTime(int lastAttackTime) {
+        this.lastattackTime = lastAttackTime;
+    }
+    
+    public int getLastAttackTime() {
+        return lastattackTime;
     }
 
     public boolean isStillCooldown(){

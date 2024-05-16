@@ -1,7 +1,7 @@
 public class SnowPea extends Shooter{
 
     public SnowPea(int x, int y){
-        super("Snow Pea", 100, 25, 4, 175, 0, 20, x, y);
+        super("Snow Pea", 100, 25, 4000, 175, 0, 20, x, y);
     }
 
     @Override

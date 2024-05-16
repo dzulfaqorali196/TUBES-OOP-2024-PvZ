@@ -34,9 +34,9 @@ public abstract class Zombie extends PlantandZombie {
     public int getSpeed(){
         return speed;
     }
-
-    public void takeDamage(Zombie zombie) {
-        hp -= zombie.getAttackDamage();
+    
+    public void takeDamage(Plant plant) {
+        hp -= plant.getAttackDamage();
     }
     
     // public void eatPlant(List<Plant> allPlants) {
