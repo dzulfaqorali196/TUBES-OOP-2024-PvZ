@@ -14,8 +14,12 @@ public class Inventory {
     public void displayInventory() {
         int i = 0;
         for(Plant currentPlant : listPlant){
-            i++;
-            System.out.println(i + ". " + currentPlant.getName());
+            System.out.println((i+1) + ". Nama tanaman : " + currentPlant.getName());
+            System.out.println("Jumlah health : " + currentPlant.getHp());
+            System.out.println("Attack damage : " + currentPlant.getAttackDamage());
+            System.out.println("Attack speed : " + currentPlant.getAttackSpeed());
+            System.out.println("Attack range : " + currentPlant.getRange());
+            System.out.println("Time to cooldown : " + currentPlant.getCooldown());
         }
     }
 
