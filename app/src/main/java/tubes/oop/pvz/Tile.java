@@ -63,6 +63,10 @@ public class Tile {
         return getPlant()==null;
     }
 
+    public boolean noZombie() {
+        return getZombie().size() == 0;
+    }
+
     public void removePlant() {
         this.plant = null;
     }

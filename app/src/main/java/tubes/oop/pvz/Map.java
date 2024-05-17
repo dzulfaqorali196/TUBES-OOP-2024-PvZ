@@ -128,6 +128,21 @@ public class Map {
         }
     }
 
+    public void removeZombieMap() {
+        for (int i = tiles.length - 1; i > 0; i--) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                if (getTile(j, i).noZombie()) {
+                    Tile tile = tiles[i][j];
+                    for (Zombie zombie : tile.getZombie()) {
+                        if (zombie.getHp() == 0) {
+                            tile.removeZombie(zombie);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void getZombieInRange(Plant plant) {
         int plantRange = plant.getRange();
         int plantX = plant.getX();
