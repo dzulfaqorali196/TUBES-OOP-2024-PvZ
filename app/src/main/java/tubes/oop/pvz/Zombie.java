@@ -5,19 +5,13 @@ package tubes.oop.pvz;
 // import java.util.Iterator;
 
 
-public abstract class Zombie extends PlantandZombie {
-    protected boolean isAquatic;
-    protected int speed;
-    protected boolean reachedPlant = false;
-    protected boolean isEating = false;
-    protected int x;
-    protected int y;
+public class Zombie extends PlantandZombie {
+    private boolean isAquatic;
     protected int jarak;
 
-    public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int speed, int x, int y, int jarak) {
+    public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int x, int y, int jarak) {
         super(name, hp, attack_damage, attack_speed, x, y);
         this.isAquatic = isAquatic;
-        this.speed = speed;
         jarak = 0;
     }
 
@@ -31,10 +25,6 @@ public abstract class Zombie extends PlantandZombie {
 
     public boolean getIsAquatic(){
         return isAquatic;
-    }
-
-    public int getSpeed(){
-        return speed;
     }
     
     public void takeDamage(Plant plant) {
@@ -69,7 +59,4 @@ public abstract class Zombie extends PlantandZombie {
     public  boolean isSlow(){
         return false; //belum terkena
     }
-
-    // Abstract methods untuk move
-    public abstract void move();
 }

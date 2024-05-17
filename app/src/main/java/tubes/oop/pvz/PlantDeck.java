@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public class PlantDeck {
     private ArrayList<Plant> deck;
+    private Map map;
     
-    public PlantDeck(){
+    public PlantDeck(Map map){
         this.deck = new ArrayList<Plant>(6);
+        this.map = map;
     }
 
     public boolean isPlantExist(Plant plant){
@@ -82,21 +84,31 @@ public class PlantDeck {
         }
     }
 
-    public boolean isPlantCooldown(Plant plant){
-        for (Plant currentPlant : deck) {
-            if (currentPlant.equals(plant) && currentPlant.isStillCooldown()) {
-                return true;
+    public boolean isStillCooldown(Plant plant){
+        return ((System.currentTimeMillis() - plant.getLastPlantTime()) <= plant.getCooldown());
+    }
+
+    public void plantPlant(int x, int y, Plant plant) {
+        Tile tile = map.getTile(x, y);
+        if (tile.isEmpty()) {
+            if (!isStillCooldown(plant)) {
+                tile.setPlant(plant);
+                plant.setLastPlantTime(System.currentTimeMillis());
+            } else {
+                throw new IllegalStateException("Plant is still in cooldown!");
             }
+        } else {
+            throw new IllegalStateException("Tile already occupied!");
         }
-        return false; 
     }
 
-    public void plantPlant(int x, int y){
-
-    }
-
-    public void digPlant(int x, int y){
-
+    public void digPlant(int x, int y) {
+        Tile tile = map.getTile(x, y);
+        if (!tile.isEmpty()) {
+            tile.removePlant();
+        } else {
+            throw new IllegalStateException("No plant to remove!");
+        }
     }
 
     public boolean isDeckFull(){
