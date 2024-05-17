@@ -12,13 +12,15 @@ public class PoleVaultingZombie extends Zombie implements SpecialMove {
     @Override
     public void specialMove(Tile currentTile, Tile nextTile) {
         try {
-            if (!hasJumped && nextTile.getPlant() != null) {
-                nextTile.removePlant();
+            if (!hasJumped) {
+                if (nextTile.getPlant() != null) {
+                    nextTile.removePlant();
+                }
                 this.hasJumped = true;
                 // Logika untuk melompat ke tile berikutnya
                 this.setX(this.getX() - 2); // Melompat dua tile ke depan
             } else {
-                // Gerakan normal jika sudah melompat atau tidak ada tanaman di tile berikutnya
+                // Gerakan normal jika sudah melompat
                 this.setX(this.getX() - 1);
             }
         } catch (InvalidPositionException e) {
