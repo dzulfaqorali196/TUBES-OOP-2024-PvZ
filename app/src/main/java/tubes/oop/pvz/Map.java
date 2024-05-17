@@ -113,8 +113,6 @@ public class Map {
     }
 
     public void attackZombieInRange (){
-
-
         for (int i = tiles.length - 1; i > 0; i--) {
             for (int j = 0; j < tiles[0].length; j++) {
                 if (!getTile(j, i).isEmpty()) {
@@ -193,18 +191,59 @@ public class Map {
         return 0 <= x && x < width && 0 <= y && y < height;
     }
 
-    public void moveZombie () {
-        for (int i = tiles.length - 1; i > 0; i--) {
-            for (int j = 0; j < tiles[0].length; j++) {
+    public void zombieAct () {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 9; j++) {
                 if (!getTile(j, i).noZombie()) {
-                    Tile tile = tiles[i][j];
-                    for (Zombie zombie : tile.getZombie()) {
-                        if (zombie.getHp() > 0) {
-                            zombie.move();
+                    int zi = i;
+                    int zj = j;
+                    Tile tile = tiles[zi][zj];
+                    Tile nexttile = tiles[zi][zj - 1];
+                    List<Zombie> zombieList = tile.getZombie();
+                    while (nexttile.getY()>=0) {
+                        if (tile.isEmpty() && nexttile.isEmpty()) {
+                            for (Zombie zombie : zombieList) {
+                                moveZombie(zombie, zi, zj);
+                            }
+                        } else if (!tile.isEmpty()) {
+                            for (Zombie zombie : zombieList) {
+                                Runnable task = () -> {
+                                    tile.getPlant().takeDamage(zombie);
+                                };
+                                scheduler.scheduleAtFixedRate(task, 0, zombie.getAttackSpeed(), TimeUnit.SECONDS);
+                            }
+                        } else if (!nexttile.isEmpty()) {
+                            for (Zombie zombie : zombieList) {
+                                Runnable task = () -> {
+                                    nexttile.getPlant().takeDamage(zombie);
+                                };
+                                scheduler.scheduleAtFixedRate(task, 0, zombie.getAttackSpeed(), TimeUnit.SECONDS);
+                            }
                         }
-                    }
+                    }   
                 }
             }
+        }
+    }
+
+    public void moveZombie(Zombie zombie, int zi, int zj) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        if (zombie.getIsSlow() == 0) {
+            Runnable task1 = () -> {
+                tiles[zi][zj].removeZombie(zombie);
+                placeZombie(zombie, zi - 1, zj);
+            };
+    
+            scheduler.scheduleAtFixedRate(task1, 0, 5, TimeUnit.SECONDS);
+        } else {
+            Runnable task2 = () -> {
+                tiles[zi][zj].removeZombie(zombie);
+                placeZombie(zombie, zi - 1, zj);
+            };
+    
+            scheduler.scheduleAtFixedRate(task2, 0, 5/2, TimeUnit.SECONDS);
         }
     }
 

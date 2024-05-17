@@ -45,8 +45,8 @@ public class Tile {
             this.plant = plant;
 
             try {
-                getPlant().setX(this.getX());
-                getPlant().setY(this.getY());
+                plant.setX(this.getX());
+                plant.setY(this.getY());
             } catch (InvalidPositionException e) {
                 throw new IllegalStateException("Invalid coordinates!");
             }
@@ -57,6 +57,13 @@ public class Tile {
 
     public void setZombie(Zombie zombie) {
         zombieList.add(zombie);
+
+        try {
+            zombie.setX(this.getX());
+            zombie.setY(this.getY());
+        } catch (InvalidPositionException e) {
+            throw new IllegalStateException("Invalid coordinates!");
+        }
     }
 
     public boolean isEmpty() {
