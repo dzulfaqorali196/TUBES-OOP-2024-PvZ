@@ -16,7 +16,6 @@ public class Map {
     private final int width = 9;
     private final int height = 6;
     private final Tile[][] tiles;
-    private List<Zombie> zombieList;
     private Random random;
 
     public Map(int width, int height) {
@@ -131,10 +130,10 @@ public class Map {
     public void removeZombieMap() {
         for (int i = tiles.length - 1; i > 0; i--) {
             for (int j = 0; j < tiles[0].length; j++) {
-                if (getTile(j, i).noZombie()) {
+                if (!getTile(j, i).noZombie()) {
                     Tile tile = tiles[i][j];
                     for (Zombie zombie : tile.getZombie()) {
-                        if (zombie.getHp() == 0) {
+                        if (zombie.getHp() <= 0) {
                             tile.removeZombie(zombie);
                         }
                     }
@@ -166,13 +165,13 @@ public class Map {
             }
         } else if (plantRange == 1) {
             if (tiles[plantY][plantX].getZombie() != null) {
-                //List<Zombie> zombies = tile.getZombie();
+                List<Zombie> zombieList = getTile(plantX, plantY).getZombie();
                 for (Zombie zombie : zombieList) {
                     zombie.takeDamage(plant);
                 }
 
             } else if (tiles[plantY][plantX + 1].getZombie() != null) {
-                //List<Zombie> zombies = tile.getZombie();
+                List<Zombie> zombieList = getTile(plantX +1, plantY).getZombie();
                 for (Zombie zombie : zombieList) {
                     zombie.takeDamage(plant);
                 }
@@ -183,6 +182,10 @@ public class Map {
 
     private boolean isValidCoordinate(int x, int y) {
         return 0 <= x && x < width && 0 <= y && y < height;
+    }
+
+    public void moveZombie () {
+
     }
 
     public void printMap() {
