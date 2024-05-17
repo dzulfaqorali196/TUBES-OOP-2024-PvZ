@@ -156,7 +156,16 @@ public class Map {
                     List<Zombie> zombieList = getTile(j, plantY).getZombie();
                     Runnable task = () -> {
                         for (Zombie zombie : zombieList) {
-                            zombie.takeDamage(plant);
+                            if (plant.getName()=="Snow Pea") {
+                                if (zombie.getName()=="Jester Zombie") {
+                                    zombie.takeDamage(plant);
+                                } else {
+                                    zombie.setIsSlow(1);
+                                    zombie.takeDamage(plant);
+                                }
+                            } else {
+                                zombie.takeDamage(plant);
+                            }
                         }
                     };
 
@@ -185,7 +194,18 @@ public class Map {
     }
 
     public void moveZombie () {
-
+        for (int i = tiles.length - 1; i > 0; i--) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                if (!getTile(j, i).noZombie()) {
+                    Tile tile = tiles[i][j];
+                    for (Zombie zombie : tile.getZombie()) {
+                        if (zombie.getHp() > 0) {
+                            zombie.move();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void printMap() {
