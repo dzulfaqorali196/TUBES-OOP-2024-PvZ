@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 public class Map {
     private final int width;
@@ -115,20 +119,20 @@ public class Map {
         int plantX = plant.getX();
         int plantY = plant.getY();
 
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+        
         if (plantRange == -1) {
             for (int j = plantX; j < tiles.length; j++) {
                 if (getTile(j, plantY).getZombie() != null) {
-
-                    plant.setLastAttackTime(System.currentTimeMillis());
-                    for (Zombie zombie : zombieList) {
-                        zombie.takeDamage(plant);
-
-                        if (System.currentTimeMillis() - plant.getLastAttackTime() >= plant.getAttackSpeed()) {
+                    List<Zombie> zombieList = getTile(j, plantY).getZombie();
+                    Runnable task = () -> {
+                        for (Zombie zombie : zombieList) {
                             zombie.takeDamage(plant);
-                            plant.setLastAttackTime(System.currentTimeMillis());
                         }
-                    }
+                    };
+
+                    scheduler.scheduleAtFixedRate(task, 0, plant.getAttackSpeed(), TimeUnit.SECONDS);
                 }
             }
         } else if (plantRange == 1) {
