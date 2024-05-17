@@ -12,6 +12,7 @@ public class Zombie extends PlantandZombie {
     public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int x, int y, int jarak) {
         super(name, hp, attack_damage, attack_speed, x, y);
         this.isAquatic = isAquatic;
+
         jarak = 0;
     }
 
