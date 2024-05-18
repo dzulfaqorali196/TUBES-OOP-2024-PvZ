@@ -8,10 +8,13 @@ package tubes.oop.pvz;
 public class Zombie extends PlantandZombie {
     private boolean isAquatic;
     protected int jarak;
+    private int isSlow;
 
     public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int x, int y, int jarak) {
         super(name, hp, attack_damage, attack_speed, x, y);
         this.isAquatic = isAquatic;
+        isSlow = 0; //0 = gak slow, 1= slow
+
         jarak = 0;
     }
 
@@ -54,9 +57,13 @@ public class Zombie extends PlantandZombie {
     public boolean isAtGoal() {
         return x <= 0;  // Hanya periksa posisi x untuk menentukan apakah zombie telah mencapai tujuan
     }
+
+    public void setIsSlow(int slow) {
+        this.isSlow = slow ;
+    }
       
     // menentukan apakah zombie terkena tembakan snowpea
-    public  boolean isSlow(){
-        return false; //belum terkena
+    public int getIsSlow(){
+        return isSlow;
     }
 }

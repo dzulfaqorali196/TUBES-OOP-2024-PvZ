@@ -4,35 +4,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class Map {
-    private final int width;
-    private final int height;
+    private final int width = 9;
+    private final int height = 6;
     private final Tile[][] tiles;
-    private List<Integer> numberZombie;
-    private List<Zombie> zombieList;
+    private Random random;
 
     public Map(int width, int height) {
-        this.width = width;
-        this.height = height;
         this.tiles = new Tile[height][width];
-        numberZombie = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        this.random = new Random();
         
-        for (int y = 0; y < 2; y++) {
+        for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 9; x++) {
-                tiles[y][x] = new Tile(x, y, "GRASS");
+                if (y==2 || y==3) {
+                    tiles[y][x] = new Tile(x, y, "WATER");
+                } else {
+                    tiles[y][x] = new Tile(x, y, "GRASS");
+                }
             }
         }
-        for (int y = 2; y < 4; y++) {
-            for (int x = 0; x <9; x++) {
-                tiles[y][x] = new Tile(x, y, "WATER");
-            }
-        }
-        for (int y = 4; y < 6; y++) {
-            for (int x = 0; x <9; x++) {
-                tiles[y][x] = new Tile(x, y, "GRASS");
-            }
-        }
+
+        startSpawnZombie();
     }
 
     public Tile getTile(int x, int y) throws IndexOutOfBoundsException {
@@ -54,57 +54,87 @@ public class Map {
         getTile(x, y).setZombie(zombie);
     }
 
-    public void spawnRandomZombie(/*ArrayList<Integer> numberZombie, double probability*/){
-        // BENERIN!!!
-        Random randZombie = new Random();
-        int pilihanzombie = randZombie.nextInt(numberZombie.size()) + 1;
-        
-        Random randInt = new Random();
-        int row = randInt.nextInt(6);
-        /* nunggu class zombie zombie lainnya
-        if (pilihanzombie == 1) {
-            NormalZombie zombie = new NormalZombie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 2) {
-            ConeHeadZombie zombie = new ConeHeadZombie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 3) {
-            BucketHeadZombie zombie = new BucketHeadZombie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 4) {
-            PoleVaultingZombie zombie = new PoleVaultingZOmbie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 5) {
-            DuckyTubeZombie zombie = new DuckyTubeZombie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 6) {
-            DolphinRiderZombie zombie = new DolphinRiderZombie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 7) {
-            FootballZombie zombie = new FootballZombie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 8) {
-            ShieldZombie zombie = new ShieldZombie();
-            placeZombie(zombie, row, 9);
-        } else if (pilihanzombie == 9) {
-            JesterZombie zombie = new JesterZombie();
-            placeZombie(zombie, row, 9);
-        } */
+    public void spawnRandomZombie(){
+        int totalzombie = 0;
+        for (Tile[] row : tiles) {
+            for (Tile tile : row) {
+                totalzombie += tile.getZombie().size();
+            }
+        }
 
+        if (totalzombie <= 10) {
+            for (int y= 0; y<6; y++) {
+                if (random.nextDouble()<=0.3) {
+                    double probability = random.nextDouble();
+                    Zombie zombie;
+
+                    if (probability < 0.1) {
+                        zombie = new NormalZombie(8,y);
+                    } else if (probability < 0.2) {
+                        zombie = new BucketheadZombie(8,y);
+                    } else if (probability < 0.3) {
+                        zombie = new ConeheadZombie(8,y);
+                    } else if (probability < 0.4) {
+                        zombie = new DolphinRiderZombie(8,y);
+                    } else if (probability < 0.5) {
+                        zombie = new DuckyTubeZombie(8,y);
+                    } else if (probability < 0.6) {
+                        zombie = new FootballZombie(8,y);
+                    } else if (probability < 0.7) {
+                        zombie = new GiantZombie(8,y);
+                    } else if (probability < 0.8) {
+                        zombie = new JesterZombie(8,y);
+                    } else if (probability < 0.9) {
+                        zombie = new PoleVaultingZombie(8,y);
+                    } else {
+                        zombie = new ShieldZombie(8,y);
+                    }
+
+                    if ((zombie.getIsAquatic()==true && getTile(8,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(8,y).getTileType() == "GRASS")) {
+                        placeZombie(zombie, 8, y);
+                    
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void startSpawnZombie () {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                spawnRandomZombie();
+            }
+        };
+        timer.schedule(task, 0, 1000);
 
     }
 
     public void attackZombieInRange (){
-
-
         for (int i = tiles.length - 1; i > 0; i--) {
             for (int j = 0; j < tiles[0].length; j++) {
                 if (!getTile(j, i).isEmpty()) {
                     Tile tile = tiles[i][j];
-                    //Plant plant = tile.getPlant(j, i);
+                    Plant plant = tile.getPlant();
                     
-                    // benerin
-                    //getZombieInRange(plant);
+                    getZombieInRange(plant);
+                }
+            }
+        }
+    }
+
+    public void removeZombieMap() {
+        for (int i = tiles.length - 1; i > 0; i--) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                if (!getTile(j, i).noZombie()) {
+                    Tile tile = tiles[i][j];
+                    for (Zombie zombie : tile.getZombie()) {
+                        if (zombie.getHp() <= 0) {
+                            tile.removeZombie(zombie);
+                        }
+                    }
                 }
             }
         }
@@ -115,31 +145,40 @@ public class Map {
         int plantX = plant.getX();
         int plantY = plant.getY();
 
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+        
         if (plantRange == -1) {
             for (int j = plantX; j < tiles.length; j++) {
                 if (getTile(j, plantY).getZombie() != null) {
-
-                    plant.setLastAttackTime(System.currentTimeMillis());
-                    for (Zombie zombie : zombieList) {
-                        zombie.takeDamage(plant);
-
-                        if (System.currentTimeMillis() - plant.getLastAttackTime() >= plant.getAttackSpeed()) {
-                            zombie.takeDamage(plant);
-                            plant.setLastAttackTime(System.currentTimeMillis());
+                    List<Zombie> zombieList = getTile(j, plantY).getZombie();
+                    Runnable task = () -> {
+                        for (Zombie zombie : zombieList) {
+                            if (plant.getName()=="Snow Pea") {
+                                if (zombie.getName()=="Jester Zombie") {
+                                    zombie.takeDamage(plant);
+                                } else {
+                                    zombie.setIsSlow(1);
+                                    zombie.takeDamage(plant);
+                                }
+                            } else {
+                                zombie.takeDamage(plant);
+                            }
                         }
-                    }
+                    };
+
+                    scheduler.scheduleAtFixedRate(task, 0, plant.getAttackSpeed(), TimeUnit.SECONDS);
                 }
             }
         } else if (plantRange == 1) {
             if (tiles[plantY][plantX].getZombie() != null) {
-                //List<Zombie> zombies = tile.getZombie();
+                List<Zombie> zombieList = getTile(plantX, plantY).getZombie();
                 for (Zombie zombie : zombieList) {
                     zombie.takeDamage(plant);
                 }
 
             } else if (tiles[plantY][plantX + 1].getZombie() != null) {
-                //List<Zombie> zombies = tile.getZombie();
+                List<Zombie> zombieList = getTile(plantX +1, plantY).getZombie();
                 for (Zombie zombie : zombieList) {
                     zombie.takeDamage(plant);
                 }
@@ -150,6 +189,62 @@ public class Map {
 
     private boolean isValidCoordinate(int x, int y) {
         return 0 <= x && x < width && 0 <= y && y < height;
+    }
+
+    public void zombieAct () {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (!getTile(j, i).noZombie()) {
+                    int zi = i;
+                    int zj = j;
+                    Tile tile = tiles[zi][zj];
+                    Tile nexttile = tiles[zi][zj - 1];
+                    List<Zombie> zombieList = tile.getZombie();
+                    while (nexttile.getY()>=0) {
+                        if (tile.isEmpty() && nexttile.isEmpty()) {
+                            for (Zombie zombie : zombieList) {
+                                moveZombie(zombie, zi, zj);
+                            }
+                        } else if (!tile.isEmpty()) {
+                            for (Zombie zombie : zombieList) {
+                                Runnable task = () -> {
+                                    tile.getPlant().takeDamage(zombie);
+                                };
+                                scheduler.scheduleAtFixedRate(task, 0, zombie.getAttackSpeed(), TimeUnit.SECONDS);
+                            }
+                        } else if (!nexttile.isEmpty()) {
+                            for (Zombie zombie : zombieList) {
+                                Runnable task = () -> {
+                                    nexttile.getPlant().takeDamage(zombie);
+                                };
+                                scheduler.scheduleAtFixedRate(task, 0, zombie.getAttackSpeed(), TimeUnit.SECONDS);
+                            }
+                        }
+                    }   
+                }
+            }
+        }
+    }
+
+    public void moveZombie(Zombie zombie, int zi, int zj) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        if (zombie.getIsSlow() == 0) {
+            Runnable task1 = () -> {
+                tiles[zi][zj].removeZombie(zombie);
+                placeZombie(zombie, zi - 1, zj);
+            };
+    
+            scheduler.scheduleAtFixedRate(task1, 0, 5, TimeUnit.SECONDS);
+        } else {
+            Runnable task2 = () -> {
+                tiles[zi][zj].removeZombie(zombie);
+                placeZombie(zombie, zi - 1, zj);
+            };
+    
+            scheduler.scheduleAtFixedRate(task2, 0, 5/2, TimeUnit.SECONDS);
+        }
     }
 
     public void printMap() {
