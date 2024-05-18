@@ -1,26 +1,34 @@
 package tubes.oop.pvz;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private List<Plant> listPlant;
+    private static List<Plant> listPlant;
+    
 
-    public Inventory(List<Plant> listPlant) {
-        this.listPlant = listPlant;
+    public Inventory() {
+        listPlant = new ArrayList<>();
+        listPlant.add(new Sunflower(0, 0));
+        listPlant.add(new PeaShooter(0, 0));
+        listPlant.add(new Wallnut(0, 0));
+        listPlant.add(new SnowPea(0, 0));
+        listPlant.add(new Squash(0, 0));
+        listPlant.add(new Lilypad(0, 0));
+        listPlant.add(new TallWallnut(0, 0));
+        listPlant.add(new RepeaterPea(0, 0));
+        listPlant.add(new Sunflower(0, 0));
+        listPlant.add(new Jalapeno(0, 0));
     }
 
     public boolean isInventoryEmpty() {
         return listPlant.isEmpty();
     }
 
-    public void displayInventory() {
+    public static void displayInventory() {
         int i = 0;
         for(Plant currentPlant : listPlant){
-            System.out.println((i+1) + ". Nama tanaman : " + currentPlant.getName());
-            System.out.println("Jumlah health : " + currentPlant.getHp());
-            System.out.println("Attack damage : " + currentPlant.getAttackDamage());
-            System.out.println("Attack speed : " + currentPlant.getAttackSpeed());
-            System.out.println("Attack range : " + currentPlant.getRange());
-            System.out.println("Time to cooldown : " + currentPlant.getCooldown());
+            System.out.println((i+1) + ". " + currentPlant.getName());
+            i++;
         }
     }
 
@@ -28,7 +36,7 @@ public class Inventory {
         return listPlant.contains(plant);
     }
 
-    public Plant getSelectedPlant(int x) {
+    public static Plant getSelectedPlant(int x) {
         if (x >= 0 && x < listPlant.size()) {
             return listPlant.get(x);
         }

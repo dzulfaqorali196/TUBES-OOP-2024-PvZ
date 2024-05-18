@@ -3,6 +3,7 @@ package tubes.oop.pvz;
 import java.util.Scanner;
 
 public class Main {
+    public static Inventory inventory = new Inventory();
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan;
@@ -19,6 +20,34 @@ public class Main {
                 
                 switch (pilihan) {
                     case 1:
+                        System.out.println("Game dimulai. Selamat bermain!");
+                        System.out.println("Berikut merupakan daftar inventory:");
+                        Inventory.displayInventory();
+                        System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N): ");
+                        String addDeck = scanner.nextLine();
+                        // scanner.nextLine();
+                        if(addDeck.equals("Y")){
+                            System.out.println("Masukkan tanaman ke dalam deck (maksimal 6 tanaman).");
+                            while (PlantDeck.getSize() < 6) {
+                                System.out.println("Masukkan nomor tanaman untuk dimasukkan ke deck: ");
+                                int plantIndex = scanner.nextInt();
+                                scanner.nextLine(); // consume newline
+                                Plant plant = Inventory.getSelectedPlant(plantIndex - 1);
+                                if (plant != null) {
+                                    try {
+                                        PlantDeck.addPlant(plant, plantIndex - 1);
+                                    } catch (InvalidDeckException | InvalidIndexException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    throw new InvalidInputMainException("Tanaman tidak ditemukan dalam inventory.");
+                                }
+                            }
+                            PlantDeck.printDeck();
+                        }
+                        else{
+                            System.out.println("x");
+                        }
                         startGame();
                         break;
                     case 2:
@@ -37,15 +66,14 @@ public class Main {
                         throw new InvalidInputMainException("Pilihan tidak valid. Silakan coba lagi.");
                 }
             } while (pilihan != 5);
-        } catch (InvalidInputMainException e) {
+        } 
+        catch (InvalidInputMainException e) {
             System.err.println(e.getMessage());
         }
     }
 
     public static void startGame() {
         System.out.println("Game dimulai. Selamat bermain!");
-        System.out.println("Berikut merupakan daftar inventory : ");
-        System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N) : ");
     }
 
     public static void showHelp() {
@@ -105,5 +133,17 @@ public class Main {
 
     public static void exitGame() {
         System.out.println("Terima kasih telah bermain!");
+    }
+}
+
+class InvalidInputMainException extends java.lang.Exception {
+    private String message;
+
+    public InvalidInputMainException(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
