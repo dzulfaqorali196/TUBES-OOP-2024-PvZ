@@ -48,33 +48,65 @@ public class Main {
     }
 
     public static void startGame(Scanner scanner) {
-        System.out.println("Game dimulai. Selamat bermain!");
         System.out.println("Berikut merupakan daftar inventory:");
         inventory.displayInventory();
         System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N): ");
         String addDeck = scanner.nextLine();
+
         if (addDeck.equalsIgnoreCase("Y")) {
-            System.out.println("Masukkan tanaman ke dalam deck (maksimal 6 tanaman).");
-            while (plantDeck.getSize() < 6) {
-                System.out.println("Masukkan nomor tanaman untuk dimasukkan ke deck: ");
-                int plantIndex = scanner.nextInt();
-                scanner.nextLine();
-                Plant plant = inventory.getSelectedPlant(plantIndex - 1);
-                if (plant != null) {
-                    try {
-                        plantDeck.addPlant(plant, plantDeck.getSize());
-                    } catch (InvalidDeckException | InvalidIndexException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.out.println("Tanaman tidak ditemukan dalam inventory.");
-                }
-            }
+            System.out.println("Masukkan tanaman ke dalam deck (maksimal 6 tanaman)\n");
+            System.out.println("Daftar deck tanaman saat ini :");
+
             plantDeck.printDeck();
-        } else {
+            while(!(plantDeck.isDeckNotNull())){
+                startDeck(scanner);
+            }
+        } 
+        else {
             System.out.println("Tidak ada tanaman yang dimasukkan ke dalam deck.");
         }
+        System.out.println("Game dimulai. Selamat bermain!");
     }
+    
+    public static void startDeck(Scanner scanner){
+        while(!(plantDeck.isDeckNotNull())){
+            System.out.println("Masukkan nomor tanaman untuk dimasukkan ke deck: ");
+            int plantIndex = scanner.nextInt();
+            scanner.nextLine();
+            Plant plant = inventory.getSelectedPlant(plantIndex - 1);
+            if (plant != null) {
+                try {
+                    for (int i = 0; i < 6; i++) {
+                        if (plantDeck.getPlant(i) == null) {
+                            plantDeck.addPlant(plant, i);
+                            break;
+                        }
+                    }
+                    plantDeck.printDeck();
+                } catch (InvalidDeckException | InvalidIndexException e) {
+                    e.printStackTrace();
+                }
+            } 
+            else {
+                System.out.println("Tanaman tidak ditemukan dalam inventory.");
+            }
+        }
+        System.out.println("Apakah ingin menghapus deck? (Y/N)");
+        String hapusDeck = scanner.nextLine();
+        
+        if (hapusDeck.equalsIgnoreCase("Y")) {
+            System.out.println("Nomor berapa yang ingin dihapus?");
+            int hapusIndexDeck = scanner.nextInt();
+            scanner.nextLine();
+            try {
+                plantDeck.removePlant(hapusIndexDeck-1);
+            } catch (InvalidIndexException e) {
+                e.printStackTrace();
+            }
+            plantDeck.printDeck();
+        }
+    }
+    
 
     public static void showHelp() {
         System.out.println("Help:");

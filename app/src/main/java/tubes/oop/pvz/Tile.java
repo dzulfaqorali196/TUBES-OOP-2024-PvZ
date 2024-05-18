@@ -112,7 +112,6 @@ public class Tile {
         for (Zombie zombie : new ArrayList<>(zombieList)) {
             int newCol = zombie.getX() - 1;
             if (newCol < 0) {
-                // Zombie reached the leftmost side, game over
                 System.out.println("Game Over! Zombie reached the end.");
                 System.exit(0);
             }

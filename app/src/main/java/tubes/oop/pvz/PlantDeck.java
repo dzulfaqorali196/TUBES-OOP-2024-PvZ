@@ -8,12 +8,15 @@ public class PlantDeck {
     
     public PlantDeck(Map map){
         this.deck = new ArrayList<Plant>(6);
+        for (int i = 0; i < 6; i++) {
+            deck.add(null);
+        }
         this.map = map;
     }
 
     public boolean isPlantExist(Plant plant){
         for(Plant currentPlant : deck){
-            if(currentPlant.equals(plant)){
+            if(currentPlant == plant){
                 return true;
             }
         }
@@ -43,10 +46,10 @@ public class PlantDeck {
         }
     }
 
-    public boolean isDeckEmpty(){
+    public boolean isDeckNotNull(){
         for(Plant currentPlant : deck){
-            if(!(currentPlant.equals(null))){
-                return true;
+            if(currentPlant == null){
+                return false;
             }
         }
         return true;
@@ -54,11 +57,20 @@ public class PlantDeck {
 
     public void addPlant(Plant plant, int index) throws InvalidDeckException, InvalidIndexException{
         if(!isDeckFull()){
-            if (index >= 0 && index < deck.size()) {
-                deck.add(index, plant); 
+            if(!isPlantExist((plant))){
+                if (index >= 0 && index < deck.size()) {
+                    if (deck.get(index) == null) {
+                        deck.set(index, plant);
+                    } else {
+                        throw new InvalidDeckException("Position already occupied!");
+                    }
+                }
+                else {
+                    throw new InvalidIndexException(index);
+                }
             }
-            else {
-                throw new InvalidIndexException(index);
+            else{
+                throw new InvalidDeckException("Invalid add plant, plant already exist!");
             }
         }
         else{
@@ -112,8 +124,8 @@ public class PlantDeck {
     }
 
     public boolean isDeckFull(){
-        for(Plant currenPlant : deck){
-            if(currenPlant.equals(null)){
+        for(Plant currentPlant : deck){
+            if(currentPlant == null){
                 return false;
             }
         }
@@ -126,8 +138,14 @@ public class PlantDeck {
 
     public void printDeck() {
         for (int i = 0; i < deck.size(); i++) {
-            System.out.println(i + ": " + deck.get(i).getName());
+            Plant plant = deck.get(i);
+            if (plant != null) {
+                System.out.println((i+1) + " : " + plant.getName());
+            } else {
+                System.out.println((i+1) + " : Empty");
+            }
         }
+        System.out.println("");
     }
 }
 
