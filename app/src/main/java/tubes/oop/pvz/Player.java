@@ -7,8 +7,8 @@ public class Player{
        Player.sunScore = sunScore;
     }
  
-    public static void increaseSun(){
-       sunScore += 25;
+    public static void increaseSun(int value){
+       sunScore += value;
     }
  
     public void decreaseSun(int value){

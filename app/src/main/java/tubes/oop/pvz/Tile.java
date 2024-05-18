@@ -9,6 +9,7 @@ public class Tile {
     private Plant plant;
     private List<Zombie> zombieList;
     private final String tileType;
+    public static ListZombie listZombie = new ListZombie();
 
     public Tile(int x, int y, String tileType) {
         this.x = x;
@@ -82,16 +83,27 @@ public class Tile {
         zombieList.remove(zombie);
     }
 
-    public char getDisplayChar() {
-        if (getZombie() != null) {
-            return 'Z';
-        } else if (!isEmpty()) {
-            return 'P';
-        } else if (getTileType()=="GRASS") {
-            return 'G';
-        } else {
-            return 'W';
+    public String getDisplayChar() {
+        StringBuilder output = new StringBuilder();
+
+        if (plant != null) {
+            output.append('P');
         }
+
+        for (Zombie zombie : listZombie.getListZombie()) {
+            output.append('Z');
+        }
+
+        if (output.length() == 0) {
+            if(tileType.equals("WATER")){
+                output.append('W');
+            }
+            else{
+                output.append('G');
+            }
+        }
+
+        return output.toString();
     }
 
 
@@ -112,7 +124,7 @@ public class Tile {
         for (Zombie zombie : new ArrayList<>(zombieList)) {
             int newCol = zombie.getX() - 1;
             if (newCol < 0) {
-                System.out.println("Game Over! Zombie reached the end.");
+                System.out.println("Game Over! Zombie reached the end");
                 System.exit(0);
             }
 

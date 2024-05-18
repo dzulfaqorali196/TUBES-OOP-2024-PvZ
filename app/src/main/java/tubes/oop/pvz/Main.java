@@ -1,17 +1,23 @@
 package tubes.oop.pvz;
 
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static Inventory inventory = new Inventory();
-    public static Map gameMap = new Map(9, 6);
-    public static PlantDeck plantDeck = new PlantDeck(gameMap);
+    public static Map map = new Map(9, 6);
+    public static PlantDeck plantDeck = new PlantDeck(map);
     public static ListZombie listZombie = new ListZombie();
+    public static Player player = new Player(25);
+    public static Sun sun;
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan;
             do {
+                map.printMap();
                 System.out.println("Pilih menu yang akan dijalankan:");
                 System.out.println("1. Start Game");
                 System.out.println("2. Help");
@@ -47,7 +53,7 @@ public class Main {
         }
     }
 
-    public static void startGame(Scanner scanner) {
+    public static void startGame(Scanner scanner) throws InvalidInputMainException{
         System.out.println("Berikut merupakan daftar inventory:");
         inventory.displayInventory();
         System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N): ");
@@ -66,9 +72,12 @@ public class Main {
             System.out.println("Tidak ada tanaman yang dimasukkan ke dalam deck.");
         }
         System.out.println("Game dimulai. Selamat bermain!");
+        sun = new Sun();
+        // map.printMap();
+        gameLoop(scanner);
     }
     
-    public static void startDeck(Scanner scanner){
+    public static void startDeck(Scanner scanner) throws InvalidInputMainException{
         while(!(plantDeck.isDeckNotNull())){
             System.out.println("Masukkan nomor tanaman untuk dimasukkan ke deck: ");
             int plantIndex = scanner.nextInt();
@@ -94,7 +103,7 @@ public class Main {
         System.out.println("Apakah ingin menghapus deck? (Y/N)");
         String hapusDeck = scanner.nextLine();
         
-        if (hapusDeck.equalsIgnoreCase("Y")) {
+        if(hapusDeck.equalsIgnoreCase("Y")){
             System.out.println("Nomor berapa yang ingin dihapus?");
             int hapusIndexDeck = scanner.nextInt();
             scanner.nextLine();
@@ -105,12 +114,123 @@ public class Main {
             }
             plantDeck.printDeck();
         }
+        else if(!(hapusDeck.equalsIgnoreCase("N"))){
+            throw new InvalidInputMainException("Pilihan tidak valid. Silakan coba lagi.");
+        }
     }
-    
+       
+    public static void gameLoop(Scanner scanner) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
+
+        Runnable timeGamePlay = new Runnable() {
+            private int time = 0;
+
+            @Override
+            public void run() {
+                time++;
+                System.out.println("Waktu: " + time);
+                if (time % 200 == 0) {
+                    time = 0;
+                }
+                //map.printMap();
+            }
+        };
+
+        Runnable spawnZombieTask = new Runnable() {
+            private int time = 0;
+
+            @Override
+            public void run() {
+                time++;
+                if(time >= 20 && time <= 160) {
+                    map.spawnRandomZombie(time);
+                }
+            }
+        };
+
+        Runnable sunTask = new Runnable() {
+            @Override
+            public void run() {
+                sun.increaseSun(25); // Menambahkan sun setiap 3 detik
+                System.out.println("Sun: " + sun.getSunScore());
+            }
+        };
+
+        scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(sunTask, 0, 3, TimeUnit.SECONDS);
+
+        while (!scheduler.isShutdown()) {
+            System.out.println("Masukkan perintah (P/D/E): ");
+            String command = scanner.nextLine();
+
+            if (command.equalsIgnoreCase("E")) {
+                System.out.println("Permainan berakhir.");
+                scheduler.shutdown();
+                sun.stopSunGeneration();
+            } 
+            else if (command.startsWith("P")) {
+                String[] parts = command.split(" ");
+                if (parts.length == 4) {
+                    try {
+                        int deckIndex = Integer.parseInt(parts[1]) - 1;
+                        int x = Integer.parseInt(parts[2]);
+                        int y = Integer.parseInt(parts[3]);
+                        Plant plant = plantDeck.getPlant(deckIndex);
+                        if (plant != null){
+                            if(player.getSunScore() >= plant.getCostPlant()){
+                                map.placePlant(plant, x-1, y-1);
+                                System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
+                                System.out.println("Sun tersisa: " + sun.getSunScore());
+                            }
+                            else{
+                                System.out.println("Sun tidak mencukupi untuk membeli tanaman");
+                            }
+                        } 
+                        else {
+                            System.out.println("Tanaman tidak ditemukan di deck");
+                        }
+                    } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                        System.out.println("Perintah tidak valid.");
+                    }
+                } 
+                else {
+                    System.out.println("Perintah tidak valid.");
+                }
+            } 
+            else if (command.startsWith("D")) {
+                String[] parts = command.split(" ");
+                if (parts.length == 3) {
+                    try {
+                        int x = Integer.parseInt(parts[1]);
+                        int y = Integer.parseInt(parts[2]);
+                        map.getTile(x, y).removePlant();
+                        System.out.println("Digging plant on (" + x + ", " + y + ")");
+                    } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                        System.out.println("Perintah tidak valid.");
+                    }
+                } else {
+                    System.out.println("Perintah tidak valid.");
+                }
+            } 
+            else {
+                System.out.println("Perintah tidak dikenal.");
+            }
+
+            // Cetak peta setelah setiap perintah
+            map.printMap();
+            
+            // Check game over conditions
+            // if (map.isZombieReachedEnd() || !map.isZombieSpawnPossible()) {
+            //     System.out.println("Permainan berakhir.");
+            //     scheduler.shutdown();
+            //     sun.stopSunGeneration();
+            // }
+        }
+    }
 
     public static void showHelp() {
-        System.out.println("Help:");
-        // Tambahkan informasi bantuan di sini
+        System.out.println("Help:"); // tambahin
     }
 
     public static void showPlantList() {

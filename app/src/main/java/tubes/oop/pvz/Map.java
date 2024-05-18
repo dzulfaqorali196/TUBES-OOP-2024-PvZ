@@ -31,8 +31,7 @@ public class Map {
                 }
             }
         }
-
-        startSpawnZombie();
+        //startSpawnZombie();
     }
 
     public Tile getTile(int x, int y) throws IndexOutOfBoundsException {
@@ -51,66 +50,82 @@ public class Map {
     }
 
     public void placeZombie(Zombie zombie, int x, int y) throws IllegalStateException, IndexOutOfBoundsException {
-        getTile(x, y).setZombie(zombie);
+        if (isValidCoordinate(x, y)) {
+            getTile(x, y).setZombie(zombie);
+        } else {
+            throw new IndexOutOfBoundsException("Invalid coordinates!");
+        }
     }
 
-    public void spawnRandomZombie(){
+    public void spawnRandomZombie(int currentTime){
         int totalzombie = 0;
-        for (Tile[] row : tiles) {
-            for (Tile tile : row) {
-                totalzombie += tile.getZombie().size();
-            }
-        }
 
-        if (totalzombie <= 10) {
-            for (int y= 0; y<6; y++) {
-                if (random.nextDouble()<=0.3) {
-                    double probability = random.nextDouble();
-                    Zombie zombie;
+        if((currentTime >= 20) && (currentTime <= 160)){
 
-                    if (probability < 0.1) {
-                        zombie = new NormalZombie(8,y);
-                    } else if (probability < 0.2) {
-                        zombie = new BucketheadZombie(8,y);
-                    } else if (probability < 0.3) {
-                        zombie = new ConeheadZombie(8,y);
-                    } else if (probability < 0.4) {
-                        zombie = new DolphinRiderZombie(8,y);
-                    } else if (probability < 0.5) {
-                        zombie = new DuckyTubeZombie(8,y);
-                    } else if (probability < 0.6) {
-                        zombie = new FootballZombie(8,y);
-                    } else if (probability < 0.7) {
-                        zombie = new GiantZombie(8,y);
-                    } else if (probability < 0.8) {
-                        zombie = new JesterZombie(8,y);
-                    } else if (probability < 0.9) {
-                        zombie = new PoleVaultingZombie(8,y);
-                    } else {
-                        zombie = new ShieldZombie(8,y);
-                    }
+            if (totalzombie <= 10) {
+                for (int y= 0; y<6; y++) {
+                    if (random.nextDouble()<=0.3) {
+                        double probability = random.nextDouble();
+                        Zombie zombie;
 
-                    if ((zombie.getIsAquatic()==true && getTile(8,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(8,y).getTileType() == "GRASS")) {
-                        placeZombie(zombie, 8, y);
-                    
+                        if (probability < 0.1) {
+                            zombie = new NormalZombie(8,y);
+                        } 
+                        else if (probability < 0.2) {
+                            zombie = new BucketheadZombie(8,y);
+                        } 
+                        else if (probability < 0.3) {
+                            zombie = new ConeheadZombie(8,y);
+                        } 
+                        else if (probability < 0.4) {
+                            zombie = new DolphinRiderZombie(8,y);
+                        } 
+                        else if (probability < 0.5) {
+                            zombie = new DuckyTubeZombie(8,y);
+                        } 
+                        else if (probability < 0.6) {
+                            zombie = new FootballZombie(8,y);
+                        } 
+                        else if (probability < 0.7) {
+                            zombie = new GiantZombie(8,y);
+                        } 
+                        else if (probability < 0.8) {
+                            zombie = new JesterZombie(8,y);
+                        } 
+                        else if (probability < 0.9) {
+                            zombie = new PoleVaultingZombie(8,y);
+                        } 
+                        else {
+                            zombie = new ShieldZombie(8,y);
+                        }
+                        System.out.println(zombie.getName() + "(" + y + ") are starting to attack your fields!");
+
+                        if ((zombie.getIsAquatic()==true && getTile(8,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(8,y).getTileType() == "GRASS")) {
+                            placeZombie(zombie, 8, y);
+                        
+                        }
+                        totalzombie += 1;
                     }
                 }
             }
+            else{
+                return;
+            }
         }
 
     }
 
-    public void startSpawnZombie () {
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                spawnRandomZombie();
-            }
-        };
-        timer.schedule(task, 0, 1000);
+    // public void startSpawnZombie () {
+    //     Timer timer = new Timer();
+    //     TimerTask task = new TimerTask() {
+    //         @Override
+    //         public void run() {
+    //             spawnRandomZombie(timer);
+    //         }
+    //     };
+    //     timer.schedule(task, 0, 1000);
 
-    }
+    // }
 
     public void attackZombieInRange (){
         for (int i = tiles.length - 1; i > 0; i--) {
@@ -166,7 +181,6 @@ public class Map {
                             }
                         }
                     };
-
                     scheduler.scheduleAtFixedRate(task, 0, plant.getAttackSpeed(), TimeUnit.SECONDS);
                 }
             }
@@ -250,8 +264,10 @@ public class Map {
     public void printMap() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                System.out.print(tiles[height][width].getDisplayChar() + " ");
+                //System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
+                System.out.print("|" + tiles[y][x].getDisplayChar() + "|");
             }
+            //System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
             System.out.println();
         }
     }
@@ -280,7 +296,7 @@ public class Map {
             }
         }
     }
-
+}
  
 /* masih mikirin implementasinya
     public void applyDamageToClosestZombie(List<Plant> plants, List<Zombie> zombies) {
@@ -324,7 +340,3 @@ public class Map {
         }
     }
 */
-    
-    
-    
-}
