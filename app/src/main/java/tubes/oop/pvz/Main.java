@@ -4,10 +4,14 @@ import java.util.Scanner;
 
 public class Main {
     public static Inventory inventory = new Inventory();
+    public static Map gameMap = new Map(9, 6);
+    public static PlantDeck plantDeck = new PlantDeck(gameMap);
+    public static ListZombie listZombie = new ListZombie();
+
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan;
-                do{
+            do {
                 System.out.println("Pilih menu yang akan dijalankan:");
                 System.out.println("1. Start Game");
                 System.out.println("2. Help");
@@ -16,39 +20,11 @@ public class Main {
                 System.out.println("5. Exit");
                 System.out.print("Masukkan pilihan: ");
                 pilihan = scanner.nextInt();
-                scanner.nextLine(); 
-                
+                scanner.nextLine();
+
                 switch (pilihan) {
                     case 1:
-                        System.out.println("Game dimulai. Selamat bermain!");
-                        System.out.println("Berikut merupakan daftar inventory:");
-                        Inventory.displayInventory();
-                        System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N): ");
-                        String addDeck = scanner.nextLine();
-                        // scanner.nextLine();
-                        if(addDeck.equals("Y")){
-                            System.out.println("Masukkan tanaman ke dalam deck (maksimal 6 tanaman).");
-                            while (PlantDeck.getSize() < 6) {
-                                System.out.println("Masukkan nomor tanaman untuk dimasukkan ke deck: ");
-                                int plantIndex = scanner.nextInt();
-                                scanner.nextLine(); // consume newline
-                                Plant plant = Inventory.getSelectedPlant(plantIndex - 1);
-                                if (plant != null) {
-                                    try {
-                                        PlantDeck.addPlant(plant, plantIndex - 1);
-                                    } catch (InvalidDeckException | InvalidIndexException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    throw new InvalidInputMainException("Tanaman tidak ditemukan dalam inventory.");
-                                }
-                            }
-                            PlantDeck.printDeck();
-                        }
-                        else{
-                            System.out.println("x");
-                        }
-                        startGame();
+                        startGame(scanner);
                         break;
                     case 2:
                         showHelp();
@@ -66,14 +42,38 @@ public class Main {
                         throw new InvalidInputMainException("Pilihan tidak valid. Silakan coba lagi.");
                 }
             } while (pilihan != 5);
-        } 
-        catch (InvalidInputMainException e) {
-            System.err.println(e.getMessage());
+        } catch (InvalidInputMainException e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    public static void startGame() {
+    public static void startGame(Scanner scanner) {
         System.out.println("Game dimulai. Selamat bermain!");
+        System.out.println("Berikut merupakan daftar inventory:");
+        inventory.displayInventory();
+        System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N): ");
+        String addDeck = scanner.nextLine();
+        if (addDeck.equalsIgnoreCase("Y")) {
+            System.out.println("Masukkan tanaman ke dalam deck (maksimal 6 tanaman).");
+            while (plantDeck.getSize() < 6) {
+                System.out.println("Masukkan nomor tanaman untuk dimasukkan ke deck: ");
+                int plantIndex = scanner.nextInt();
+                scanner.nextLine();
+                Plant plant = inventory.getSelectedPlant(plantIndex - 1);
+                if (plant != null) {
+                    try {
+                        plantDeck.addPlant(plant, plantDeck.getSize());
+                    } catch (InvalidDeckException | InvalidIndexException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Tanaman tidak ditemukan dalam inventory.");
+                }
+            }
+            plantDeck.printDeck();
+        } else {
+            System.out.println("Tidak ada tanaman yang dimasukkan ke dalam deck.");
+        }
     }
 
     public static void showHelp() {
@@ -83,52 +83,22 @@ public class Main {
 
     public static void showPlantList() {
         System.out.println("\nDaftar Plant :\n");
-        Plant sunflower = new Sunflower(0, 0);
-        Plant peaShooter = new PeaShooter(0, 0);
-        Plant wallNut = new Wallnut(0, 0);
-        Plant snowPea = new SnowPea(0, 0);
-        Plant squash = new Squash(0, 0);
-        Plant lilypad = new Lilypad(0, 0);
-        Plant tallWallNut = new TallWallnut(0, 0);
-        Plant repeaterPea = new RepeaterPea(0, 0);
-        Plant jalapeno = new Jalapeno(0, 0);
-        Plant tangleKelp = new TangleKelp(0, 0);
-
-        PrintPlant.printPlantInfo(sunflower);
-        PrintPlant.printPlantInfo(peaShooter);
-        PrintPlant.printPlantInfo(wallNut);
-        PrintPlant.printPlantInfo(snowPea);
-        PrintPlant.printPlantInfo(squash);
-        PrintPlant.printPlantInfo(lilypad);
-        PrintPlant.printPlantInfo(tallWallNut);
-        PrintPlant.printPlantInfo(repeaterPea);
-        PrintPlant.printPlantInfo(jalapeno);
-        PrintPlant.printPlantInfo(tangleKelp);
+        try {
+            inventory.printPlantInfo();
+            System.out.println("\n");
+        } catch (Exception e) {
+            System.out.println("Terjadi kesalahan saat menampilkan daftar tanaman: " + e.getMessage());
+        }
     }
 
     public static void showZombieList() {
         System.out.println("\nDaftar Zombie :\n");
-        Zombie normalZombie = new NormalZombie(0, 0);
-        Zombie coneHeadZombie = new ConeheadZombie(0, 0);
-        Zombie poleVaultingZombie = new PoleVaultingZombie(0, 0);
-        Zombie bucketHeadZombie = new BucketheadZombie(0, 0);
-        Zombie duckyTubeZombie = new DuckyTubeZombie(0, 0);
-        Zombie dolphinRiderZombie = new DolphinRiderZombie(0, 0);
-        Zombie jesterZombie = new JesterZombie(0, 0);
-        Zombie shieldZombie = new ShieldZombie(0, 0);
-        Zombie giantZombie = new GiantZombie(0, 0);
-        Zombie footballZombie = new FootballZombie(0, 0);
-
-        PrintZombie.printZombieInfo(normalZombie);
-        PrintZombie.printZombieInfo(coneHeadZombie);
-        PrintZombie.printZombieInfo(poleVaultingZombie);
-        PrintZombie.printZombieInfo(bucketHeadZombie);
-        PrintZombie.printZombieInfo(duckyTubeZombie);
-        PrintZombie.printZombieInfo(dolphinRiderZombie);
-        PrintZombie.printZombieInfo(jesterZombie);
-        PrintZombie.printZombieInfo(shieldZombie);
-        PrintZombie.printZombieInfo(giantZombie);
-        PrintZombie.printZombieInfo(footballZombie);
+        try {
+            listZombie.printZombieInfo();
+            System.out.println("\n");
+        } catch (Exception e) {
+            System.out.println("Terjadi kesalahan saat menampilkan daftar zombie: " + e.getMessage());
+        }
     }
 
     public static void exitGame() {
@@ -137,13 +107,7 @@ public class Main {
 }
 
 class InvalidInputMainException extends java.lang.Exception {
-    private String message;
-
     public InvalidInputMainException(String message) {
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
+        super(message);
     }
 }

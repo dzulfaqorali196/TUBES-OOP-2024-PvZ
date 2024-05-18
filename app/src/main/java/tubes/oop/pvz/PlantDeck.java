@@ -3,11 +3,11 @@ package tubes.oop.pvz;
 import java.util.ArrayList;
 
 public class PlantDeck {
-    private static ArrayList<Plant> deck;
+    private ArrayList<Plant> deck;
     private Map map;
     
     public PlantDeck(Map map){
-        PlantDeck.deck = new ArrayList<Plant>(6);
+        this.deck = new ArrayList<Plant>(6);
         this.map = map;
     }
 
@@ -52,7 +52,7 @@ public class PlantDeck {
         return true;
     }
 
-    public static void addPlant(Plant plant, int index) throws InvalidDeckException, InvalidIndexException{
+    public void addPlant(Plant plant, int index) throws InvalidDeckException, InvalidIndexException{
         if(!isDeckFull()){
             if (index >= 0 && index < deck.size()) {
                 deck.add(index, plant); 
@@ -111,7 +111,7 @@ public class PlantDeck {
         }
     }
 
-    public static boolean isDeckFull(){
+    public boolean isDeckFull(){
         for(Plant currenPlant : deck){
             if(currenPlant.equals(null)){
                 return false;
@@ -120,11 +120,11 @@ public class PlantDeck {
         return true;
     }
 
-    public static int getSize(){
+    public int getSize(){
         return deck.size();
     }
 
-    public static void printDeck() {
+    public void printDeck() {
         for (int i = 0; i < deck.size(); i++) {
             System.out.println(i + ": " + deck.get(i).getName());
         }

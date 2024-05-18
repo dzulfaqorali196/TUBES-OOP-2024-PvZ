@@ -3,9 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-    private static List<Plant> listPlant;
+    private List<Plant> listPlant;
     
-
     public Inventory() {
         listPlant = new ArrayList<>();
         listPlant.add(new Sunflower(0, 0));
@@ -24,10 +23,29 @@ public class Inventory {
         return listPlant.isEmpty();
     }
 
-    public static void displayInventory() {
+    public List<Plant> getListPlant(){
+        return listPlant;
+    }
+
+    public void displayInventory() {
         int i = 0;
         for(Plant currentPlant : listPlant){
             System.out.println((i+1) + ". " + currentPlant.getName());
+            i++;
+        }
+    }
+
+    public void printPlantInfo() {
+        int i = 0;
+        for(Plant currentPlant : getListPlant()){
+            System.out.println("----- " + currentPlant.getName() + " -----");
+            System.out.println("Nama : " + currentPlant.getName());
+            System.out.println("Health : " + currentPlant.getHp());
+            System.out.println("Attack damage : " + currentPlant.getAttackDamage());
+            System.out.println("Attack speed : " + currentPlant.getAttackSpeed());
+            System.out.println("Cost : " + currentPlant.getCostPlant());
+            System.out.println("Range : " + currentPlant.getRange());
+            System.out.println("Cooldown : " + currentPlant.getCooldown());
             i++;
         }
     }
@@ -36,7 +54,7 @@ public class Inventory {
         return listPlant.contains(plant);
     }
 
-    public static Plant getSelectedPlant(int x) {
+    public Plant getSelectedPlant(int x) {
         if (x >= 0 && x < listPlant.size()) {
             return listPlant.get(x);
         }
