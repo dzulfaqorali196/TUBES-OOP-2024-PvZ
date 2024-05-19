@@ -3,7 +3,7 @@ package tubes.oop.pvz;
 import java.util.TimerTask;
 public class FootballZombie extends Zombie {
     public FootballZombie(int x, int y, Map map) {
-        super("Football Zombie", 500, 100, 2, false, x, y, 0, map); 
+        super("Football Zombie", 500, 100, 2, 10000, false, x, y, 0, map); 
     }
 
     public void startMoving() {
@@ -25,7 +25,7 @@ public class FootballZombie extends Zombie {
                     startAttacking(currentTile.getPlant());
                 }
             }
-        }, 0, 5000); // Zombie bergerak setiap 5 detik
+        }, 0, isSlow ? 7500 : 5000); // Zombie bergerak setiap 5 detik
     }
 
 }

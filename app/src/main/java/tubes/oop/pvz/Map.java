@@ -17,7 +17,6 @@ public class Map {
     private final int height = 6;
     private final Tile[][] tiles;
     private Random random;
-    private List<Zombie> listZombieSpawn;
 
     public Map(int width, int height) {
         this.tiles = new Tile[height][width];
@@ -174,7 +173,7 @@ public class Map {
                                 if (zombie.getName()=="Jester Zombie") {
                                     zombie.takeDamage(plant);
                                 } else {
-                                    zombie.setIsSlow(1);
+                                    zombie.applySnowPeaEffect();
                                     zombie.takeDamage(plant);
                                 }
                             } else {
@@ -275,19 +274,13 @@ public class Map {
 
     public void printMap() {
         for (int y = 0; y < height; y++) {
-            System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
             for (int x = 0; x < width; x++) {
-                if(x == 0){
-                    System.out.print("|          ");
-                }
-                System.out.print("|" + tiles[y][x].getDisplayChar());
-                if(x == 8){
-                    System.out.print("|          |");
-                }
+                //System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
+                System.out.print("|" + tiles[y][x].getDisplayChar() + "|");
             }
+            //System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
             System.out.println();
         }
-        System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
     }
     
     public void getPlantsInRow(int row) {
@@ -314,15 +307,6 @@ public class Map {
             }
         }
     }
-
-    public String getZombiesAt(int x, int y) {
-        if (isValidCoordinate(x, y)) {
-            return getTile(x, y).getZombiesInTile();
-        } 
-        else {
-            throw new IndexOutOfBoundsException("Invalid coordinates!");
-        }
-    }    
 }
  
 /* masih mikirin implementasinya

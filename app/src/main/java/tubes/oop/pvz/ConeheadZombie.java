@@ -5,7 +5,7 @@ import java.util.TimerTask;
 public class ConeheadZombie extends Zombie {
 
     public ConeheadZombie(int x, int y, Map map) {
-        super("Conehead Zombie", 250, 100, 1, false, x, y, 0, map);
+        super("Conehead Zombie", 250, 100, 1, 10000, false, x, y, 0, map);
     }
 
     public void startMoving() {
@@ -27,7 +27,7 @@ public class ConeheadZombie extends Zombie {
                     startAttacking(currentTile.getPlant());
                 }
             }
-        }, 0, 5000); // Zombie bergerak setiap 5 detik
+        }, 0, isSlow ? 7500 : 5000); // Zombie bergerak setiap 5 detik
     }
 
 }

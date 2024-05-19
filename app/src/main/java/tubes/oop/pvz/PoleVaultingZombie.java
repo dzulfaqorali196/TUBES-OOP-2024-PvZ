@@ -6,26 +6,39 @@ public class PoleVaultingZombie extends Zombie implements SpecialMove {
     private boolean hasJumped;
 
     public PoleVaultingZombie(int x, int y, Map map) {
-        super("Pole Vaulting Zombie", 175, 100, 1, false, x, y, 0, map);
+        super("Pole Vaulting Zombie", 175, 100, 1, 10000, false, x, y, 0, map);
         this.hasJumped = false;
     }
 
     @Override
     public void specialMove(Tile currentTile, Tile nextTile) {
-        currentTile.removeZombie(this);
-        currentTile.removePlant();
-        nextTile.removePlant();
-        Tile next2Tile = map.getNextTile(nextTile);
-        next2Tile.setZombie(this);
+        if (!currentTile.isEmpty()) {
+            currentTile.removeZombie(this);
+            currentTile.removePlant();
+            nextTile.setZombie(this);
 
-        this.currentTile = next2Tile;
-        hasJumped = true;
+            this.currentTile = nextTile;
+            this.hasJumped = true;
 
-        try {
-            setX(getX()-2);
-            setY(getY()-2);
-        } catch (InvalidPositionException e) {
+            try {
+                setX(getX()-1);
+            } catch (InvalidPositionException e) {
             // Handle the exception here
+            }
+        } else if (!nextTile.isEmpty()) {
+            currentTile.removeZombie(this);
+            nextTile.removePlant();
+            Tile next2Tile = map.getNextTile(nextTile);
+            next2Tile.setZombie(this);
+
+            this.currentTile = next2Tile;
+            this.hasJumped = true;
+
+            try {
+                setX(getX()-2);
+            } catch (InvalidPositionException e) {
+                // Handle the exception here
+            }
         }
     }
 
@@ -57,6 +70,6 @@ public class PoleVaultingZombie extends Zombie implements SpecialMove {
                     }
                 }
             }
-        }, 0, 5000); // Zombie bergerak setiap 5 detik
+        }, 0, isSlow ? 7500 : 5000); // Zombie bergerak setiap 5 detik
     }
 }

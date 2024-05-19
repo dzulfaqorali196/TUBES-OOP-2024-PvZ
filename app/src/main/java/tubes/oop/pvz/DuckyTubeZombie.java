@@ -4,7 +4,7 @@ package tubes.oop.pvz;
 import java.util.TimerTask;
 public class DuckyTubeZombie extends Zombie {
     public DuckyTubeZombie(int x, int y, Map map) {
-        super("Ducky Tube Zombie", 100, 100, 1, true, x, y, 0, map);
+        super("Ducky Tube Zombie", 100, 100, 1, 10000, true, x, y, 0, map);
     }
 
     public void startMoving() {
@@ -26,7 +26,7 @@ public class DuckyTubeZombie extends Zombie {
                     startAttacking(currentTile.getPlant());
                 }
             }
-        }, 0, 5000); // Zombie bergerak setiap 5 detik
+        }, 0, isSlow ? 7500 : 5000); // Zombie bergerak setiap 5 detik
     }
 
 }

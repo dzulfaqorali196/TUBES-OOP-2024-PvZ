@@ -9,22 +9,28 @@ import java.util.TimerTask;
 public abstract class Zombie extends PlantandZombie {
     private boolean isAquatic;
     protected int jarak;
-    private int isSlow;
+    protected int movement_speed;
+    public boolean isSlow;
     Tile currentTile;
     Timer moveTimer;
     Timer attackTimer;
+    Timer snowPeaTimer;
+
     boolean isAttacking;
     Map map;
 
 
-    public Zombie(String name, int hp, int attack_damage, int attack_speed, boolean isAquatic, int x, int y, int jarak, Map map) {
+    public Zombie(String name, int hp, int attack_damage, int attack_speed, int movement_speed, boolean isAquatic, int x, int y, int jarak, Map map) {
         super(name, hp, attack_damage, attack_speed, x, y);
+        this.movement_speed = movement_speed;
         this.isAquatic = isAquatic;
-        isSlow = 0; //0 = gak slow, 1= slow
+        isSlow = false; //0 = gak slow, 1= slow
         this.moveTimer = new Timer();
         this.attackTimer = new Timer();
         this.isAttacking = false;
         this.map = map;
+        this.snowPeaTimer = new Timer();
+
 
         jarak = 0;
     }
@@ -69,13 +75,36 @@ public abstract class Zombie extends PlantandZombie {
         return x <= 0;  // Hanya periksa posisi x untuk menentukan apakah zombie telah mencapai tujuan
     }
 
-    public void setIsSlow(int slow) {
-        this.isSlow = slow ;
+    public void setIsSlow(boolean isSlow){
+        this.isSlow = isSlow;
     }
       
     // menentukan apakah zombie terkena tembakan snowpea
-    public int getIsSlow(){
+    public boolean getIsSlow(){
         return isSlow;
+    }
+
+    public void applySnowPeaEffect() {
+        if (isSlow) {
+            snowPeaTimer.cancel();
+        }
+        isSlow = true;
+        this.attack_speed += attack_speed/2;
+        this.movement_speed += movement_speed/2;
+
+        snowPeaTimer = new Timer();
+        snowPeaTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                removeSnowPeaEffect();
+            }
+        }, 3000); // Efek berlangsung selama 3 detik
+    }
+
+    public void removeSnowPeaEffect() {
+        attack_speed -= attack_speed/3;
+        movement_speed -= movement_speed/3;
+        isSlow = false;
     }
 
     public void attack(Plant plant) {
@@ -97,7 +126,7 @@ public abstract class Zombie extends PlantandZombie {
                             public void run() {
                                 startMoving();
                             }
-                        }, 5000); // 5 detik setelah penyerangan selesai
+                        }, movement_speed); // 5 detik setelah penyerangan selesai
                     }
                 } else {
                     attack(plant);
@@ -112,7 +141,6 @@ public abstract class Zombie extends PlantandZombie {
         this.currentTile = toTile;
         try {
             setX(getX()-1);
-            setY(getY()-1);
         } catch (InvalidPositionException e) {
             // Handle the exception here
         }

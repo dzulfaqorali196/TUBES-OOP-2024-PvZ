@@ -3,7 +3,7 @@ package tubes.oop.pvz;
 import java.util.TimerTask;
 public class NormalZombie extends Zombie {
     public NormalZombie(int x, int y, Map map) {
-        super("Normal Zombie", 125, 100, 1, false, x, y, 0, map);
+        super("Normal Zombie", 125, 100, 1, 10000, false, x, y, 0, map);
     }
 
     public void startMoving() {
@@ -25,6 +25,6 @@ public class NormalZombie extends Zombie {
                     startAttacking(currentTile.getPlant());
                 }
             }
-        }, 0, 5000); // Zombie bergerak setiap 5 detik
+        }, 0, isSlow ? 7500 : 5000); // Zombie bergerak setiap 5 detik
     }
 }

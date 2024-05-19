@@ -4,7 +4,7 @@ import java.util.TimerTask;
 public class GiantZombie extends Zombie {
 
     public GiantZombie(int x, int y, Map map) {
-        super("Giant Zombie", 1000, 100, 1, false, x, y, 0, map);
+        super("Giant Zombie", 1000, 100, 1, 10000, false, x, y, 0, map);
     }
 
     public void startMoving() {
@@ -18,6 +18,6 @@ public class GiantZombie extends Zombie {
                     nextTile.removePlant();
                 }
             }
-        }, 0, 5000); // Zombie bergerak setiap 5 detik
+        }, 0, isSlow ? 7500 : 5000); // Zombie bergerak setiap 5 detik
     }
 }

@@ -4,7 +4,7 @@ import java.util.TimerTask;
 public class JesterZombie extends Zombie {
     
     public JesterZombie(int x, int y, Map map) {
-        super("Jester Zombie", 200, 100, 1  , false, x, y, 0, map);
+        super("Jester Zombie", 200, 100, 1, 10000, false, x, y, 0, map);
     }
 
     public void startMoving() {
