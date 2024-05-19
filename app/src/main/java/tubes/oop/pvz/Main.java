@@ -278,15 +278,10 @@ public class Main {
                         int deckIndex = Integer.parseInt(parts[1]);
                         int x = Integer.parseInt(parts[2]);
                         int y = Integer.parseInt(parts[3]);
-                        x--;
-                        y--;
                         Plant plant = plantDeck.getPlant(deckIndex-1);
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
-                                System.out.println(plant.getName());
-                                System.out.println(x);
-                                System.out.println(y);
-                                map.placePlant(plant, x, y);
+                                map.placePlant(plant, (x-1), (y-1));
                                 System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
                                 System.out.println("Sun tersisa: " + Sun.getSunScore());
                             }
