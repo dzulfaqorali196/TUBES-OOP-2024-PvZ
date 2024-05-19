@@ -17,7 +17,7 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan;
             do {
-                map.printMap();
+                //map.printMap();
                 System.out.println("Pilih menu yang akan dijalankan:");
                 System.out.println("1. Start Game");
                 System.out.println("2. Help");
@@ -73,7 +73,7 @@ public class Main {
         }
         System.out.println("Game dimulai. Selamat bermain!");
         sun = new Sun();
-        // map.printMap();
+        map.printMap();
         gameLoop(scanner);
     }
     
@@ -204,7 +204,7 @@ public class Main {
                     try {
                         int x = Integer.parseInt(parts[1]);
                         int y = Integer.parseInt(parts[2]);
-                        map.getTile(x, y).removePlant();
+                        map.getTile(x-1, y-1).removePlant();
                         System.out.println("Digging plant on (" + x + ", " + y + ")");
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
                         System.out.println("Perintah tidak valid.");
