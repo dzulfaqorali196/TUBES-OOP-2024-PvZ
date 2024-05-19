@@ -9,7 +9,6 @@ public class Tile {
     private Plant plant;
     private List<Zombie> zombieList;
     private final String tileType;
-    public static ListZombie listZombie = new ListZombie();
 
     public Tile(int x, int y, String tileType) {
         this.x = x;
@@ -89,22 +88,29 @@ public class Tile {
         if (plant != null) {
             output.append('P');
         }
-
-        for (Zombie zombie : listZombie.getListZombie()) {
+    
+        for (Zombie zombie : zombieList) {
             output.append('Z');
         }
-
+    
         if (output.length() == 0) {
-            if(tileType.equals("WATER")){
+            if (tileType.equals("WATER")) {
                 output.append('W');
-            }
-            else{
+            } else {
                 output.append('G');
             }
         }
 
+        int space = 10 - output.length();
+        if (output.length() < 10){
+            for(int i = 0; i < (space); i++){
+                output.append(' ');
+            }
+        }
+    
         return output.toString();
     }
+    
 
 
     @Override
@@ -150,5 +156,13 @@ public class Tile {
         }
         // BENERIN!!
         // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
+    }
+
+    public String getZombiesInTile() {
+        StringBuilder output = new StringBuilder();
+        for (Zombie zombie : zombieList) {
+            output.append(zombie.getName()).append(" ");
+        }
+        return output.toString().trim();
     }
 }
