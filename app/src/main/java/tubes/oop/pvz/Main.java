@@ -10,8 +10,10 @@ public class Main {
     public static Map map = new Map(9, 6);
     public static PlantDeck plantDeck = new PlantDeck(map);
     public static ListZombie listZombie = new ListZombie();
-    public static Player player = new Player(25);
+    public static Player player = new Player(50);
     public static Sun sun;
+    private static int time = 0;
+
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -196,12 +198,12 @@ public class Main {
             throw new InvalidInputMainException("Pilihan tidak valid. Silakan coba lagi.");
         }
     }
-       
+
     public static void gameLoop(Scanner scanner) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 
         Runnable timeGamePlay = new Runnable() {
-            private int time = 0;
+            //private int time = 0;
 
             @Override
             public void run() {
@@ -215,11 +217,10 @@ public class Main {
         };
 
         Runnable spawnZombieTask = new Runnable() {
-            private int time = 0;
+            // private int time = 0;
 
             @Override
             public void run() {
-                time++;
                 if(time >= 20 && time <= 160) {
                     map.spawnRandomZombie(time);
                 }
@@ -229,8 +230,14 @@ public class Main {
         Runnable sunTask = new Runnable() {
             @Override
             public void run() {
-                sun.increaseSun(25);
-                System.out.println("Sun: " + sun.getSunScore());
+                int delay = 5 + (int)(Math.random() * ((10 - 5) + 1)); 
+                scheduler.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        player.increaseSun(25); 
+                        System.out.println("Sun: " + Player.getSunScore());
+                    }
+                }, delay, TimeUnit.SECONDS);
             }
         };
 
@@ -250,8 +257,8 @@ public class Main {
         };
 
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 1, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(sunTask, 0, 3, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
 

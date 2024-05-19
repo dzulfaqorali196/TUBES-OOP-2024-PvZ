@@ -151,6 +151,4 @@ public abstract class Zombie extends PlantandZombie {
     }
 
     public abstract void startMoving();
-
-
 }
