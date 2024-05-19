@@ -62,6 +62,8 @@ public class Tile {
         try {
             zombie.setX(this.getX());
             zombie.setY(this.getY());
+
+            zombie.currentTile = this;
         } catch (InvalidPositionException e) {
             throw new IllegalStateException("Invalid coordinates!");
         }
@@ -120,35 +122,4 @@ public class Tile {
         return "Tile (" + x + ", " + y + "): " + plantStr + ", " + zombieStr + ", Type: " + tileType;
     }
 
-    public void move(Map map) {
-        for (Zombie zombie : new ArrayList<>(zombieList)) {
-            int newCol = zombie.getX() - 1;
-            if (newCol < 0) {
-                System.out.println("Game Over! Zombie reached the end");
-                System.exit(0);
-            }
-
-            Tile nextTile = map.getTile(zombie.getY(), newCol);
-            if (nextTile.isEmpty()) {
-                removeZombie(zombie);
-                nextTile.setZombie(zombie);
-                try {
-                    zombie.setX(newCol);
-                } catch (InvalidPositionException e) {
-                    System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
-                }
-                zombie.setJarak(zombie.getJarak() + 1);
-            } else {
-                // Attack the plant or wait for the tile to be cleared
-            }
-
-            try {
-                Thread.sleep(5000); // Delay for MOVE_DELAY seconds
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        // BENERIN!!
-        // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
-    }
 }

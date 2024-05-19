@@ -1,23 +1,23 @@
 package tubes.oop.pvz;
 
+import java.util.TimerTask;
 public class GiantZombie extends Zombie {
 
-    public GiantZombie(int x, int y) {
-        super("Giant Zombie", 1000, 100, 1, false, x, y, 0);
+    public GiantZombie(int x, int y, Map map) {
+        super("Giant Zombie", 1000, 100, 1, false, x, y, 0, map);
     }
 
-    public void move(Tile[][] map) throws InvalidPositionException {
-        int x = this.getX();
-        int y = this.getY();
-
-        if (x > 0) {
-            Tile currentTile = map[x][y];
-            // Hapus tanaman di tile saat ini
-            if (currentTile.getPlant() != null) {
-                currentTile.removePlant();
+    public void startMoving() {
+        moveTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Tile nextTile = map.getNextTile(currentTile);
+                if (!isDead()) {
+                    move(currentTile, nextTile);
+                    currentTile.removePlant();
+                    nextTile.removePlant();
+                }
             }
-            // Pindahkan zombie ke tile berikutnya
-            this.setX(x - 1);
-        }
+        }, 0, 5000); // Zombie bergerak setiap 5 detik
     }
 }
