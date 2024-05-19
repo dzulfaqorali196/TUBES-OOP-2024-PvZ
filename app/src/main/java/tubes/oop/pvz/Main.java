@@ -275,15 +275,20 @@ public class Main {
                 String[] parts = command.split(" ");
                 if (parts.length == 4) {
                     try {
-                        int deckIndex = Integer.parseInt(parts[1]) - 1;
+                        int deckIndex = Integer.parseInt(parts[1]);
                         int x = Integer.parseInt(parts[2]);
                         int y = Integer.parseInt(parts[3]);
-                        Plant plant = plantDeck.getPlant(deckIndex);
+                        x--;
+                        y--;
+                        Plant plant = plantDeck.getPlant(deckIndex-1);
                         if (plant != null){
-                            if(player.getSunScore() >= plant.getCostPlant()){
-                                map.placePlant(plant, x-1, y-1);
+                            if(Player.getSunScore() >= plant.getCostPlant()){
+                                System.out.println(plant.getName());
+                                System.out.println(x);
+                                System.out.println(y);
+                                map.placePlant(plant, x, y);
                                 System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
-                                System.out.println("Sun tersisa: " + sun.getSunScore());
+                                System.out.println("Sun tersisa: " + Sun.getSunScore());
                             }
                             else{
                                 System.out.println("Sun tidak mencukupi untuk membeli tanaman");
@@ -293,11 +298,11 @@ public class Main {
                             System.out.println("Tanaman tidak ditemukan di deck");
                         }
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                        System.out.println("Perintah tidak valid.");
+                        System.out.println("Perintah tidak valid.A");
                     }
                 } 
                 else {
-                    System.out.println("Perintah tidak valid.");
+                    System.out.println("Perintah tidak valid.B");
                 }
             } 
             else if (command.startsWith("D")) {

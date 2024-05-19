@@ -47,10 +47,13 @@ public class Tile {
             try {
                 plant.setX(this.getX());
                 plant.setY(this.getY());
-            } catch (InvalidPositionException e) {
+            } 
+            catch (InvalidPositionException e) {
+                System.out.println("havaasdjfhksadsf");
                 throw new IllegalStateException("Invalid coordinates!");
             }
         } else {
+            System.out.println("gavaldiidaiis");
             throw new IllegalStateException("Tile already occupied!");
         }
     }

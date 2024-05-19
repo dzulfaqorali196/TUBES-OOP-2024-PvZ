@@ -46,7 +46,8 @@ public class Map {
     public void placePlant(Plant plant, int x, int y) throws IllegalStateException, IndexOutOfBoundsException {
         if (isValidCoordinate(x, y)) {
             getTile(x, y).setPlant(plant);
-        } else {
+        } 
+        else {
             throw new IndexOutOfBoundsException("Invalid coordinates!");
         }
     }

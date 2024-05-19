@@ -66,7 +66,7 @@ public abstract class PlantandZombie extends Player{
     }
 
     public void setX(int x) throws InvalidPositionException{
-        if(x > 0 && x < 10){
+        if(0 <= x && x < 9){
             this.x = x;
         }
         else{
@@ -75,7 +75,7 @@ public abstract class PlantandZombie extends Player{
     }
 
     public void setY(int y) throws InvalidPositionException{
-        if(y > 0 && y < 7){
+        if(0 <= y && y < 6){
             this.y = y;
         }
         else{
