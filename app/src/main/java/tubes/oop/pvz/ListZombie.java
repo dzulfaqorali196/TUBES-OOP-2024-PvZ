@@ -9,16 +9,16 @@ public class ListZombie {
 
     public ListZombie() {
         listZombie = new ArrayList<>();
-        listZombie.add(new NormalZombie(0, 0));
-        listZombie.add(new ConeheadZombie(0, 0));
-        listZombie.add(new PoleVaultingZombie(0, 0));
-        listZombie.add(new BucketheadZombie(0, 0));
-        listZombie.add(new DuckyTubeZombie(0, 0));
-        listZombie.add(new DolphinRiderZombie(0, 0));
-        listZombie.add(new JesterZombie(0, 0));
-        listZombie.add(new ShieldZombie(0, 0));
-        listZombie.add(new GiantZombie(0, 0));
-        listZombie.add(new FootballZombie(0, 0));
+        listZombie.add(new NormalZombie(0, 0, null));
+        listZombie.add(new ConeheadZombie(0, 0, null));
+        listZombie.add(new PoleVaultingZombie(0, 0,null));
+        listZombie.add(new BucketheadZombie(0, 0, null));
+        listZombie.add(new DuckyTubeZombie(0, 0, null));
+        listZombie.add(new DolphinRiderZombie(0, 0, null));
+        listZombie.add(new JesterZombie(0, 0, null));
+        listZombie.add(new ShieldZombie(0, 0, null));
+        listZombie.add(new GiantZombie(0, 0, null));
+        listZombie.add(new FootballZombie(0, 0, null));
     }
 
     public List<Zombie> getListZombie(){

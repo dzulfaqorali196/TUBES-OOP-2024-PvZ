@@ -61,6 +61,8 @@ public class Tile {
         try {
             zombie.setX(this.getX());
             zombie.setY(this.getY());
+
+            zombie.currentTile = this;
         } catch (InvalidPositionException e) {
             throw new IllegalStateException("Invalid coordinates!");
         }
@@ -157,7 +159,6 @@ public class Tile {
         // BENERIN!!
         // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
     }
-
     public String getZombiesInTile() {
         StringBuilder output = new StringBuilder();
         for (Zombie zombie : zombieList) {
