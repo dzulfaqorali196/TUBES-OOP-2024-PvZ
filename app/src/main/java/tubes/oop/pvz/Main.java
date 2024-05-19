@@ -17,7 +17,7 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan;
             do {
-                //map.printMap();
+                map.printMap();
                 System.out.println("Pilih menu yang akan dijalankan:");
                 System.out.println("1. Start Game");
                 System.out.println("2. Help");
@@ -151,7 +151,7 @@ public class Main {
         Runnable sunTask = new Runnable() {
             @Override
             public void run() {
-                sun.increaseSun(25); // Menambahkan sun setiap 3 detik
+                sun.increaseSun(25);
                 System.out.println("Sun: " + sun.getSunScore());
             }
         };
