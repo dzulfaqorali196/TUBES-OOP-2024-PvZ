@@ -159,11 +159,5 @@ public class Tile {
         // BENERIN!!
         // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
     }
-    public String getZombiesInTile() {
-        StringBuilder output = new StringBuilder();
-        for (Zombie zombie : zombieList) {
-            output.append(zombie.getName()).append(" ");
-        }
-        return output.toString().trim();
-    }
+    
 }

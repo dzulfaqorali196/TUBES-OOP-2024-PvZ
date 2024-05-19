@@ -26,7 +26,7 @@ public class JesterZombie extends Zombie {
                     startAttacking(currentTile.getPlant());
                 }
             }
-        }, 0, 5000); // Zombie bergerak setiap 5 detik
+        }, 0, (long) movement_speed); // Zombie bergerak setiap 5 detik
     }
 
     // @Override

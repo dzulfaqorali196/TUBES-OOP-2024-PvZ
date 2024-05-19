@@ -156,9 +156,18 @@ public class Main {
             }
         };
 
+        Runnable attackTask = new Runnable() {
+            @Override
+            public void run() {
+                map.attackZombieInRange();
+                //map.moveZombies();
+            }
+        };
+
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 1, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(sunTask, 0, 3, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
 
         while (!scheduler.isShutdown()) {
             System.out.println("Masukkan perintah (P/D/E): ");

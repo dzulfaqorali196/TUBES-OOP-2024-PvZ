@@ -9,7 +9,7 @@ import java.util.TimerTask;
 public abstract class Zombie extends PlantandZombie {
     private boolean isAquatic;
     protected int jarak;
-    protected int movement_speed;
+    protected long movement_speed;
     public boolean isSlow;
     Tile currentTile;
     Timer moveTimer;
@@ -20,7 +20,7 @@ public abstract class Zombie extends PlantandZombie {
     Map map;
 
 
-    public Zombie(String name, int hp, int attack_damage, int attack_speed, int movement_speed, boolean isAquatic, int x, int y, int jarak, Map map) {
+    public Zombie(String name, int hp, int attack_damage, int attack_speed, long movement_speed, boolean isAquatic, int x, int y, int jarak, Map map) {
         super(name, hp, attack_damage, attack_speed, x, y);
         this.movement_speed = movement_speed;
         this.isAquatic = isAquatic;

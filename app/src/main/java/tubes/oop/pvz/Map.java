@@ -17,6 +17,7 @@ public class Map {
     private final int height = 6;
     private final Tile[][] tiles;
     private Random random;
+    private static int totalzombie = 0;
 
     public Map(int width, int height) {
         this.tiles = new Tile[height][width];
@@ -58,45 +59,55 @@ public class Map {
     }
 
     public void spawnRandomZombie(int currentTime){
-        int totalzombie = 0;
-
         if((currentTime >= 20) && (currentTime <= 160)){
 
-            if (totalzombie <= 10) {
+            if (totalzombie < 10) {
                 for (int y= 0; y<6; y++) {
-                    if (random.nextDouble()<=0.3) {
+                    if ((random.nextDouble()<=0.3) && (totalzombie <= 10)){// nanti cobain lagi
                         double probability = random.nextDouble();
                         Zombie zombie;
 
+                        System.out.println(totalzombie);
+
                         if (probability < 0.1) {
                             zombie = new NormalZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.2) {
                             zombie = new BucketheadZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.3) {
                             zombie = new ConeheadZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.4) {
                             zombie = new DolphinRiderZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.5) {
                             zombie = new DuckyTubeZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.6) {
                             zombie = new FootballZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.7) {
                             zombie = new GiantZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.8) {
                             zombie = new JesterZombie(8,y,  this);
+                            totalzombie += 1;
                         } 
                         else if (probability < 0.9) {
                             zombie = new PoleVaultingZombie(8,y, this);
+                            totalzombie += 1;
                         } 
                         else {
                             zombie = new ShieldZombie(8,y, this);
+                            totalzombie += 1;
                         }
                         System.out.println(zombie.getName() + "(" + y + ") are starting to attack your fields!");
 
@@ -104,7 +115,6 @@ public class Map {
                             placeZombie(zombie, 8, y);
                         
                         }
-                        totalzombie += 1;
                     }
                 }
             }
