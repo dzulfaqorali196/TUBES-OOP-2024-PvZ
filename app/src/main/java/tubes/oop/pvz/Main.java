@@ -15,22 +15,27 @@ public class Main {
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
-            int pilihan;
+            int pilihan = 1;
             do {
                 map.printMap();
-                System.out.println("Pilih menu yang akan dijalankan:");
-                System.out.println("1. Start Game");
-                System.out.println("2. Help");
-                System.out.println("3. Plant List");
-                System.out.println("4. Zombie List");
-                System.out.println("5. Exit");
-                System.out.print("Masukkan pilihan: ");
-                pilihan = scanner.nextInt();
-                scanner.nextLine();
+                do{
+                    if(pilihan < 1 || pilihan > 5){
+                        System.out.println("Masukkan hanya angka 1-5, perintah tidak valid!");
+                    }
+                    System.out.println("Pilih menu yang akan dijalankan:");
+                    System.out.println("1. Start Game");
+                    System.out.println("2. Help");
+                    System.out.println("3. Plant List");
+                    System.out.println("4. Zombie List");
+                    System.out.println("5. Exit");
+                    System.out.print("Masukkan pilihan: ");
+                    pilihan = scanner.nextInt();
+                    scanner.nextLine();
+                } while(pilihan < 1 || pilihan > 5);
 
                 switch (pilihan) {
                     case 1:
-                        startGame(scanner);
+                        inventoryGame(scanner);
                         break;
                     case 2:
                         showHelp();
@@ -53,27 +58,100 @@ public class Main {
         }
     }
 
-    public static void startGame(Scanner scanner) throws InvalidInputMainException{
+    public static void inventoryGame(Scanner scanner) throws InvalidInputMainException{
         System.out.println("Berikut merupakan daftar inventory:");
         inventory.displayInventory();
-        System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N): ");
-        String addDeck = scanner.nextLine();
+        String swapInvent;
 
-        if (addDeck.equalsIgnoreCase("Y")) {
-            System.out.println("Masukkan tanaman ke dalam deck (maksimal 6 tanaman)\n");
-            System.out.println("Daftar deck tanaman saat ini :");
-
-            plantDeck.printDeck();
-            while(!(plantDeck.isDeckNotNull())){
-                startDeck(scanner);
+        do {
+            System.out.println("Apakah Anda ingin menukar inventory? (Y/N)");
+            swapInvent = scanner.nextLine();
+            if (swapInvent.equals("Y")) {
+                System.out.println("Masukkan nomor yang ingin ditukar (x y)");
+                swapInvent = scanner.nextLine();
+                String[] sukuString = swapInvent.split(" ");
+                if(sukuString.length == 2){
+                    int x = Integer.parseInt(sukuString[0]);
+                    int y = Integer.parseInt(sukuString[1]);
+                    if((1 <= x && x <= 10) && (1 <= y && y <= 10) && (x != y)){
+                        try {
+                            inventory.swapPlantInventory((x-1), (y-1));
+                        } 
+                        catch (InvalidIndexException e) {
+                            e.printStackTrace();
+                        }
+                        inventory.displayInventory();
+                    }
+                    else{
+                        System.out.println("Masukkan hanya angka 1-10, perintah tidak valid!");
+                    }
+                }
+                else{
+                    System.out.println("Masukkan hanya 2 angka (x, y), perintah tidak valid!");
+                }
+            } 
+            else if (swapInvent.equals("N")) {
+                break;
             }
-        } 
-        else {
-            System.out.println("Tidak ada tanaman yang dimasukkan ke dalam deck.");
-        }
-        System.out.println("Game dimulai. Selamat bermain!");
-        sun = new Sun();
-        map.printMap();
+            else{
+                System.out.println("Masukkan hanya huruf Y atau N, perintah tidak valid!");
+            }
+        } while (!swapInvent.equals("Y") && !swapInvent.equals("N"));
+        deckGame(scanner);
+    }
+
+    public static void deckGame(Scanner scanner) throws InvalidInputMainException{
+        String addDeck;
+        String swapDeck;
+
+        do {
+            System.out.println("Apakah ingin masukkan tanaman ke dalam deck? (Y/N): ");
+            addDeck = scanner.nextLine();
+            if (addDeck.equalsIgnoreCase("Y")) {
+                System.out.println("Masukkan tanaman ke dalam deck (maksimal 6 tanaman)\n");
+                System.out.println("Daftar deck tanaman saat ini :");
+    
+                plantDeck.printDeck();
+                while(!(plantDeck.isDeckNotNull())){
+                    startDeck(scanner);
+                }
+
+                do {
+                    System.out.println("Apakah Anda ingin menukar plant deck? (Y/N)");
+                    swapDeck = scanner.nextLine();
+                    if (swapDeck.equals("Y")) {
+                        System.out.println("Masukkan nomor yang ingin ditukar (x y)");
+                        swapDeck = scanner.nextLine();
+                        String[] sukuString = swapDeck.split(" ");
+                        if(sukuString.length == 2){
+                            int x = Integer.parseInt(sukuString[0]);
+                            int y = Integer.parseInt(sukuString[1]);
+                            if((1 <= x && x <= 6) && (1 <= y && y <= 6) && (x != y)){
+                                try {
+                                    plantDeck.swapPlantDeck((x-1), (y-1));
+                                } 
+                                catch (InvalidIndexException e) {
+                                    e.printStackTrace();
+                                }
+                                plantDeck.printDeck();
+                            }
+                            else{
+                                System.out.println("Masukkan hanya angka 1-6, perintah tidak valid!");
+                            }
+                        }
+                        else{
+                            System.out.println("Masukkan hanya 2 angka (x, y), perintah tidak valid!");
+                        }
+                    } 
+                    else if (swapDeck.equals("N")) {
+                        break;
+                    }
+                    else{
+                        System.out.println("Masukkan hanya huruf Y atau N, perintah tidak valid!");
+                    }
+                } while (!swapDeck.equals("Y") && !swapDeck.equals("N"));
+            } 
+        } while (!addDeck.equals("Y") && !addDeck.equals("N") || !(plantDeck.isDeckNotNull()));
         gameLoop(scanner);
     }
     
@@ -164,10 +242,18 @@ public class Main {
             }
         };
 
+        Runnable removeDeadZombiesTask = new Runnable() {
+            @Override
+            public void run() {
+                map.removeZombieMap();
+            }
+        };
+
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 1, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(sunTask, 0, 3, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
 
         while (!scheduler.isShutdown()) {
             System.out.println("Masukkan perintah (P/D/E): ");

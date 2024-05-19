@@ -23,7 +23,7 @@ public class PlantDeck {
         return false;
     }
 
-    public void swapPlant(int index1, int index2) throws InvalidIndexException{
+    public void swapPlantDeck(int index1, int index2) throws InvalidIndexException{
         if (index1 >= 0 && index1 < deck.size() && index2 >= 0 && index2 < deck.size()) {
             Plant temp = deck.get(index1);
             deck.set(index1, deck.get(index2));

@@ -60,4 +60,19 @@ public class Inventory {
         }
         return null;
     }
+
+    public void swapPlantInventory(int index1, int index2) throws InvalidIndexException{
+        if (index1 >= 0 && index1 < listPlant.size() && index2 >= 0 && index2 < listPlant.size()) {
+            Plant temp = listPlant.get(index1);
+            listPlant.set(index1, listPlant.get(index2));
+            listPlant.set(index2, temp);
+        } else {
+            if(!(index1 >= 0 && index1 < listPlant.size())){
+                throw new InvalidIndexException(index1);
+            }
+            else if(!(index2 >= 0 && index2 < listPlant.size())){
+                throw new InvalidIndexException(index2);
+            }
+        }
+    }
 }

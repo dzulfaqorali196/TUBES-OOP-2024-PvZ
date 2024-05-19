@@ -49,7 +49,11 @@ public abstract class Zombie extends PlantandZombie {
     
     public void takeDamage(Plant plant) {
         hp -= plant.getAttackDamage();
+        if (isDead()) {
+            map.removeZombie(this);
+        }
     }
+    
     
     // public void eatPlant(List<Plant> allPlants) {
     //     boolean foundPlant = false;
