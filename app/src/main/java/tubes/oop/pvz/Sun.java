@@ -11,7 +11,7 @@ public class Sun extends Player {
     private ScheduledExecutorService scheduler;
 
     public Sun() {
-        super(50);
+        //super(50);
         // startSunGeneration();
     }
 

@@ -68,6 +68,7 @@ public class Map {
         if((Time.getCurrentTime()>= 20) && (Time.getCurrentTime() <= 160)){
 
             if (totalZombie <= 10) {
+                System.out.println("AJHSDKJFHAKDJHKASFSAD");
                 for (int y= 0; y<6; y++) {
                     double spawnPorbability = random.nextDouble();
                     if ((spawnPorbability<=0.3) && (totalZombie < 10)){
@@ -110,6 +111,7 @@ public class Map {
                         if ((zombie.getIsAquatic()==true && getTile(8,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(8,y).getTileType() == "GRASS")) {
                             System.out.println(zombie.getName() + "(" + y + ") are starting to attack your fields!");
                             placeZombie(zombie, 8, y);
+                            System.out.println(Sun.getSunScore());
                             totalZombie += 1;
                         }
                     }

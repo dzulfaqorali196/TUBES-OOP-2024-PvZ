@@ -10,7 +10,7 @@ public class Main {
     public static Map map;
     public static PlantDeck plantDeck = new PlantDeck(map);
     public static ListZombie listZombie = new ListZombie();
-    public static Player player = new Player(50);
+    public static Player player = new Player();
     public static Sun sun;
     private static int time = 0;
 
