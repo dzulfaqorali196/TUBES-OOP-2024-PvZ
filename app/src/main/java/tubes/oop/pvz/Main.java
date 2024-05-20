@@ -199,7 +199,7 @@ public class Main {
     }
 
     public static void gameLoop(Scanner scanner) {
-        map = new Map(9, 6);
+        map = new Map(11, 6);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 
         Runnable timeGamePlay = new Runnable() {

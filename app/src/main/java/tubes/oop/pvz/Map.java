@@ -13,8 +13,8 @@ import java.util.TimerTask;
 
 
 public class Map {
-    private final int width = 9;
-    private final int height = 6;
+    private int width = 11;
+    private int height = 6;
     private final Tile[][] tiles;
     private Random random;
     private static int totalZombie = 0;
@@ -24,7 +24,7 @@ public class Map {
         this.random = new Random();
         
         for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < 9; x++) {
+            for (int x = 0; x < 11; x++) {
                 if (y==2 || y==3) {
                     tiles[y][x] = new Tile(x, y, "WATER");
                 } else {
@@ -49,10 +49,22 @@ public class Map {
     public void placePlant(Plant plant, int x, int y) throws IllegalStateException, IndexOutOfBoundsException {
         if (isValidCoordinate(x, y)) {
             getTile(x, y).setPlant(plant);
+            Timer moveTimer = new Timer();
+            moveTimer.scheduleAtFixedRate(new TimerTask() {
+
+                @Override
+                public void run() {
+                    getZombieInRange(getTile(x, y).getPlant());
+                }
+            }, 0, 4000);
         } 
         else {
             throw new IndexOutOfBoundsException("Invalid coordinates!");
         }
+    }
+
+    public int getTotalZombie () {
+        return totalZombie;
     }
 
     public void placeZombie(Zombie zombie, int x, int y) throws IllegalStateException, IndexOutOfBoundsException {
@@ -68,7 +80,6 @@ public class Map {
         if((Time.getCurrentTime()>= 20) && (Time.getCurrentTime() <= 160)){
 
             if (totalZombie <= 10) {
-                System.out.println("AJHSDKJFHAKDJHKASFSAD");
                 for (int y= 0; y<6; y++) {
                     double spawnPorbability = random.nextDouble();
                     if ((spawnPorbability<=0.3) && (totalZombie < 10)){
@@ -78,40 +89,39 @@ public class Map {
                         System.out.println(totalZombie);
 
                         if (probability == 1) {
-                            zombie = new NormalZombie(8,y, this);
+                            zombie = new NormalZombie(10,y, this);
                         } 
                         else if (probability == 2) {
-                            zombie = new BucketheadZombie(8,y, this);
+                            zombie = new BucketheadZombie(10,y, this);
                         } 
                         else if (probability == 3) {
-                            zombie = new ConeheadZombie(8,y, this);
+                            zombie = new ConeheadZombie(10,y, this);
                         } 
                         else if (probability == 4) {
-                            zombie = new DolphinRiderZombie(8,y, this);
+                            zombie = new DolphinRiderZombie(10,y, this);
                         } 
                         else if (probability == 5) {
-                            zombie = new DuckyTubeZombie(8,y, this);
+                            zombie = new DuckyTubeZombie(10,y, this);
                         } 
                         else if (probability == 6) {
-                            zombie = new FootballZombie(8,y, this);
+                            zombie = new FootballZombie(10,y, this);
                         } 
                         else if (probability == 7) {
-                            zombie = new GiantZombie(8,y, this);
+                            zombie = new GiantZombie(10,y, this);
                         } 
                         else if (probability == 8) {
-                            zombie = new JesterZombie(8,y,  this);
+                            zombie = new JesterZombie(10,y,  this);
                         } 
                         else if (probability == 9) {
-                            zombie = new PoleVaultingZombie(8,y, this);
+                            zombie = new PoleVaultingZombie(10,y, this);
                         } 
                         else {
-                            zombie = new ShieldZombie(8,y, this);
+                            zombie = new ShieldZombie(10,y, this);
                         }
 
-                        if ((zombie.getIsAquatic()==true && getTile(8,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(8,y).getTileType() == "GRASS")) {
+                        if ((zombie.getIsAquatic()==true && getTile(10,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(10,y).getTileType() == "GRASS")) {
                             System.out.println(zombie.getName() + "(" + y + ") are starting to attack your fields!");
-                            placeZombie(zombie, 8, y);
-                            System.out.println(Sun.getSunScore());
+                            placeZombie(zombie, 10, y);
                             totalZombie += 1;
                         }
                     }
@@ -177,32 +187,32 @@ public class Map {
         }, 0, 3000);
     }
 
-    public void attackZombieInRange (){
-        for (int i = tiles.length - 1; i > 0; i--) {
-            for (int j = 0; j < tiles[0].length; j++) {
-                if (!getTile(j, i).isEmpty()) {
-                    Tile tile = tiles[i][j];
-                    Plant plant = tile.getPlant();
+    // public void attackZombieInRange (){
+    //     for (int i = tiles.length - 1; i > 0; i--) {
+    //         for (int j = 0; j < tiles[0].length; j++) {
+    //             if (!getTile(j, i).isEmpty()) {
+    //                 Tile tile = tiles[i][j];
+    //                 Plant plant = tile.getPlant();
                     
-                    getZombieInRange(plant);
-                }
-            }
-        }
-    }
+    //                 getZombieInRange(plant);
+    //             }
+    //         }
+    //     }
+    // }
 
-    public void removeZombie(Zombie zombie) {
-        Tile tile = getTile(zombie.getX(), zombie.getY());
-        tile.removeZombie(zombie);
-        totalZombie--;
-    }    
+    // public void removeZombie(Zombie zombie) {
+    //     Tile tile = getTile(zombie.getX(), zombie.getY());
+    //     tile.removeZombie(zombie);
+    //     totalZombie--;
+    // }    
     
     public void removeZombieMap() {
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                for (int i = tiles.length - 1; i >= 0; i--) {
-                    for (int j = 0; j < tiles[0].length; j++) {
+                for (int i = 5; i >= 0; i--) {
+                    for (int j = 1; j < 11; j++) {
                         if (!getTile(j, i).noZombie()) {
                             for (Zombie zombie : getTile(j, i).getZombie()) {
                                 if (zombie.getHp() <= 0) {
@@ -338,12 +348,9 @@ public class Map {
             System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
             for (int x = 0; x < width; x++) {
                 //System.out.println("+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+----------+");
-                if(x == 0){
-                    System.out.print("|          ");
-                }
                 System.out.print("|" + tiles[y][x].getDisplayChar());
-                if(x == 8){
-                    System.out.print("|          |");
+                if(x == 10){
+                    System.out.print("|");
                 }
             }
             System.out.println();

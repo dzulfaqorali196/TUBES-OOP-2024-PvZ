@@ -57,15 +57,18 @@ public class Tile {
 
     public void setZombie(Zombie zombie) {
         zombieList.add(zombie);
-
-        try {
-            zombie.setX(this.getX());
-            zombie.setY(this.getY());
-
+        for (Zombie zombiese : zombieList) {
             zombie.currentTile = this;
-        } catch (InvalidPositionException e) {
-            throw new IllegalStateException("Invalid coordinates!");
+
         }
+        // try {
+        //     zombie.setX(this.getX());
+        //     zombie.setY(this.getY());
+
+        //     zombie.currentTile = this;
+        // } catch (InvalidPositionException e) {
+        //     throw new IllegalStateException("Invalid coordinates!");
+        // }
     }
 
     public boolean isEmpty() {
@@ -96,9 +99,9 @@ public class Tile {
         }
     
         if (output.length() == 0) {
-            if (tileType.equals("WATER")) {
+            if (tileType.equals("WATER") && x>0 && x<10) {
                 output.append('W');
-            } else {
+            } else if (tileType.equals("GRASS") && x>0 && x<10){
                 output.append('G');
             }
         }
@@ -128,41 +131,41 @@ public class Tile {
         return "Tile (" + x + ", " + y + "): " + plantStr + ", " + zombieStr + ", Type: " + tileType;
     }
 
-    public void move(Map map) {
-        for (Zombie zombie : new ArrayList<>(zombieList)) {
-            int newCol = zombie.getX() - 1;
-            if (newCol < 0) {
-                System.out.println("Game Over! Zombie reached the end");
-                System.exit(0);
-            }
+    // public void move(Map map) {
+    //     for (Zombie zombie : new ArrayList<>(zombieList)) {
+    //         int newCol = zombie.getX() - 1;
+    //         if (newCol < 0) {
+    //             System.out.println("Game Over! Zombie reached the end");
+    //             System.exit(0);
+    //         }
 
-            Tile nextTile = map.getTile(zombie.getY(), newCol);
-            if (nextTile.isEmpty()) {
-                removeZombie(zombie);
-                if(nextTile.getZombie() == null){
-                    System.out.println("Game selesai");//gangerti gajelasz
-                }
-                else{
-                    nextTile.setZombie(zombie);//belum nanganin kalo next tilenya tuh null
-                    try {
-                        zombie.setX(newCol);
-                    } catch (InvalidPositionException e) {
-                        System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
-                    }
-                    zombie.setJarak(zombie.getJarak() + 1);
-                }
-            } else {
-                // Attack the plant or wait for the tile to be cleared
-            }
+    //         Tile nextTile = map.getTile(zombie.getY(), newCol);
+    //         if (nextTile.isEmpty()) {
+    //             removeZombie(zombie);
+    //             if(nextTile.getZombie() == null){
+    //                 System.out.println("Game selesai");//gangerti gajelasz
+    //             }
+    //             else{
+    //                 nextTile.setZombie(zombie);//belum nanganin kalo next tilenya tuh null
+    //                 try {
+    //                     zombie.setX(newCol);
+    //                 } catch (InvalidPositionException e) {
+    //                     System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
+    //                 }
+    //                 zombie.setJarak(zombie.getJarak() + 1);
+    //             }
+    //         } else {
+    //             // Attack the plant or wait for the tile to be cleared
+    //         }
 
-            try {
-                Thread.sleep(5000); // Delay for MOVE_DELAY seconds
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        // BENERIN!!
-        // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
-    }
+    //         try {
+    //             Thread.sleep(5000); // Delay for MOVE_DELAY seconds
+    //         } catch (InterruptedException e) {
+    //             e.printStackTrace();
+    //         }
+    //     }
+    //     // BENERIN!!
+    //     // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
+    // }
     
 }
