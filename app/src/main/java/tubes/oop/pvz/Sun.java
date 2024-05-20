@@ -15,23 +15,23 @@ public class Sun extends Player {
         // startSunGeneration();
     }
 
-    // public void startSunGeneration() {
-    //     Runnable sunTask = new Runnable() {
-    //         @Override
-    //         public void run() {
-    //             int delay = 5 + (int)(Math.random() * ((10 - 5) + 1)); 
-    //             scheduler.schedule(new Runnable() {
-    //                 @Override
-    //                 public void run() {
-    //                     increaseSun(25); 
-    //                     System.out.println("Sun: " + getSunScore());
-    //                 }
-    //             }, delay, TimeUnit.SECONDS);
-    //         }
-    //     };
+    public void startSunGeneration() {
+        Runnable sunTask = new Runnable() {
+            @Override
+            public void run() {
+                int delay = 5 + (int)(Math.random() * ((10 - 5) + 1)); 
+                scheduler.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        increaseSun(25); 
+                        System.out.println("Sun: " + getSunScore());
+                    }
+                }, delay, TimeUnit.SECONDS);
+            }
+        };
 
-    //     scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
-    // }
+        scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
+    }
 
     public void stopSunGeneration() {
         timer.cancel();

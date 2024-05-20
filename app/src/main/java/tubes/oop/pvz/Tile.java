@@ -47,13 +47,10 @@ public class Tile {
             try {
                 plant.setX(this.getX());
                 plant.setY(this.getY());
-            } 
-            catch (InvalidPositionException e) {
-                System.out.println("havaasdjfhksadsf");
+            } catch (InvalidPositionException e) {
                 throw new IllegalStateException("Invalid coordinates!");
             }
         } else {
-            System.out.println("gavaldiidaiis");
             throw new IllegalStateException("Tile already occupied!");
         }
     }
@@ -142,13 +139,18 @@ public class Tile {
             Tile nextTile = map.getTile(zombie.getY(), newCol);
             if (nextTile.isEmpty()) {
                 removeZombie(zombie);
-                nextTile.setZombie(zombie);
-                try {
-                    zombie.setX(newCol);
-                } catch (InvalidPositionException e) {
-                    System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
+                if(nextTile.getZombie() == null){
+                    System.out.println("Game selesai");//gangerti gajelasz
                 }
-                zombie.setJarak(zombie.getJarak() + 1);
+                else{
+                    nextTile.setZombie(zombie);//belum nanganin kalo next tilenya tuh null
+                    try {
+                        zombie.setX(newCol);
+                    } catch (InvalidPositionException e) {
+                        System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
+                    }
+                    zombie.setJarak(zombie.getJarak() + 1);
+                }
             } else {
                 // Attack the plant or wait for the tile to be cleared
             }

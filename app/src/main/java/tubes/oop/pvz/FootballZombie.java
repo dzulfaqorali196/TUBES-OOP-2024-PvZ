@@ -25,7 +25,7 @@ public class FootballZombie extends Zombie {
                     startAttacking(currentTile.getPlant());
                 }
             }
-        }, 0, isSlow ? (long) ((movement_speed * 0.5) + movement_speed) : movement_speed); 
+        }, 0, movement_speed); 
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static Inventory inventory = new Inventory();
-    public static Map map = new Map(9, 6);
+    public static Map map;
     public static PlantDeck plantDeck = new PlantDeck(map);
     public static ListZombie listZombie = new ListZombie();
     public static Player player = new Player(50);
@@ -19,7 +19,6 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan = 1;
             do {
-                map.printMap();
                 do{
                     if(pilihan < 1 || pilihan > 5){
                         System.out.println("Masukkan hanya angka 1-5, perintah tidak valid!");
@@ -200,6 +199,7 @@ public class Main {
     }
 
     public static void gameLoop(Scanner scanner) {
+        map = new Map(9, 6);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 
         Runnable timeGamePlay = new Runnable() {
@@ -216,16 +216,16 @@ public class Main {
             }
         };
 
-        Runnable spawnZombieTask = new Runnable() {
-            // private int time = 0;
+        // Runnable spawnZombieTask = new Runnable() {
+        //     // private int time = 0;
 
-            @Override
-            public void run() {
-                if(time >= 20 && time <= 160) {
-                    map.spawnRandomZombie(time);
-                }
-            }
-        };
+        //     @Override
+        //     public void run() {
+        //         if(time >= 20 && time <= 160) {
+        //             map.spawnRandomZombie(time);
+        //         }
+        //     }
+        // };
 
         Runnable sunTask = new Runnable() {
             @Override
@@ -241,26 +241,26 @@ public class Main {
             }
         };
 
-        Runnable attackTask = new Runnable() {
-            @Override
-            public void run() {
-                map.attackZombieInRange();
-                //map.moveZombies();
-            }
-        };
+        // Runnable attackTask = new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         map.attackZombieInRange();
+        //         //map.moveZombies();
+        //     }
+        // };
 
-        Runnable removeDeadZombiesTask = new Runnable() {
-            @Override
-            public void run() {
-                map.removeZombieMap();
-            }
-        };
+        // Runnable removeDeadZombiesTask = new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         map.removeZombieMap();
+        //     }
+        // };
 
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
+        // scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
+        // scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
+        // scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
 
         while (!scheduler.isShutdown()) {
             System.out.println("Masukkan perintah (P/D/E): ");
