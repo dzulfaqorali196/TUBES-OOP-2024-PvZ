@@ -104,7 +104,7 @@ public class PlantDeck {
         Tile tile = map.getTile(x, y);
         if (tile.isEmpty()) {
             if (!isStillCooldown(plant)) {
-                tile.setPlant(plant);
+                tile.setPlant(plant, map);
                 plant.setLastPlantTime(System.currentTimeMillis());
             } else {
                 throw new IllegalStateException("Plant is still in cooldown!");

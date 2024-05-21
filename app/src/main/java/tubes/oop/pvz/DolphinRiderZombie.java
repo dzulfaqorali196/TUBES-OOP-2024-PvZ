@@ -44,33 +44,38 @@ public class DolphinRiderZombie extends Zombie implements SpecialMove {
     }
 
     public void startMoving() {
-        moveTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (isDead() || isAttacking) {
-                    return;
-                }
-
-                Tile nextTile = map.getNextTile(currentTile);
-
-                if (currentTile.isEmpty()) {
-                    if (nextTile.isEmpty()) {
-                        move(currentTile, nextTile);
+        if (getHp() <= 0) {
+            currentTile.removeZombie(this);
+        } else {
+            moveTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    if (isDead() || isAttacking) {
+                        moveTimer.cancel();
+                        return;
+                    }
+    
+                    Tile nextTile = map.getNextTile(currentTile);
+    
+                    if (currentTile.isEmpty()) {
+                        if (nextTile.isEmpty()) {
+                            move(currentTile, nextTile);
+                        } else {
+                            if (!hasJumped) {
+                                specialMove(currentTile, nextTile);
+                            } else {
+                                startAttacking(nextTile.getPlant());
+                            }
+                        }
                     } else {
                         if (!hasJumped) {
                             specialMove(currentTile, nextTile);
                         } else {
-                            startAttacking(nextTile.getPlant());
+                            startAttacking(currentTile.getPlant());
                         }
                     }
-                } else {
-                    if (!hasJumped) {
-                        specialMove(currentTile, nextTile);
-                    } else {
-                        startAttacking(currentTile.getPlant());
-                    }
                 }
-            }
-        }, 0, isSlow ? (long) ((movement_speed * 0.5) + movement_speed) : movement_speed); 
+            }, 0, (long) movement_speed); 
+        }
     }
 }

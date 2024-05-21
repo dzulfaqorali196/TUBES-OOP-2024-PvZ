@@ -1,6 +1,6 @@
 package tubes.oop.pvz;
 
-public abstract class PlantandZombie extends Player{
+public abstract class PlantandZombie{
     String name;
     int hp;
     int attack_damage;
@@ -10,7 +10,6 @@ public abstract class PlantandZombie extends Player{
     
 
     public PlantandZombie(String name, int hp, int attack_damage, int attack_speed, int x, int y){
-        super(25);
         this.name = name;
         this.hp = hp;
         this.attack_damage = attack_damage;
@@ -24,7 +23,7 @@ public abstract class PlantandZombie extends Player{
     }
     
     public int getHp(){
-        return hp;
+        return this.hp;
     }
     
     public int getAttackDamage(){
@@ -66,7 +65,7 @@ public abstract class PlantandZombie extends Player{
     }
 
     public void setX(int x) throws InvalidPositionException{
-        if(0 <= x && x < 9){
+        if(0 <= x && x < 11){
             this.x = x;
         }
         else{

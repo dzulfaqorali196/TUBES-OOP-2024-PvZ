@@ -3,16 +3,16 @@ package tubes.oop.pvz;
    public class Player{
       private static int sunScore;
    
-      public Player(int sc){
-         sunScore = sc;
+      public Player(){
+         sunScore = 50;
       }
    
       public void increaseSun(int value){
-         sunScore += value;
+         this.sunScore += value;
       }
    
       public void decreaseSun(int value){
-         sunScore -= value;
+         this.sunScore -= value;
       }
    
       public static int getSunScore(){

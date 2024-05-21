@@ -13,7 +13,6 @@ public class Tile {
     public Tile(int x, int y, String tileType) {
         this.x = x;
         this.y = y;
-        this.plant = null;
         this.zombieList = new ArrayList<Zombie>();
         this.tileType = tileType;
     }
@@ -27,33 +26,35 @@ public class Tile {
     }
 
     public Plant getPlant() {
-        return plant;
+        return this.plant;
     }
 
     
     public List<Zombie> getZombie() {
-        return zombieList;
+        return this.zombieList;
     }
 
     public String getTileType() {
-        return tileType;
+        return this.tileType;
     }
 
     // Setters (be cautious modifying x and y)
-    public void setPlant(Plant plant) throws IllegalStateException {
+    public void setPlant(Plant plant, Map map) throws IllegalStateException {
         if (isEmpty()) {
             this.plant = plant;
+            plant.currentTile = this;
+            // plant.map = map;
+            System.out.println("x: " + this.getX() + " y: " + this.getY());
+
+            // plant.startAttackZombie();
 
             try {
-                plant.setX(this.getX());
-                plant.setY(this.getY());
-            } 
-            catch (InvalidPositionException e) {
-                System.out.println("havaasdjfhksadsf");
+                this.plant.setX(this.getX());
+                this.plant.setY(this.getY());
+            } catch (InvalidPositionException e) {
                 throw new IllegalStateException("Invalid coordinates!");
             }
         } else {
-            System.out.println("gavaldiidaiis");
             throw new IllegalStateException("Tile already occupied!");
         }
     }
@@ -61,14 +62,17 @@ public class Tile {
     public void setZombie(Zombie zombie) {
         zombieList.add(zombie);
 
-        try {
-            zombie.setX(this.getX());
-            zombie.setY(this.getY());
-
+        for (Zombie zombiese : zombieList) {
             zombie.currentTile = this;
-        } catch (InvalidPositionException e) {
-            throw new IllegalStateException("Invalid coordinates!");
+            try {
+                zombiese.setY(this.getY());
+                zombiese.setX(this.getX());
+
+            } catch (InvalidPositionException e) {
+                throw new IllegalStateException("Invalid coordinates!");
+            }
         }
+        
     }
 
     public boolean isEmpty() {
@@ -99,10 +103,10 @@ public class Tile {
         }
     
         if (output.length() == 0) {
-            if (tileType.equals("WATER")) {
-                output.append('W');
-            } else {
-                output.append('G');
+            if (tileType.equals("WATER") && x>0 && x<10) {
+                output.append(' ');
+            } else if (tileType.equals("GRASS") && x>0 && x<10){
+                output.append(' ');
             }
         }
 
@@ -131,36 +135,41 @@ public class Tile {
         return "Tile (" + x + ", " + y + "): " + plantStr + ", " + zombieStr + ", Type: " + tileType;
     }
 
-    public void move(Map map) {
-        for (Zombie zombie : new ArrayList<>(zombieList)) {
-            int newCol = zombie.getX() - 1;
-            if (newCol < 0) {
-                System.out.println("Game Over! Zombie reached the end");
-                System.exit(0);
-            }
+    // public void move(Map map) {
+    //     for (Zombie zombie : new ArrayList<>(zombieList)) {
+    //         int newCol = zombie.getX() - 1;
+    //         if (newCol < 0) {
+    //             System.out.println("Game Over! Zombie reached the end");
+    //             System.exit(0);
+    //         }
 
-            Tile nextTile = map.getTile(zombie.getY(), newCol);
-            if (nextTile.isEmpty()) {
-                removeZombie(zombie);
-                nextTile.setZombie(zombie);
-                try {
-                    zombie.setX(newCol);
-                } catch (InvalidPositionException e) {
-                    System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
-                }
-                zombie.setJarak(zombie.getJarak() + 1);
-            } else {
-                // Attack the plant or wait for the tile to be cleared
-            }
+    //         Tile nextTile = map.getTile(zombie.getY(), newCol);
+    //         if (nextTile.isEmpty()) {
+    //             removeZombie(zombie);
+    //             if(nextTile.getZombie() == null){
+    //                 System.out.println("Game selesai");//gangerti gajelasz
+    //             }
+    //             else{
+    //                 nextTile.setZombie(zombie);//belum nanganin kalo next tilenya tuh null
+    //                 try {
+    //                     zombie.setX(newCol);
+    //                 } catch (InvalidPositionException e) {
+    //                     System.out.println(e.getClass().getSimpleName() + "! " + e.getMessage());
+    //                 }
+    //                 zombie.setJarak(zombie.getJarak() + 1);
+    //             }
+    //         } else {
+    //             // Attack the plant or wait for the tile to be cleared
+    //         }
 
-            try {
-                Thread.sleep(5000); // Delay for MOVE_DELAY seconds
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        // BENERIN!!
-        // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
-    }
+    //         try {
+    //             Thread.sleep(5000); // Delay for MOVE_DELAY seconds
+    //         } catch (InterruptedException e) {
+    //             e.printStackTrace();
+    //         }
+    //     }
+    //     // BENERIN!!
+    //     // BUAT IMPLEMENTASI TAKE DAMAGE DARI PLANT SAMPE ZOOM
+    // }
     
 }

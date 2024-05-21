@@ -6,20 +6,20 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
+    public static Map map = new Map(11, 6);
     public static Inventory inventory = new Inventory();
-    public static Map map = new Map(9, 6);
     public static PlantDeck plantDeck = new PlantDeck(map);
     public static ListZombie listZombie = new ListZombie();
-    public static Player player = new Player(50);
+    public static Player player = new Player();
     public static Sun sun;
     private static int time = 0;
+
 
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan = 1;
             do {
-                map.printMap();
                 do{
                     if(pilihan < 1 || pilihan > 5){
                         System.out.println("Masukkan hanya angka 1-5, perintah tidak valid!");
@@ -208,7 +208,7 @@ public class Main {
             @Override
             public void run() {
                 time++;
-                System.out.println("Waktu: " + time);
+
                 if (time % 200 == 0) {
                     time = 0;
                 }
@@ -216,16 +216,16 @@ public class Main {
             }
         };
 
-        Runnable spawnZombieTask = new Runnable() {
-            // private int time = 0;
+        // Runnable spawnZombieTask = new Runnable() {
+        //     // private int time = 0;
 
-            @Override
-            public void run() {
-                if(time >= 20 && time <= 160) {
-                    map.spawnRandomZombie(time);
-                }
-            }
-        };
+        //     @Override
+        //     public void run() {
+        //         if(time >= 20 && time <= 160) {
+        //             map.spawnRandomZombie(time);
+        //         }
+        //     }
+        // };
 
         Runnable sunTask = new Runnable() {
             @Override
@@ -244,23 +244,30 @@ public class Main {
         Runnable attackTask = new Runnable() {
             @Override
             public void run() {
-                map.attackZombieInRange();
-                //map.moveZombies();
+                for (int x = 0; x < 6; x++) {
+                    for (int y = 0; y < 11; y++) {
+                        Tile tile = map.getTile(y, x);
+                        Plant plant = tile.getPlant();
+                        if (map != null) {
+                            plant.getZombieInRange(map);
+                        }
+                    }
+                }                //map.moveZombies();
             }
         };
 
-        Runnable removeDeadZombiesTask = new Runnable() {
-            @Override
-            public void run() {
-                map.removeZombieMap();
-            }
-        };
+        // Runnable removeDeadZombiesTask = new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         map.removeZombieMap();
+        //     }
+        // };
 
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
+        // scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
+        // scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
 
         while (!scheduler.isShutdown()) {
             System.out.println("Masukkan perintah (P/D/E): ");
@@ -281,7 +288,8 @@ public class Main {
                         Plant plant = plantDeck.getPlant(deckIndex-1);
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
-                                map.placePlant(plant, (x-1), (y-1));
+                                map.placePlant(plant, (x), (y-1));
+                                
                                 System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
                                 System.out.println("Sun tersisa: " + Sun.getSunScore());
                             }
