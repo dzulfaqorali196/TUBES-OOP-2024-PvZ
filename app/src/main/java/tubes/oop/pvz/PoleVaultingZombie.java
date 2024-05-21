@@ -6,7 +6,7 @@ public class PoleVaultingZombie extends Zombie implements SpecialMove {
     private boolean hasJumped;
 
     public PoleVaultingZombie(int x, int y, Map map) {
-        super("Pole Vaulting Zombie", 175, 100, 1, 10000, false, x, y, 0, map);
+        super("Pole Vaulting Zombie", 175, 100, 1, 100000, false, x, y, 0, map);
         this.hasJumped = false;
     }
 
@@ -43,33 +43,37 @@ public class PoleVaultingZombie extends Zombie implements SpecialMove {
     }
 
     public void startMoving() {
-        moveTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (isDead() || isAttacking) {
-                    return;
-                }
-
-                Tile nextTile = map.getNextTile(currentTile);
-
-                if (currentTile.isEmpty()) {
-                    if (nextTile.isEmpty()) {
-                        move(currentTile, nextTile);
+        if (getHp() <= 0) {
+            currentTile.removeZombie(this);
+        } else {
+            moveTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    if (getHp() <= 0 || isAttacking) {
+                        return;
+                    }
+    
+    
+                    if (currentTile.isEmpty()) {
+                        if (map.getNextTile(currentTile).isEmpty()) {
+                            move(currentTile, map.getNextTile(currentTile));
+                        } else {
+                            if (!hasJumped) {
+                                specialMove(currentTile, map.getNextTile(currentTile));
+                            } else {
+                                startAttacking(map.getNextTile(currentTile).getPlant());
+                            }
+                        }
                     } else {
                         if (!hasJumped) {
-                            specialMove(currentTile, nextTile);
+                            specialMove(currentTile, map.getNextTile(currentTile));
                         } else {
-                            startAttacking(nextTile.getPlant());
+                            startAttacking(currentTile.getPlant());
                         }
                     }
-                } else {
-                    if (!hasJumped) {
-                        specialMove(currentTile, nextTile);
-                    } else {
-                        startAttacking(currentTile.getPlant());
-                    }
                 }
-            }
-        }, 0, movement_speed); 
+            }, 0, movement_speed); 
+        }
+        
     }
 }

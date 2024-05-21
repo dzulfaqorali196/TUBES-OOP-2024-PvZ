@@ -1,10 +1,11 @@
 package tubes.oop.pvz;
 
 // import java.util.Random;
-// import java.util.List;
+import java.util.List;
 // import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public abstract class Zombie extends PlantandZombie {
     private boolean isAquatic;
@@ -15,6 +16,8 @@ public abstract class Zombie extends PlantandZombie {
     Timer moveTimer;
     Timer attackTimer;
     Timer snowPeaTimer;
+    Timer getdamaged;
+
 
     boolean isAttacking;
     Map map;
@@ -27,12 +30,14 @@ public abstract class Zombie extends PlantandZombie {
         isSlow = false; //0 = gak slow, 1= slow
         this.moveTimer = new Timer();
         this.attackTimer = new Timer();
+        this.getdamaged = new Timer();
         this.isAttacking = false;
         this.map = map;
         this.snowPeaTimer = new Timer();
 
 
         jarak = 0;
+
     }
 
     public int getJarak(){
@@ -47,8 +52,8 @@ public abstract class Zombie extends PlantandZombie {
         return isAquatic;
     }
     
-    public void takeDamage(Plant plant) {
-        hp -= plant.getAttackDamage();
+    public void takeDamage(int damage) {
+        this.hp -= damage;
         // if (isDead()) {
         //     map.removeZombie(this);
         // }
@@ -96,7 +101,6 @@ public abstract class Zombie extends PlantandZombie {
         this.attack_speed += attack_speed/2;
         this.movement_speed += movement_speed/2;
 
-        snowPeaTimer = new Timer();
         snowPeaTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -120,8 +124,8 @@ public abstract class Zombie extends PlantandZombie {
         attackTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (plant.isDead() || isDead()) {
-                    attackTimer.cancel();
+                if (plant.getHp() <= 0) {
+                    map.getNextTile(currentTile).removePlant();
                     isAttacking = false;
                     if (!isDead()) {
                         // Mulai ulang moveTimer setelah 5 detik
@@ -130,7 +134,7 @@ public abstract class Zombie extends PlantandZombie {
                             public void run() {
                                 startMoving();
                             }
-                        }, movement_speed); // 5 detik setelah penyerangan selesai
+                        }, movement_speed); // 10 detik setelah penyerangan selesai
                     }
                 } else {
                     attack(plant);
@@ -139,12 +143,30 @@ public abstract class Zombie extends PlantandZombie {
         }, 0, attack_speed);
     }
 
+    public void getDamaged() {
+            getdamaged.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    for (int i = getX(); i > 0; i--) {
+                        if(!map.getTile(i, getY()).isEmpty()){
+                            takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                        }
+                    }
+                }
+            }, 0, 4000);
+       
+        
+    }
+
     public void move(Tile fromTile, Tile toTile) {
+        // Zombie zombies = currentTile.getZombie().get(0);
         fromTile.removeZombie(this);
         toTile.setZombie(this);
         this.currentTile = toTile;
+
+        System.out.println("Zombie moved to tile (" + toTile.getX() + ", " + toTile.getY() + ") darah : " + this.hp);
         try {
-            setX(getX()-1);
+            this.setX(this.getX()-1);
         } catch (InvalidPositionException e) {
             // Handle the exception here
         }

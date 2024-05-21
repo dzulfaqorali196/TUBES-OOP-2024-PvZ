@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Inventory {
     private List<Plant> listPlant;
+    Map map;
     
     public Inventory() {
         listPlant = new ArrayList<>();
