@@ -6,13 +6,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
+    public static Map map = new Map(11, 6);
     public static Inventory inventory = new Inventory();
-    public static Map map;
     public static PlantDeck plantDeck = new PlantDeck(map);
     public static ListZombie listZombie = new ListZombie();
     public static Player player = new Player();
     public static Sun sun;
     private static int time = 0;
+
 
 
     public static void main(String[] args) {
@@ -199,7 +200,6 @@ public class Main {
     }
 
     public static void gameLoop(Scanner scanner) {
-        map = new Map(11, 6);
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 
         Runnable timeGamePlay = new Runnable() {
@@ -208,7 +208,7 @@ public class Main {
             @Override
             public void run() {
                 time++;
-                System.out.println("Waktu: " + time);
+
                 if (time % 200 == 0) {
                     time = 0;
                 }
@@ -241,13 +241,20 @@ public class Main {
             }
         };
 
-        // Runnable attackTask = new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         map.attackZombieInRange();
-        //         //map.moveZombies();
-        //     }
-        // };
+        Runnable attackTask = new Runnable() {
+            @Override
+            public void run() {
+                for (int x = 0; x < 6; x++) {
+                    for (int y = 0; y < 11; y++) {
+                        Tile tile = map.getTile(y, x);
+                        Plant plant = tile.getPlant();
+                        if (map != null) {
+                            plant.getZombieInRange(map);
+                        }
+                    }
+                }                //map.moveZombies();
+            }
+        };
 
         // Runnable removeDeadZombiesTask = new Runnable() {
         //     @Override
@@ -259,7 +266,7 @@ public class Main {
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
         // scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
-        // scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
         // scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
 
         while (!scheduler.isShutdown()) {
@@ -281,7 +288,8 @@ public class Main {
                         Plant plant = plantDeck.getPlant(deckIndex-1);
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
-                                map.placePlant(plant, (x-1), (y-1));
+                                map.placePlant(plant, (x), (y-1));
+                                
                                 System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
                                 System.out.println("Sun tersisa: " + Sun.getSunScore());
                             }

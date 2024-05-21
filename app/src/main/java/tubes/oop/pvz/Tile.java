@@ -13,7 +13,6 @@ public class Tile {
     public Tile(int x, int y, String tileType) {
         this.x = x;
         this.y = y;
-        this.plant = null;
         this.zombieList = new ArrayList<Zombie>();
         this.tileType = tileType;
     }
@@ -27,26 +26,31 @@ public class Tile {
     }
 
     public Plant getPlant() {
-        return plant;
+        return this.plant;
     }
 
     
     public List<Zombie> getZombie() {
-        return zombieList;
+        return this.zombieList;
     }
 
     public String getTileType() {
-        return tileType;
+        return this.tileType;
     }
 
     // Setters (be cautious modifying x and y)
-    public void setPlant(Plant plant) throws IllegalStateException {
+    public void setPlant(Plant plant, Map map) throws IllegalStateException {
         if (isEmpty()) {
             this.plant = plant;
+            plant.currentTile = this;
+            // plant.map = map;
+            System.out.println("x: " + this.getX() + " y: " + this.getY());
+
+            // plant.startAttackZombie();
 
             try {
-                plant.setX(this.getX());
-                plant.setY(this.getY());
+                this.plant.setX(this.getX());
+                this.plant.setY(this.getY());
             } catch (InvalidPositionException e) {
                 throw new IllegalStateException("Invalid coordinates!");
             }
@@ -57,18 +61,18 @@ public class Tile {
 
     public void setZombie(Zombie zombie) {
         zombieList.add(zombie);
+
         for (Zombie zombiese : zombieList) {
             zombie.currentTile = this;
+            try {
+                zombiese.setY(this.getY());
+                zombiese.setX(this.getX());
 
+            } catch (InvalidPositionException e) {
+                throw new IllegalStateException("Invalid coordinates!");
+            }
         }
-        // try {
-        //     zombie.setX(this.getX());
-        //     zombie.setY(this.getY());
-
-        //     zombie.currentTile = this;
-        // } catch (InvalidPositionException e) {
-        //     throw new IllegalStateException("Invalid coordinates!");
-        // }
+        
     }
 
     public boolean isEmpty() {
@@ -100,9 +104,9 @@ public class Tile {
     
         if (output.length() == 0) {
             if (tileType.equals("WATER") && x>0 && x<10) {
-                output.append('W');
+                output.append(' ');
             } else if (tileType.equals("GRASS") && x>0 && x<10){
-                output.append('G');
+                output.append(' ');
             }
         }
 

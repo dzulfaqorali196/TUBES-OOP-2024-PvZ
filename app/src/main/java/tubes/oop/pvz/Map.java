@@ -1,12 +1,12 @@
 package tubes.oop.pvz;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+// import java.util.ArrayList;
+// import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+// import java.util.concurrent.Executors;
+// import java.util.concurrent.ScheduledExecutorService;
+// import java.util.concurrent.TimeUnit;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,9 +34,9 @@ public class Map {
         }
         // totalZombie = 0;
         Time.start();
-        startSpawnZombie();
         removeZombieMap();
-        //startSpawnZombie();
+        // spawnRandomZombie();
+        startSpawnZombie();
     }
 
     public Tile getTile(int x, int y) throws IndexOutOfBoundsException {
@@ -48,15 +48,7 @@ public class Map {
     }
     public void placePlant(Plant plant, int x, int y) throws IllegalStateException, IndexOutOfBoundsException {
         if (isValidCoordinate(x, y)) {
-            getTile(x, y).setPlant(plant);
-            Timer moveTimer = new Timer();
-            moveTimer.scheduleAtFixedRate(new TimerTask() {
-
-                @Override
-                public void run() {
-                    getZombieInRange(getTile(x, y).getPlant());
-                }
-            }, 0, 4000);
+            getTile(x, y).setPlant(plant, this);
         } 
         else {
             throw new IndexOutOfBoundsException("Invalid coordinates!");
@@ -71,6 +63,7 @@ public class Map {
         if (isValidCoordinate(x, y)) {
             getTile(x, y).setZombie(zombie);
             zombie.startMoving();
+            zombie.getDamaged();
         } else {
             throw new IndexOutOfBoundsException("Invalid coordinates!");
         }
@@ -120,8 +113,8 @@ public class Map {
                         }
 
                         if ((zombie.getIsAquatic()==true && getTile(10,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(10,y).getTileType() == "GRASS")) {
-                            System.out.println(zombie.getName() + "(" + y + ") are starting to attack your fields!");
                             placeZombie(zombie, 10, y);
+                            System.out.println(zombie.getName() + "(" + y + ") are starting to attack your fields!");
                             totalZombie += 1;
                         }
                     }
@@ -207,8 +200,10 @@ public class Map {
     // }    
     
     public void removeZombieMap() {
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
+
+        Timer removeTimer = new Timer();
+        removeTimer.scheduleAtFixedRate(new TimerTask() {
+
             @Override
             public void run() {
                 for (int i = 5; i >= 0; i--) {
@@ -224,53 +219,55 @@ public class Map {
                     }
                 }
             }
-        };
-        timer.schedule(task, 0, 10);
+        }, 0, 1);
     }
     
-    public void getZombieInRange(Plant plant) {
-        int plantRange = plant.getRange();
-        int plantX = plant.getX();
-        int plantY = plant.getY();
+    // public void getZombieInRange(Plant plant) {
+    //     int plantRange = plant.getRange();
+    //     int plantX = plant.getX();
+    //     int plantY = plant.getY();
 
 
         
-        if (plantRange == -1) {
-            int zombieterdekat = 10;
-            for (int j = tiles.length; j <= plantX; j--) {
-                if (getTile(j, plantY).getZombie() != null) {
-                    if (zombieterdekat>j) {
-                        zombieterdekat = j;
-                    }
-                }
-            }
-            for (Zombie zombie : getTile(zombieterdekat, plantY).getZombie()) {
-                if (plant.getName()=="Snow Pea") {
-                    if (zombie.getName()=="Jester Zombie") {
-                        zombie.takeDamage(plant);
-                    } else {
-                        zombie.applySnowPeaEffect();
-                        zombie.takeDamage(plant);
-                    }
-                } else {
-                    zombie.takeDamage(plant);
-                }
-            }
+    //     if (plantRange == -1) {
+    //         int zombieterdekat;
+    //         int tanda =0 ;
+    //         for (int j = tiles.length; j >= plantX; j--) {
+    //             if (getTile(j, plantY).getZombie() != null) {
+    //                 if (j<tanda) {
+    //                     tanda = j;
+    //                 }
+    //             }
+    //         }
+
+    //         zombieterdekat = tanda;
+    //         for (Zombie zombie : getTile(zombieterdekat, plantY).getZombie()) {
+    //             if (plant.getName()=="Snow Pea") {
+    //                 if (zombie.getName()=="Jester Zombie") {
+    //                     zombie.takeDamage(plant);
+    //                 } else {
+    //                     zombie.applySnowPeaEffect();
+    //                     zombie.takeDamage(plant);
+    //                 }
+    //             } else {
+    //                 zombie.takeDamage(plant);
+    //             }
+    //         }
             
-        } else if (plantRange == 1) {
-            if (tiles[plantY][plantX].getZombie() != null) {
-                for (Zombie zombie : getTile(plantX, plantY).getZombie()) {
-                    zombie.takeDamage(plant);
-                }
+    //     } else if (plantRange == 1) {
+    //         if (tiles[plantY][plantX].getZombie() != null) {
+    //             for (Zombie zombie : getTile(plantX, plantY).getZombie()) {
+    //                 zombie.takeDamage(plant);
+    //             }
 
-            } else if (tiles[plantY][plantX + 1].getZombie() != null) {
-                for (Zombie zombie : getTile(plantX +1, plantY).getZombie()) {
-                    zombie.takeDamage(plant);
-                }
-            }
-        }
+    //         } else if (tiles[plantY][plantX + 1].getZombie() != null) {
+    //             for (Zombie zombie : getTile(plantX +1, plantY).getZombie()) {
+    //                 zombie.takeDamage(plant);
+    //             }
+    //         }
+    //     }
         
-    }
+    // }
 
     private boolean isValidCoordinate(int x, int y) {
         return 0 <= x && x < width && 0 <= y && y < height;

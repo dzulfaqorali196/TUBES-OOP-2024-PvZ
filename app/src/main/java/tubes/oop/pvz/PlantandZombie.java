@@ -23,7 +23,7 @@ public abstract class PlantandZombie{
     }
     
     public int getHp(){
-        return hp;
+        return this.hp;
     }
     
     public int getAttackDamage(){
@@ -65,7 +65,7 @@ public abstract class PlantandZombie{
     }
 
     public void setX(int x) throws InvalidPositionException{
-        if(0 <= x && x < 9){
+        if(0 <= x && x < 11){
             this.x = x;
         }
         else{
