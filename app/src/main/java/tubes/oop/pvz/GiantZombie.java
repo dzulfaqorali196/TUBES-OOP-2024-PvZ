@@ -18,6 +18,6 @@ public class GiantZombie extends Zombie {
                     nextTile.removePlant();
                 }
             }
-        }, 0, movement_speed); 
+        }, movement_speed, movement_speed); 
     }
 }

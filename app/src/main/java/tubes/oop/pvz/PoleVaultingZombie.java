@@ -72,7 +72,7 @@ public class PoleVaultingZombie extends Zombie implements SpecialMove {
                         }
                     }
                 }
-            }, 0, movement_speed); 
+            }, movement_speed, movement_speed); 
         }
         
     }

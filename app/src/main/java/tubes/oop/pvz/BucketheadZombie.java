@@ -30,7 +30,7 @@ public class BucketheadZombie extends Zombie {
                         startAttacking(currentTile.getPlant());
                     }
                 }
-            }, 0, movement_speed); 
+            }, movement_speed, movement_speed); 
         }
 
         

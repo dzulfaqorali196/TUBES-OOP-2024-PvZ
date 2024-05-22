@@ -16,7 +16,7 @@ public class Main {
 
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidDeckException{
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan = 1;
             do {
@@ -60,7 +60,7 @@ public class Main {
         }
     }
 
-    public static void inventoryGame(Scanner scanner) throws InvalidInputMainException{
+    public static void inventoryGame(Scanner scanner) throws InvalidInputMainException, InvalidDeckException{
         System.out.println("Berikut merupakan daftar inventory:");
         inventory.displayInventory();
         String swapInvent;
@@ -102,7 +102,7 @@ public class Main {
         deckGame(scanner);
     }
 
-    public static void deckGame(Scanner scanner) throws InvalidInputMainException{
+    public static void deckGame(Scanner scanner) throws InvalidInputMainException, InvalidDeckException{
         String addDeck;
         String swapDeck;
 
@@ -157,7 +157,7 @@ public class Main {
         gameLoop(scanner);
     }
     
-    public static void startDeck(Scanner scanner) throws InvalidInputMainException{
+    public static void startDeck(Scanner scanner) throws InvalidInputMainException, InvalidDeckException{
         while(!(plantDeck.isDeckNotNull())){
             System.out.println("Masukkan nomor tanaman untuk dimasukkan ke deck: ");
             int plantIndex = scanner.nextInt();
@@ -180,23 +180,39 @@ public class Main {
                 System.out.println("Tanaman tidak ditemukan dalam inventory.");
             }
         }
-        System.out.println("Apakah ingin menghapus deck? (Y/N)");
-        String hapusDeck = scanner.nextLine();
+
+        String hapusDeck;
+        int hapusDeckIndex;
         
-        if(hapusDeck.equalsIgnoreCase("Y")){
-            System.out.println("Nomor berapa yang ingin dihapus?");
-            int hapusIndexDeck = scanner.nextInt();
-            scanner.nextLine();
-            try {
-                plantDeck.removePlant(hapusIndexDeck-1);
-            } catch (InvalidIndexException e) {
-                e.printStackTrace();
+        do {
+            System.out.println("Apakah ingin menghapus deck? (Y/N)");
+            hapusDeck = scanner.nextLine();
+            if (hapusDeck.equals("Y")) {
+                System.out.println("Masukkan nomor yang ingin dihapus (x)");
+                hapusDeckIndex = scanner.nextInt();
+                if(hapusDeckIndex > 0 && hapusDeckIndex <= 6){
+                    try {
+                        plantDeck.removePlant(hapusDeckIndex-1);
+                        plantDeck.printDeck();
+                    } 
+                    catch (InvalidIndexException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    System.out.println("Masukkan hanya angka 1-6, perintah tidak valid!");
+                }
             }
-            plantDeck.printDeck();
-        }
-        else if(!(hapusDeck.equalsIgnoreCase("N"))){
-            throw new InvalidInputMainException("Pilihan tidak valid. Silakan coba lagi.");
-        }
+            else if (hapusDeck.equals("N")){
+                break;
+            } 
+            else{
+                System.out.println("Masukkan hanya huruf Y atau N, perintah tidak valid!");
+            }
+        } while (!hapusDeck.equals("Y") && !hapusDeck.equals("N"));
+
+        System.out.println("Selamat bermain!");
+        gameLoop(scanner);
     }
 
     public static void gameLoop(Scanner scanner) {
@@ -208,7 +224,7 @@ public class Main {
             @Override
             public void run() {
                 time++;
-
+                System.out.println("Waktu: " + time);
                 if (time % 200 == 0) {
                     time = 0;
                 }
@@ -216,13 +232,14 @@ public class Main {
             }
         };
 
+        //NGUBAH INI, NYOBA
         // Runnable spawnZombieTask = new Runnable() {
         //     // private int time = 0;
 
         //     @Override
         //     public void run() {
         //         if(time >= 20 && time <= 160) {
-        //             map.spawnRandomZombie(time);
+        //             map.startSpawnZombie();
         //         }
         //     }
         // };
@@ -241,20 +258,20 @@ public class Main {
             }
         };
 
-        Runnable attackTask = new Runnable() {
-            @Override
-            public void run() {
-                for (int x = 0; x < 6; x++) {
-                    for (int y = 0; y < 11; y++) {
-                        Tile tile = map.getTile(y, x);
-                        Plant plant = tile.getPlant();
-                        if (map != null) {
-                            plant.getZombieInRange(map);
-                        }
-                    }
-                }                //map.moveZombies();
-            }
-        };
+        // Runnable attackTask = new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         for (int x = 0; x < 6; x++) {
+        //             for (int y = 0; y < 11; y++) {
+        //                 Tile tile = map.getTile(y, x);
+        //                 Plant plant = tile.getPlant();
+        //                 if (map != null) {
+        //                     plant.getZombieInRange(map);
+        //                 }
+        //             }
+        //         }                //map.moveZombies();
+        //     }
+        // };
 
         // Runnable removeDeadZombiesTask = new Runnable() {
         //     @Override
@@ -266,7 +283,7 @@ public class Main {
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
         // scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
         scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
+        // scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
         // scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
 
         while (!scheduler.isShutdown()) {

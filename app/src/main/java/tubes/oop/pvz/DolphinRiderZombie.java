@@ -75,7 +75,7 @@ public class DolphinRiderZombie extends Zombie implements SpecialMove {
                         }
                     }
                 }
-            }, 0, (long) movement_speed); 
+            }, movement_speed, (long) movement_speed); 
         }
     }
 }
