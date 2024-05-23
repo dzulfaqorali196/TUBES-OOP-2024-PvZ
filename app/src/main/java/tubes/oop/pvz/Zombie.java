@@ -17,6 +17,8 @@ public abstract class Zombie extends PlantandZombie {
     Timer attackTimer;
     Timer snowPeaTimer;
     Timer getdamaged;
+    boolean terdepan = false;
+
 
 
     boolean isAttacking;
@@ -147,9 +149,28 @@ public abstract class Zombie extends PlantandZombie {
             getdamaged.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    for (int j= getX()-1; j >=0; j--) {
+                        if (map.getTile(j,getY()).noZombie()) {
+                            terdepan = true;
+                        } else {
+                            terdepan = false;
+                            break;
+                        }
+                    }
                     for (int i = getX(); i > 0; i--) {
                         if(!map.getTile(i, getY()).isEmpty()){
-                            takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                            if (map.getTile(i, getY()).getPlant().getRange()==-1) {
+                                if (terdepan) {
+                                    if (map.getTile(i, getY()).getPlant().getName()=="Snow Pea") {
+                                        takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                                        applySnowPeaEffect();
+                                    } else {
+                                        takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                                    }
+                                } else {
+                                    return;
+                                }     
+                            }
                         }
                     }
                 }
@@ -164,7 +185,7 @@ public abstract class Zombie extends PlantandZombie {
         toTile.setZombie(this);
         this.currentTile = toTile;
 
-        System.out.println("Zombie moved to tile (" + toTile.getX() + ", " + toTile.getY() + ") darah : " + this.hp);
+        System.out.println("Zombie moved to tile (" + toTile.getX() + ", " + toTile.getY() + ") darah : " + this.hp + " slow :" + this.isSlow);
         try {
             this.setX(this.getX()-1);
         } catch (InvalidPositionException e) {

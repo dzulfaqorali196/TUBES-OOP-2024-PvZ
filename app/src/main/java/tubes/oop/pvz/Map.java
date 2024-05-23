@@ -218,15 +218,39 @@ public class Map {
         
 
     public void startSpawnZombie () {
-        Timer moveTimer = new Timer();
-        moveTimer.scheduleAtFixedRate(new TimerTask() {
+        Timer spawnTimer = new Timer();
+        if (Time.getCurrentTime()<=40) {
+            spawnTimer.scheduleAtFixedRate(new TimerTask() {
 
-            @Override
-            public void run() {
-                spawnRandomZombie();
-            }
-        }, 0, 3000);
+                @Override
+                public void run() {
+                    spawnRandomZombie();
+                }
+            }, 0, 3000);
+        } else {
+            System.out.println("Flag Zombie is starting to attack your fields!");
+            spawnTimer.scheduleAtFixedRate(new TimerTask() {
+
+                @Override
+                public void run() {
+                    spawnRandomZombie();
+                }
+            }, 0, 1000);
+        }
+        
     }
+
+    // public void startFlagZombie () {
+    //     System.out.println("Flag Zombie is starting to attack your fields!");
+    //     Timer moveTimer = new Timer();
+    //     moveTimer.scheduleAtFixedRate(new TimerTask() {
+
+    //         @Override
+    //         public void run() {
+    //             spawnRandomZombie();
+    //         }
+    //     }, 0, 1000);
+    // }
 
     // public void attackZombieInRange (){
     //     for (int i = tiles.length - 1; i > 0; i--) {
