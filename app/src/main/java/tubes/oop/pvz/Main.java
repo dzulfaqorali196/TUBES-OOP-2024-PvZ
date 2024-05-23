@@ -14,8 +14,6 @@ public class Main {
     public static Sun sun;
     private static int time = 0;
 
-
-
     public static void main(String[] args) throws InvalidDeckException{
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan = 1;
@@ -194,6 +192,7 @@ public class Main {
                     try {
                         plantDeck.removePlant(hapusDeckIndex-1);
                         plantDeck.printDeck();
+                        startDeck(scanner);
                     } 
                     catch (InvalidIndexException e) {
                         e.printStackTrace();
@@ -216,6 +215,7 @@ public class Main {
     }
 
     public static void gameLoop(Scanner scanner) {
+        map.gameStart();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 
         Runnable timeGamePlay = new Runnable() {
@@ -307,7 +307,7 @@ public class Main {
                             if(Player.getSunScore() >= plant.getCostPlant()){
                                 map.placePlant(plant, (x), (y-1));
                                 
-                                System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
+                                // System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
                                 System.out.println("Sun tersisa: " + Sun.getSunScore());
                             }
                             else{

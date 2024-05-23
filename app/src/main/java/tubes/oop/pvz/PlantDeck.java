@@ -96,23 +96,19 @@ public class PlantDeck {
         }
     }
 
-    public boolean isStillCooldown(Plant plant){
-        return ((System.currentTimeMillis() - plant.getLastPlantTime()) <= plant.getCooldown());
-    }
-
-    public void plantPlant(int x, int y, Plant plant) {
-        Tile tile = map.getTile(x, y);
-        if (tile.isEmpty()) {
-            if (!isStillCooldown(plant)) {
-                tile.setPlant(plant, map);
-                plant.setLastPlantTime(System.currentTimeMillis());
-            } else {
-                throw new IllegalStateException("Plant is still in cooldown!");
-            }
-        } else {
-            throw new IllegalStateException("Tile already occupied!");
-        }
-    }
+    // public void plantPlant(int x, int y, Plant plant) {
+    //     Tile tile = map.getTile(x, y);
+    //     if (tile.isEmpty()) {
+    //         if (!isStillCooldown(plant)) {
+    //             tile.setPlant(plant, map);
+    //             plant.setLastPlantTime(System.currentTimeMillis());
+    //         } else {
+    //             throw new IllegalStateException("Plant is still in cooldown!");
+    //         }
+    //     } else {
+    //         throw new IllegalStateException("Tile already occupied!");
+    //     }
+    // }
 
     public void digPlant(int x, int y) {
         Tile tile = map.getTile(x, y);

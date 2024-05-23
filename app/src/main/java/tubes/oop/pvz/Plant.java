@@ -14,6 +14,7 @@ public class Plant extends PlantandZombie {
     // Map map;
     Tile currentTile;
     Timer moveTimer;
+    Time cooldownPlant;
 
 
     public Plant(String name, int hp, int attack_damage, int attack_speed, int cost, int range, int cooldown, int x, int y){

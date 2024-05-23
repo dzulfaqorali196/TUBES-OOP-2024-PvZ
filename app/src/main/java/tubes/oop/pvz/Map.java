@@ -10,6 +10,7 @@ import java.util.Random;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 
 public class Map {
@@ -33,6 +34,9 @@ public class Map {
             }
         }
         // totalZombie = 0;
+    }
+
+    public void gameStart(){
         Time.start();
         removeZombieMap();
         // spawnRandomZombie();
@@ -46,14 +50,62 @@ public class Map {
             throw new IndexOutOfBoundsException("Invalid coordinates!");
         }
     }
-    public void placePlant(Plant plant, int x, int y) throws IllegalStateException, IndexOutOfBoundsException {
+
+    public void setTotalZombie(int x){
+        totalZombie = x;
+    }
+
+    public void placePlant(Plant plant, int x, int y) {
+        boolean notYet = true;
         if (isValidCoordinate(x, y)) {
-            getTile(x, y).setPlant(plant, this);
-        } 
-        else {
-            throw new IndexOutOfBoundsException("Invalid coordinates!");
+            for (int i = 0; i < tiles.length; i++) {
+                for (int j = 0; j < tiles[0].length; j++) {
+                    if (!getTile(j, i).isEmpty()) {
+                        Plant thereIsPlant = getTile(j, i).getPlant();
+                        if (thereIsPlant.getName().equals(plant.getName())) {
+                            notYet = false;
+                            break;
+                        }
+                    }
+                }
+                if (!notYet) {
+                    break;
+                }
+            }            
+            if (notYet) {
+                getTile(x, y).setPlant(plant, this);
+                plant.setLastPlantTime(System.currentTimeMillis()); 
+                System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
+            } 
+            else if(!notYet){
+                if (isStillCooldown(plant)){
+                    System.out.println("Plant is still in cooldown");
+                    System.out.println("cooldown " + isStillCooldown(plant) + " current " + System.currentTimeMillis() + " last " + plant.getLastPlantTime());
+                }
+                else if (!isStillCooldown(plant)) {
+                    try {
+                        getTile(x, y).setPlant(plant, this);
+                        plant.setLastPlantTime(System.currentTimeMillis());
+                        System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
+                        System.out.println("cooldown " + isStillCooldown(plant));
+                        System.out.println("cooldown " + isStillCooldown(plant) + " current " + System.currentTimeMillis() + " last " + plant.getLastPlantTime() + "xxxxxx");
+                        System.out.println("HASIL" + (System.currentTimeMillis() - plant.getLastPlantTime()) + " COOLDOWN " + plant.getCooldown());
+                    } catch (IllegalStateException e) {
+                        System.out.println("Tile already has a plant");
+                    }
+                } 
+            }
+        } else {
+            System.out.println("Invalid coordinates!");
         }
     }
+    
+    public boolean isStillCooldown(Plant plant) {
+        long currentTime = System.currentTimeMillis();
+        long lastPlantTime = plant.getLastPlantTime();
+        long cooldown = plant.getCooldown();
+        return (currentTime - lastPlantTime) < cooldown;
+    }    
 
     public int getTotalZombie () {
         return totalZombie;
@@ -212,7 +264,7 @@ public class Map {
                             for (Zombie zombie : getTile(j, i).getZombie()) {
                                 if (zombie.getHp() <= 0) {
                                     getTile(j, i).removeZombie(zombie);
-                                    totalZombie -= 1;
+                                    setTotalZombie(totalZombie-1);
                                 }
                             }
                         }

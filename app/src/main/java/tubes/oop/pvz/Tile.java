@@ -38,7 +38,6 @@ public class Tile {
         return this.tileType;
     }
 
-    // Setters (be cautious modifying x and y)
     public void setPlant(Plant plant, Map map) throws IllegalStateException {
         if (isEmpty()) {
             this.plant = plant;
@@ -75,6 +74,7 @@ public class Tile {
         
     }
 
+
     public boolean isEmpty() {
         return getPlant()==null;
     }
@@ -99,7 +99,9 @@ public class Tile {
         }
     
         for (Zombie zombie : zombieList) {
-            output.append('Z');
+            if(zombie.getHp() > 0){
+                output.append('Z');
+            }
         }
     
         if (output.length() == 0) {
