@@ -456,6 +456,21 @@ public class Main {
             }
 
             map.printMap();
+
+            
+            if (map.getTotalZombie() <= 0 && time > 160){
+                System.out.println("Permainan berakhir, kamu menang!");
+                scheduler.shutdown();
+                sun.stopSunGeneration();
+            }
+            else if(zombieWin()){
+                System.out.println("Permainan berakhir, kamu kalah");
+                scheduler.shutdown();
+                sun.stopSunGeneration();
+                map.stopGame();
+            }
+
+            // main();
             
             // if (zombieLose()) {
             //     System.out.println("Player menang! Semua zombie telah dikalahkan.");
@@ -474,21 +489,35 @@ public class Main {
         }
     }
 
-    private static boolean zombieLose() {
-        for (int y = 0; y < 6; y++) {
-            for (int x = 0; x < 11; x++)  {
-                Tile tile = map.getTile(y, x);
-                if (!tile.noZombie()) {
-                    return false;
-                }
+    // private static boolean zombieLose() {
+    //     for (int y = 0; y < 6; y++) {
+    //         for (int x = 0; x < 11; x++)  {
+    //             Tile tile = map.getTile(y, x);
+    //             if (!tile.noZombie()) {
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // }
+
+    public class Task implements Runnable {
+        private volatile boolean running = true;
+    
+        public void run() {
+            while (running) {
+                // Lakukan pekerjaan
             }
         }
-        return true;
+    
+        public void stop() {
+            running = false;
+        }
     }
-
+    
     public static boolean zombieWin() {
-        for (int i = 0; i <= 6; i++) {
-            Tile tile = map.getTile(i, 0);
+        for (int i = 0; i < 6; i++) {
+            Tile tile = map.getTile(0, i);
             if (!tile.getZombie().isEmpty()) { 
                 return true;
             }

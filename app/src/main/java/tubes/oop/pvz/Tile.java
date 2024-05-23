@@ -9,6 +9,7 @@ public class Tile {
     private Plant plant;
     private List<Zombie> zombieList;
     private final String tileType;
+    private static int totalZombieEnd;
 
     public Tile(int x, int y, String tileType) {
         this.x = x;
@@ -118,6 +119,8 @@ public class Tile {
                 output.append(' ');
             }
         }
+
+        
     
         return output.toString();
     }
