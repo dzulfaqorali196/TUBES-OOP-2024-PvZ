@@ -1,6 +1,6 @@
 package tubes.oop.pvz;
 
-// import java.util.ArrayList;
+import java.util.ArrayList;
 // import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +10,7 @@ import java.util.Random;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeUnit;
 
 
@@ -597,6 +598,17 @@ public class Map {
                 }
             }
         }
+    }
+
+    public List<Zombie> getZombiesInRowNonVoid(int y) {
+        List<Zombie> zombiesInRow = new ArrayList<>();
+        for (int x = 0; x < tiles[y].length; x++) {
+            Tile tile = tiles[y][x];
+            if (tile != null) {
+                zombiesInRow.addAll(tile.getZombie());
+            }
+        }
+        return zombiesInRow;
     }
 }
  

@@ -143,6 +143,21 @@ public class PlantDeck {
         }
         System.out.println("");
     }
+
+    public void swapPlantDeckMain(int index1, int index2) throws InvalidIndexException{
+        if (index1 >= 0 && index1 < deck.size() && index2 >= 0 && index2 < deck.size()) {
+            Plant temp = deck.get(index1);
+            deck.set(index1, deck.get(index2));
+            deck.set(index2, temp);
+        } else {
+            if(!(index1 >= 0 && index1 < deck.size())){
+                throw new InvalidIndexException(index1);
+            }
+            else if(!(index2 >= 0 && index2 < deck.size())){
+                throw new InvalidIndexException(index2);
+            }
+        }
+    }
 }
 
 class InvalidIndexException extends java.lang.Exception {

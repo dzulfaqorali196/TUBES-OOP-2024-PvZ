@@ -14,24 +14,96 @@ public class Main {
     public static Sun sun;
     private static int time = 0;
 
+    public static final String RESET = "\033[0m";
+    public static final String GREEN = "\033[0;32m";
+    public static final String RED = "\033[0;31m";
+
     public static void main(String[] args) throws InvalidDeckException{
+        String michael = GREEN +
+                "    ███▄ ▄███▓ ██▓ ▄████▄   ██░ ██  ▄▄▄      ▓█████  ██▓           \n" +
+                "   ▓██▒▀█▀ ██▒▓██▒▒██▀ ▀█  ▓██░ ██▒▒████▄    ▓█   ▀ ▓██▒           \n" +
+                "   ▓██    ▓██░▒██▒▒▓█    ▄ ▒██▀▀██░▒██  ▀█▄  ▒███   ▒██░           \n" +
+                "   ▒██    ▒██ ░██░▒▓▓▄ ▄██▒░▓█ ░██ ░██▄▄▄▄██ ▒▓█  ▄ ▒██░           \n" +
+                "   ▒██▒   ░██▒░██░▒ ▓███▀ ░░▓█▒░██▓ ▓█   ▓██▒░▒████▒░██████▒       \n" +
+                "   ░ ▒░   ░  ░░▓  ░ ░▒ ▒  ░ ▒ ░░▒░▒ ▒▒   ▓▒█░░░ ▒░ ░░ ▒░▓  ░       \n" +
+                "   ░  ░      ░ ▒ ░  ░  ▒    ▒ ░▒░ ░  ▒   ▒▒ ░ ░ ░  ░░ ░ ▒  ░       \n" +
+                "   ░      ░    ▒ ░░         ░  ░░ ░  ░   ▒      ░     ░ ░          \n" +
+                "          ░    ░  ░ ░       ░  ░  ░      ░  ░   ░  ░    ░  ░       \n" +
+                "                  ░                                                \n" + RESET;
+        String vs = RED +        
+                "                     ██▒   █▓  ██████                                                \n" +
+                "                    ▓██░   █▒▒██    ▒                                                \n" +
+                "                     ▓██  █▒░░ ▓██▄                                                 \n" +
+                "                      ▒██ █░░  ▒   ██▒                                               \n" +
+                "                       ▒▀█░  ▒██████▒▒                                               \n" +
+                "                       ░ ▐░  ▒ ▒▓▒ ▒ ░                                               \n" +
+                "                       ░ ░░  ░ ░▒  ░ ░                                               \n" +
+                "                         ░░  ░  ░  ░                                                 \n" +
+                "                          ░        ░                                                 \n" +
+                "                         ░                                                           \n" + RESET;
+        String lalapan = GREEN +
+                " ██▓    ▄▄▄       ██▓    ▄▄▄       ██▓███   ▄▄▄       ███▄    █ \n" +
+                "▓██▒   ▒████▄    ▓██▒   ▒████▄    ▓██░  ██▒▒████▄     ██ ▀█   █ \n" +
+                "▒██░   ▒██  ▀█▄  ▒██░   ▒██  ▀█▄  ▓██░ ██▓▒▒██  ▀█▄  ▓██  ▀█ ██▒\n" +
+                "▒██░   ░██▄▄▄▄██ ▒██░   ░██▄▄▄▄██ ▒██▄█▓▒ ▒░██▄▄▄▄██ ▓██▒  ▐▌██▒\n" +
+                "░██████▒▓█   ▓██▒░██████▒▓█   ▓██▒▒██▒ ░  ░ ▓█   ▓██▒▒██░   ▓██░\n" +
+                "░ ▒░▓  ░▒▒   ▓▒█░░ ▒░▓  ░▒▒   ▓▒█░▒▓▒░ ░  ░ ▒▒   ▓▒█░░ ▒░   ▒ ▒ \n" +
+                "░ ░ ▒  ░ ▒   ▒▒ ░░ ░ ▒  ░ ▒   ▒▒ ░░▒ ░       ▒   ▒▒ ░░ ░░   ░ ▒░\n" +
+                "  ░ ░    ░   ▒     ░ ░    ░   ▒   ░░         ░   ▒      ░   ░ ░ \n" +
+                "    ░  ░     ░  ░    ░  ░     ░  ░               ░  ░         ░ \n" + RESET;
+
+        System.out.print(michael + vs + lalapan);
+
         try (Scanner scanner = new Scanner(System.in)) {
             int pilihan = 1;
             do {
+                boolean inputValid;
                 do{
                     if(pilihan < 1 || pilihan > 5){
                         System.out.println("Masukkan hanya angka 1-5, perintah tidak valid!");
                     }
-                    System.out.println("Pilih menu yang akan dijalankan:");
-                    System.out.println("1. Start Game");
-                    System.out.println("2. Help");
-                    System.out.println("3. Plant List");
-                    System.out.println("4. Zombie List");
-                    System.out.println("5. Exit");
+                    String leftAlignFormat = "| %-25s | %-70s |%n";
+                    String separator = "+---------------------------+------------------------------------------------------------------------+%n";
+                
+                    String[] penjelasanMenu = {
+                        "  ___           _     _                      __  __              ",
+                        " | _ \\___ _ _  (_)___| |__ _ ___ __ _ _ _   |  \\/  |___ _ _ _  _ ",
+                        " |  _/ -_) ' \\ | / -_) / _` (_-</ _` | ' \\  | |\\/| / -_) ' \\ || |",
+                        " |_| \\___|_||_|/ \\___|_\\__,_/__/\\__,_|_||_| |_|  |_\\___|_||_\\_,_|",
+                        "             |__/                                                "
+                    };
+
+                    for (String line : penjelasanMenu) {
+                        System.out.println(GREEN + line + RESET);
+                    }
+                    System.out.format(separator);
+                    System.out.format("| Menu                      | Deskripsi                                                              |%n");
+                    System.out.format(separator);
+                    System.out.format(leftAlignFormat, "1. Start Game", "Memulai permainan dan memilih tanaman untuk deck.");
+                    System.out.format(separator);
+                    System.out.format(leftAlignFormat, "2. Help", "Menampilkan menu bantuan ini.");
+                    System.out.format(separator);
+                    System.out.format(leftAlignFormat, "3. Plant List", "Menampilkan daftar tanaman yang bisa digunakan dalam permainan.");
+                    System.out.format(separator);
+                    System.out.format(leftAlignFormat, "4. Zombie List", "Menampilkan daftar zombie yang akan muncul dalam permainan.");
+                    System.out.format(separator);
+                    System.out.format(leftAlignFormat, "5. Exit", "Keluar dari permainan.");
+                    System.out.format(separator);
                     System.out.print("Masukkan pilihan: ");
-                    pilihan = scanner.nextInt();
-                    scanner.nextLine();
-                } while(pilihan < 1 || pilihan > 5);
+                    
+                    if (scanner.hasNextInt()) {
+                        pilihan = scanner.nextInt();
+                        scanner.nextLine();  // Consume newline character
+                        inputValid = (pilihan >= 1 && pilihan <= 5);
+                        if (!inputValid) {
+                            System.out.println("Masukkan hanya angka 1-5, perintah tidak valid!");
+                        }
+                    } else {
+                        System.out.println("Masukkan hanya angka 1-5, perintah tidak valid!");
+                        scanner.nextLine();  // Clear the invalid input
+                        inputValid = false;
+                    }
+                } while(!inputValid);
 
                 switch (pilihan) {
                     case 1:
@@ -210,6 +282,43 @@ public class Main {
             }
         } while (!hapusDeck.equals("Y") && !hapusDeck.equals("N"));
 
+        String swapDeck;
+
+        do {
+            System.out.println("Apakah Anda ingin menukar plant deck? (Y/N)");
+            swapDeck = scanner.nextLine();
+            if (swapDeck.equals("Y")) {
+                System.out.println("Masukkan nomor yang ingin ditukar (x y)");
+                swapDeck = scanner.nextLine();
+                String[] sukuString = swapDeck.split(" ");
+                if(sukuString.length == 2){
+                    int x = Integer.parseInt(sukuString[0]);
+                    int y = Integer.parseInt(sukuString[1]);
+                    if((1 <= x && x <= 10) && (1 <= y && y <= 10) && (x != y)){
+                        try {
+                            plantDeck.swapPlantDeckMain((x-1), (y-1));
+                        } 
+                        catch (InvalidIndexException e) {
+                            e.printStackTrace();
+                        }
+                        plantDeck.printDeck();
+                    }
+                    else{
+                        System.out.println("Masukkan hanya angka 1-10 dan tidak boleh sama, perintah tidak valid!");
+                    }
+                }
+                else{
+                    System.out.println("Masukkan hanya 2 angka (x, y), perintah tidak valid!");
+                }
+            } 
+            else if (swapDeck.equals("N")) {
+                break;
+            }
+            else{
+                System.out.println("Masukkan hanya huruf Y atau N, perintah tidak valid!");
+            }
+        } while (!swapDeck.equals("Y") && !swapDeck.equals("N"));
+
         System.out.println("Selamat bermain!");
         gameLoop(scanner);
     }
@@ -344,10 +453,17 @@ public class Main {
                 System.out.println("Perintah tidak dikenal.");
             }
 
-            // Cetak peta setelah setiap perintah
             map.printMap();
             
-            // Check game over conditions
+            // if (zombieLose()) {
+            //     System.out.println("Player menang! Semua zombie telah dikalahkan.");
+            //     scheduler.shutdown();
+            // }
+            // if (zombieWin()) {
+            //     System.out.println("Player kalah! Salah satu zombie telah mencapai kolom pertama.");
+            //     scheduler.shutdown();
+            // }
+
             // if (map.isZombieReachedEnd() || !map.isZombieSpawnPossible()) {
             //     System.out.println("Permainan berakhir.");
             //     scheduler.shutdown();
@@ -356,8 +472,116 @@ public class Main {
         }
     }
 
+    private static boolean zombieLose() {
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < 11; x++)  {
+                Tile tile = map.getTile(y, x);
+                if (!tile.noZombie()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean zombieWin() {
+        for (int i = 0; i <= 6; i++) {
+            Tile tile = map.getTile(i, 0);
+            if (!tile.getZombie().isEmpty()) { 
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void showHelp() {
-        System.out.println("Help:"); // tambahin
+        String leftAlignFormat = "| %-25s | %-70s |%n";
+        String separator = "+---------------------------+------------------------------------------------------------------------+%n";
+        String[] deskripsiPermainan = {
+            "  ___         _       _         _   ___                    _                ",
+            " |   \\ ___ __| |___ _(_)_ __ __(_) | _ \\___ _ _ _ __  __ _(_)_ _  __ _ _ _  ",
+            " | |) / -_|_-< / / '_| | '_ (_-< | |  _/ -_) '_| '  \\/ _` | | ' \\/ _` | ' \\ ",
+            " |___/\\___/__/_\\_\\_| |_| .__/__/_| |_| \\___|_| |_|_|_\\__,_|_|_||_\\__,_|_||_|",
+            "                       |_|                                                  "
+        };
+
+        for (String line : deskripsiPermainan) {
+            System.out.println(RED + line + RESET);
+        }
+        System.out.format(separator);
+        printWrappedText("Deskripsi", "Michael vs. Lalapan adalah permainan bertahan hidup di mana pemain harus melindungi rumah dari serangan zombie. Pemain menggunakan berbagai jenis tanaman yang memiliki kemampuan khusus untuk menghalangi dan mengalahkan zombie yang datang dari sisi kanan peta.");
+        System.out.format(separator);
+    
+        String[] caraBermain = {
+            "   ___                 ___                     _      ",
+            "  / __|__ _ _ _ __ _  | _ ) ___ _ _ _ __  __ _(_)_ _  ",
+            " | (__/ _` | '_/ _` | | _ \\/ -_) '_| '  \\/ _` | | ' \\ ",
+            "  \\___\\__,_|_| \\__,_| |___/\\___|_| |_|_|_\\__,_|_|_||_|",
+            "                                                      "
+        };
+
+        for (String line : caraBermain) {
+            System.out.println(GREEN + line + RESET);
+        }
+        System.out.format(separator);
+        printWrappedText("Memulai Permainan", "Pilih opsi 'Start Game' dari menu utama. Anda akan diberikan pilihan untuk menukar tanaman di inventory sebelum permainan dimulai. Pilih tanaman untuk dimasukkan ke dalam deck. Deck hanya bisa menampung maksimal 6 tanaman.");
+        System.out.format(separator);
+        printWrappedText("Menanam Tanaman", "Gunakan perintah 'P x y z' untuk menanam tanaman dari deck ke peta. Pastikan Anda memiliki cukup sun untuk menanam tanaman tersebut.");
+        System.out.format(separator);
+        printWrappedText("Menggali Tanaman", "Gunakan perintah 'D x y' untuk menggali dan menghapus tanaman dari peta.");
+        System.out.format(separator);
+        printWrappedText("Menghasilkan Sun", "Tanaman Sunflower akan menghasilkan sun secara berkala. Sun juga bisa didapatkan secara acak saat pagi hari.");
+        System.out.format(separator);
+        printWrappedText("Menangani Zombie", "Zombie akan muncul secara berkala dari sisi kanan peta. Setiap zombie memiliki atribut health, attack damage, attack speed, dan kemampuan khusus. Gunakan tanaman yang tepat untuk menghalangi dan mengalahkan zombie sebelum mereka mencapai sisi kiri peta.");
+        System.out.format(separator);
+    
+        String[] peraturanPermainan = {
+            "  ___              _                        ___                    _                ",
+            " | _ \\___ _ _ __ _| |_ _  _ _ _ __ _ _ _   | _ \\___ _ _ _ __  __ _(_)_ _  __ _ _ _  ",
+            " |  _/ -_) '_/ _` |  _| || | '_/ _` | ' \\  |  _/ -_) '_| '  \\/ _` | | ' \\/ _` | ' \\ ",
+            " |_| \\___|_| \\__,_|\\__|\\_,_|_| \\__,_|_||_| |_| \\___|_| |_|_|_\\__,_|_|_||_\\__,_|_||_|",
+            "                                                                                   "
+        };
+
+        for (String line : peraturanPermainan) {
+            System.out.println(RED + line + RESET);
+        }
+        System.out.format(separator);
+        printWrappedText("Tanaman", "Setiap tanaman memiliki atribut: Name, Cost, Health, Attack Damage, Attack Speed, Range, Cooldown.");
+        System.out.format(separator);
+        printWrappedText("Zombie", "Setiap zombie memiliki atribut: Name, Health, Attack Damage, Attack Speed, Is Aquatic.");
+        System.out.format(separator);
+        printWrappedText("Strategi", "Pemain harus mengatur strategi dengan bijak: Tanam tanaman di petak yang strategis untuk menghentikan zombie. Kelola sun dengan bijak untuk memastikan Anda memiliki cukup sun untuk menanam tanaman saat dibutuhkan.");
+        System.out.format(separator);
+    
+        String[] selamatBermain = {
+            "  _  __            _ _    _     _   _   _    _       ___                    _                ",
+            " | |/ /___ _ _  __| (_)__(_)   /_\\ | |_| |_ (_)_ _  | _ \\___ _ _ _ __  __ _(_)_ _  __ _ _ _  ",
+            " | ' </ _ \\ ' \\/ _` | (_-< |  / _ \\| / / ' \\| | '_| |  _/ -_) '_| '  \\/ _` | | ' \\/ _` | ' \\ ",
+            " |_|\\_\\___/_||_\\__,_|_/__/_| /_/ \\_\\_\\_\\_||_|_|_|   |_| \\___|_| |_|_|_\\__,_|_|_||_\\__,_|_||_|",
+            "                                                                                             "
+        };
+
+        for (String line : selamatBermain) {
+            System.out.println(GREEN + line + RESET);
+        }
+        System.out.format(separator);
+        printWrappedText("Kondisi Menang", "Pemain menang jika semua zombie telah dikalahkan.");
+        System.out.format(separator);
+        printWrappedText("Kondisi Kalah", "Pemain kalah jika salah satu zombie mencapai kolom pertama pada peta permainan.");
+        System.out.format(separator);
+    
+        String[] art = {
+            "  ___      _                 _     ___                     _      _ ",
+            " / __| ___| |__ _ _ __  __ _| |_  | _ ) ___ _ _ _ __  __ _(_)_ _ | |",
+            " \\__ \\/ -_) / _` | '  \\/ _` |  _| | _ \\/ -_) '_| '  \\/ _` | | ' \\|_|",
+            " |___/\\___|_\\__,_|_|_|_\\__,_|\\__| |___/\\___|_| |_|_|_\\__,_|_|_||_(_)",
+            "                                                                    "
+        };
+
+        for (String line : art) {
+            System.out.println(RED + line + RESET);
+        }
     }
 
     public static void showPlantList() {
@@ -368,6 +592,18 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Terjadi kesalahan saat menampilkan daftar tanaman: " + e.getMessage());
         }
+    }
+
+    private static void printWrappedText(String header, String text) {
+        int maxLineLength = 70;
+        while (text.length() > maxLineLength) {
+            int splitPos = text.lastIndexOf(' ', maxLineLength);
+            if (splitPos == -1) splitPos = maxLineLength;
+            System.out.format("| %-25s | %-70s |%n", header, text.substring(0, splitPos));
+            text = text.substring(splitPos).trim();
+            header = "";
+        }
+        System.out.format("| %-25s | %-70s |%n", header, text);
     }
 
     public static void showZombieList() {
