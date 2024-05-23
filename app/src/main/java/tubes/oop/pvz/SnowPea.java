@@ -3,7 +3,7 @@ package tubes.oop.pvz;
 public class SnowPea extends Shooter{
 
     public SnowPea(int x, int y) {
-        super("Snow Pea", 100, 25, 4, 175, -1, 20000, x, y);
+        super("Snow Pea", 100, 25, 4, 175, -1, 20000, false, x, y);
     }
 
     @Override

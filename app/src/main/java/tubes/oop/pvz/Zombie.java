@@ -51,7 +51,7 @@ public abstract class Zombie extends PlantandZombie {
     }
 
     public boolean getIsAquatic(){
-        return isAquatic;
+        return this.isAquatic;
     }
     
     public void takeDamage(int damage) {
@@ -157,26 +157,47 @@ public abstract class Zombie extends PlantandZombie {
                             break;
                         }
                     }
+
                     for (int i = getX(); i > 0; i--) {
                         if(!map.getTile(i, getY()).isEmpty()){
-                            if (map.getTile(i, getY()).getPlant().getRange()==-1) {
-                                if (terdepan) {
-                                    if (map.getTile(i, getY()).getPlant().getName()=="Snow Pea") {
-                                        takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
-                                        applySnowPeaEffect();
-                                    } else {
-                                        takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                            if (map.getTile(i, getY()).getTileType().equals("WATER") && map.getTile(i, getY()).getPlant() instanceof Lilypad) {
+                                Lilypad lilypad = (Lilypad) map.getTile(i, getY()).getPlant();
+                                if (!lilypad.isEmpty()) {
+                                    if (lilypad.getPlant().getRange()==-1) {
+                                        if (terdepan) {
+                                            if (lilypad.getPlant().equals("Snow Pea")) {
+                                                takeDamage(lilypad.getPlant().getAttackDamage());
+                                                applySnowPeaEffect();
+                                            } else {
+                                                takeDamage(lilypad.getPlant().getAttackDamage());
+                                            }
+                                        } else {
+                                            return;
+                                        }
                                     }
+                                    
                                 } else {
                                     return;
-                                }     
+                                }
+                                    
+                            } else if (map.getTile(i, getY()).getTileType().equals("GRASS")) {
+                                if (map.getTile(i, getY()).getPlant().getRange()==-1) {
+                                    if (terdepan) {
+                                        if (map.getTile(i, getY()).getPlant().getName()=="Snow Pea") {
+                                            takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                                            applySnowPeaEffect();
+                                        } else {
+                                            takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                                        }
+                                    } else {
+                                        return;
+                                    }     
+                                }
                             }
-                        }
+                        } 
                     }
                 }
             }, 0, 4000);
-       
-        
     }
 
     public void move(Tile fromTile, Tile toTile) {

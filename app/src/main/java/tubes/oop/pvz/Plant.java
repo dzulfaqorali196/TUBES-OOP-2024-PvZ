@@ -6,8 +6,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Plant extends PlantandZombie {
+    public boolean isAquatic;
     private int cost;
-    private int range;
+    public int range;
     private long cooldown;
     private long lastattackTime;
     private long lastPlantTime;
@@ -17,7 +18,7 @@ public class Plant extends PlantandZombie {
     Time cooldownPlant;
 
 
-    public Plant(String name, int hp, int attack_damage, int attack_speed, int cost, int range, long cooldown, int x, int y){
+    public Plant(String name, int hp, int attack_damage, int attack_speed, int cost, int range, long cooldown, boolean isAquatic, int x, int y){
         super(name, hp, attack_damage, attack_speed, x, y);
         this.cost = cost;
         this.range = range;
@@ -28,6 +29,10 @@ public class Plant extends PlantandZombie {
 
     public long getLastPlantTime(){
         return lastPlantTime;
+    }
+    
+    public boolean getIsAquatic(){
+        return this.isAquatic;
     }
 
     public long setLastPlantTime(long lastPlantTime){

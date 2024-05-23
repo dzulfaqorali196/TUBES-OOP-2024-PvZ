@@ -38,10 +38,10 @@ public class Tile {
         return this.tileType;
     }
 
-    public void setPlant(Plant plant, Map map) throws IllegalStateException {
+    public void setPlant(Plant plant) throws IllegalStateException {
         if (isEmpty()) {
             this.plant = plant;
-            plant.currentTile = this;
+            this.plant.currentTile = this;
             // plant.map = map;
             System.out.println("x: " + this.getX() + " y: " + this.getY());
 
