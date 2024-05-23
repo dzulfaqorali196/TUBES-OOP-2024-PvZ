@@ -8,7 +8,7 @@ import java.util.TimerTask;
 public class Plant extends PlantandZombie {
     private int cost;
     private int range;
-    private int cooldown;
+    private long cooldown;
     private long lastattackTime;
     private long lastPlantTime;
     // Map map;
@@ -17,7 +17,7 @@ public class Plant extends PlantandZombie {
     Time cooldownPlant;
 
 
-    public Plant(String name, int hp, int attack_damage, int attack_speed, int cost, int range, int cooldown, int x, int y){
+    public Plant(String name, int hp, int attack_damage, int attack_speed, int cost, int range, long cooldown, int x, int y){
         super(name, hp, attack_damage, attack_speed, x, y);
         this.cost = cost;
         this.range = range;
@@ -54,7 +54,7 @@ public class Plant extends PlantandZombie {
         return this.range;
     }
 
-    public int getCooldown(){
+    public long getCooldown(){
         return this.cooldown;
     }
 

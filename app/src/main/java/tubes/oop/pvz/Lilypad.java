@@ -4,7 +4,7 @@ public class Lilypad extends Aquatic{
     private Plant plantOnWater;
 
     public Lilypad(int x, int y) {
-        super("Lilypad", 100, 0, 0, 25, 0, 10, x, y);
+        super("Lilypad", 100, 0, 0, 25, 0, 10000, x, y);
     }
 
     @Override

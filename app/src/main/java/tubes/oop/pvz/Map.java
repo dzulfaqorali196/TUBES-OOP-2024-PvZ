@@ -80,16 +80,12 @@ public class Map {
             else if(!notYet){
                 if (isStillCooldown(plant)){
                     System.out.println("Plant is still in cooldown");
-                    System.out.println("cooldown " + isStillCooldown(plant) + " current " + System.currentTimeMillis() + " last " + plant.getLastPlantTime());
                 }
                 else if (!isStillCooldown(plant)) {
                     try {
                         getTile(x, y).setPlant(plant, this);
                         plant.setLastPlantTime(System.currentTimeMillis());
                         System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
-                        System.out.println("cooldown " + isStillCooldown(plant));
-                        System.out.println("cooldown " + isStillCooldown(plant) + " current " + System.currentTimeMillis() + " last " + plant.getLastPlantTime() + "xxxxxx");
-                        System.out.println("HASIL" + (System.currentTimeMillis() - plant.getLastPlantTime()) + " COOLDOWN " + plant.getCooldown());
                     } catch (IllegalStateException e) {
                         System.out.println("Tile already has a plant");
                     }
