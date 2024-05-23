@@ -37,9 +37,6 @@ public class Time {
                 }
             }
 
-            if (currentTime >= gameDuration) {
-                endGame();
-            }
         }, 0, 1, TimeUnit.SECONDS);
     }
 

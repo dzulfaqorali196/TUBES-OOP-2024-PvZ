@@ -360,7 +360,9 @@ public class Main {
                 scheduler.schedule(new Runnable() {
                     @Override
                     public void run() {
-                        player.increaseSun(25); 
+                        if((time % 200) <= 100){
+                            player.increaseSun(25); 
+                        }
                         System.out.println("Sun: " + Player.getSunScore());
                     }
                 }, delay, TimeUnit.SECONDS);

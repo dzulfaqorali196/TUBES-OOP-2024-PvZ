@@ -179,10 +179,8 @@ public abstract class Zombie extends PlantandZombie {
                                             else if (lilypad.getPlant().equals("Jalapeno")) {
                                                 List<Zombie> zombiesInRow = map.getZombiesInRowNonVoid(getY());
                                                 for (Zombie zombie : zombiesInRow) {
-                                                    System.out.println("zombie " + zombie.getName() + " darah " + zombie.getHp());
                                                     zombie.takeDamage(lilypad.getPlant().getAttackDamage());
                                                     takeDamage(lilypad.getPlant().getAttackDamage());
-                                                    System.out.println("zombie " + zombie.getName() + " darah " + zombie.getHp());
                                                 }
                                                 map.getTile(i, getY()).removePlant();
                                             } 
