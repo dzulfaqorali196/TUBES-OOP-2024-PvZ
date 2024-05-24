@@ -21,7 +21,7 @@ public class Map {
     private final Tile[][] tiles;
     private Random random;
     private static int totalZombie = 0;
-    
+    private static boolean validationMain = true;
     private static int targetTotalZombie;
 
     private Timer spawnTimer;
@@ -41,6 +41,14 @@ public class Map {
             }
         }
         // totalZombie = 0;
+    }
+
+    public boolean getValidationMain(){
+        return validationMain;
+    }
+
+    public void setValidationMain(boolean x){
+        validationMain = x;
     }
 
     public void gameStart(){
@@ -136,6 +144,7 @@ public class Map {
                                         System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
                                         lilyPad.water();
                                     } catch (InvalidInputException e) {
+                                        setValidationMain(false);
                                         System.out.println("Can't place plant here: " + e.getMessage());
                                     }
                                 } else {
@@ -321,12 +330,12 @@ public class Map {
     }
     
     public void spawnRandomZombie(){
-        if((Time.getCurrentTime()>= 20) && (Time.getCurrentTime() <= 160)){
+        if((Time.getCurrentTime()>= 20) && (Time.getCurrentTime() <= 140)){
 
-            if (totalZombie <= getTotalZombieTarget()) {
+            if (totalZombie <= 10) {
                 for (int y= 0; y<6; y++) {
                     double spawnPorbability = random.nextDouble();
-                    if ((spawnPorbability<=0.3) && (totalZombie < getTotalZombieTarget())){
+                    if ((spawnPorbability<=0.3) && (totalZombie < 10)){
                         int probability = (int) (Math.random() * 10); 
                         Zombie zombie;
 
@@ -375,7 +384,57 @@ public class Map {
                 return;
             }
         }
+        else if((Time.getCurrentTime()> 140) && (Time.getCurrentTime() <= 160)){
+            System.out.println("Flag Zombie is starting to attack your fields!");
+            if (totalZombie <= 25) {
+                for (int y= 0; y<6; y++) {
+                    double spawnPorbability = random.nextDouble();
+                    if ((spawnPorbability<=0.3) && (totalZombie < 25)){
+                        int probability = (int) (Math.random() * 10); 
+                        Zombie zombie;
 
+                        System.out.println(totalZombie);
+
+                        if (probability == 1) {
+                            zombie = new NormalZombie(10,y, this);
+                        } 
+                        else if (probability == 2) {
+                            zombie = new BucketheadZombie(10,y, this);
+                        } 
+                        else if (probability == 3) {
+                            zombie = new ConeheadZombie(10,y, this);
+                        } 
+                        else if (probability == 4) {
+                            zombie = new DolphinRiderZombie(10,y, this);
+                        } 
+                        else if (probability == 5) {
+                            zombie = new DuckyTubeZombie(10,y, this);
+                        } 
+                        else if (probability == 6) {
+                            zombie = new FootballZombie(10,y, this);
+                        } 
+                        else if (probability == 7) {
+                            zombie = new GiantZombie(10,y, this);
+                        } 
+                        else if (probability == 8) {
+                            zombie = new JesterZombie(10,y,  this);
+                        } 
+                        else if (probability == 9) {
+                            zombie = new PoleVaultingZombie(10,y, this);
+                        } 
+                        else {
+                            zombie = new ShieldZombie(10,y, this);
+                        }
+
+                        if ((zombie.getIsAquatic()==true && getTile(10,y).getTileType() == "WATER") || (zombie.getIsAquatic()==false && getTile(10,y).getTileType() == "GRASS")) {
+                            placeZombie(zombie, 10, y);
+                            System.out.println(zombie.getName() + "(" + y + ") are starting to attack your fields!");
+                            totalZombie += 1;
+                        }
+                    }
+                }
+            }        
+        }
     }
         // if ((currentTime >= 20) && (currentTime <= 160) && (totalZombie < 10)) {
         //     for (int y = 0; y < height; y++) {
@@ -423,7 +482,7 @@ public class Map {
     public void startSpawnZombie () {
         spawnTimer = new Timer();
 
-        if (Time.getCurrentTime()<=140) {
+        if (Time.getCurrentTime() <= 140) {
             setTotalZombieTarget(10);
             spawnTimer.scheduleAtFixedRate(new TimerTask() {
 
@@ -432,18 +491,7 @@ public class Map {
                     spawnRandomZombie();
                 }
             }, 0, 3000);
-        } else {
-            System.out.println("Flag Zombie is starting to attack your fields!");
-            setTotalZombieTarget(25);
-            spawnTimer.scheduleAtFixedRate(new TimerTask() {
-
-                @Override
-                public void run() {
-                    spawnRandomZombie();
-                }
-            }, 0, 1000);
-        }
-        
+        }        
     }
 
     public int getTotalZombieTarget(){

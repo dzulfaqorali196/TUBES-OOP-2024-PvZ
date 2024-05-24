@@ -14,6 +14,7 @@ public class Time {
 
     private static int currentTime = 0;
     private static boolean isMorning = true;
+    private static boolean isFlag = false;
     private static Timer startTime;
     // ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 

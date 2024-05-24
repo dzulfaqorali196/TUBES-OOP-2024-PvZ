@@ -436,8 +436,10 @@ public class Main {
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
                                 map.placePlant(plant, (x), (y-1));
-                                player.decreaseSun(plant.getCostPlant());
-                                
+                                if (map.getValidationMain() == true){
+                                    player.decreaseSun(plant.getCostPlant());
+                                }
+                                map.setValidationMain(false);
                                 // System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
                                 System.out.println("Sun tersisa: " + Sun.getSunScore());
                             }
