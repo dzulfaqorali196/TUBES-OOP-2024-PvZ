@@ -435,11 +435,13 @@ public class Main {
                         Plant plant = plantDeck.getPlant(deckIndex-1);
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
-                                map.placePlant(plant, (x), (y-1));
-                                if(!map.getTile(x, y-1).isEmpty()){
-                                    if(map.getTile(x, y-1).getPlant().getName().equals(plant.getName())){
-                                        player.decreaseSun(plant.getCostPlant());
-                                    }
+                                if(map.getTile(x, y-1).isEmpty()){
+                                    map.placePlant(plant, (x), (y-1));
+                                    if(!map.getTile(x, y-1).isEmpty()){
+                                        if(map.getTile(x, y-1).getPlant().getName().equals(plant.getName())){
+                                            player.decreaseSun(plant.getCostPlant());
+                                        }
+                                }
                                 }
                                 // map.setValidationMain(false);
                                 // System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
