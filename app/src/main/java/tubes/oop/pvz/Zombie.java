@@ -177,7 +177,21 @@ public abstract class Zombie extends PlantandZombie {
                     for (int i = getX(); i > 0; i--) {
                         if(!map.getTile(i, getY()).isEmpty()){
                             if (map.getTile(i, getY()).getTileType().equals("WATER")) {
-                                if(map.getTile(i, getY()).getPlant() instanceof Lilypad){
+                                if(map.getTile(i, getY()).getPlant().getName().equals("Tanglekelp")){
+                                    if (getY() == 3 || getY() == 4) {
+                                        if (i > 0) {
+                                            List<Zombie> zombiesInFront = map.getTile(i + 1, getY()).getZombie();
+                                            zombiesInFront = map.getTile(i, getY()).getZombie();
+                                                if(!zombiesInFront.isEmpty()){
+                                                    for (Zombie zombie : zombiesInFront) {
+                                                        zombie.takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
+                                                    }
+                                                    map.getTile(i, getY()).removePlant();
+                                                }
+                                        }
+                                    } 
+                                }
+                                else if(map.getTile(i, getY()).getPlant() instanceof Lilypad){
                                     Lilypad lilypad = (Lilypad) map.getTile(i, getY()).getPlant();
                                     if (!lilypad.isEmpty()) {
                                         if (lilypad.getPlant().getRange()==-1) {
@@ -201,6 +215,7 @@ public abstract class Zombie extends PlantandZombie {
                                                 else if(lilypad.getName().equals("Squash")){
                                                     if (i > 0) {
                                                         List<Zombie> zombiesInFront = map.getTile(i + 1, getY()).getZombie();
+                                                        zombiesInFront = map.getTile(i, getY()).getZombie();
                                                         if(!zombiesInFront.isEmpty()){
                                                             for (Zombie zombie : zombiesInFront) {
                                                                 zombie.takeDamage(lilypad.getPlant().getAttackDamage());
@@ -213,6 +228,7 @@ public abstract class Zombie extends PlantandZombie {
                                                     if (getY() == 3 || getY() == 4) {
                                                         if (i > 0) {
                                                             List<Zombie> zombiesInFront = map.getTile(i + 1, getY()).getZombie();
+                                                            zombiesInFront = map.getTile(i, getY()).getZombie();
                                                             if(!zombiesInFront.isEmpty()){
                                                                 for (Zombie zombie : zombiesInFront) {
                                                                     zombie.takeDamage(lilypad.getPlant().getAttackDamage());
@@ -239,19 +255,6 @@ public abstract class Zombie extends PlantandZombie {
                                         return;
                                     }
                                 }    
-                                else if(map.getTile(i, getY()).getPlant().getName().equals("Tanglekelp")){
-                                    if (getY() == 3 || getY() == 4) {
-                                        if (i > 0) {
-                                            List<Zombie> zombiesInFront = map.getTile(i + 1, getY()).getZombie();
-                                            if(!zombiesInFront.isEmpty()){
-                                                for (Zombie zombie : zombiesInFront) {
-                                                    zombie.takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
-                                                }
-                                                map.getTile(i, getY()).removePlant();
-                                            }
-                                        }
-                                    } 
-                                }
                             } else if (map.getTile(i, getY()).getTileType().equals("GRASS")) {
                                 if (map.getTile(i, getY()).getPlant().getRange()==-1) {
                                     if (terdepan) {
@@ -276,6 +279,7 @@ public abstract class Zombie extends PlantandZombie {
                                         else if(map.getTile(i, getY()).getPlant().getName()=="Squash"){
                                             if (i > 0) {
                                                 List<Zombie> zombiesInFront = map.getTile(i + 1, getY()).getZombie();
+                                                zombiesInFront = map.getTile(i, getY()).getZombie();
                                                 if(!zombiesInFront.isEmpty()){
                                                     for (Zombie zombie : zombiesInFront) {
                                                         zombie.takeDamage(map.getTile(i, getY()).getPlant().getAttackDamage());
