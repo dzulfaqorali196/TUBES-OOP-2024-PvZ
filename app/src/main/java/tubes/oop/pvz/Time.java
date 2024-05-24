@@ -84,7 +84,6 @@ public class Time {
             startTime.cancel();
             startTime.purge();
         }
-        System.out.println("Selamat, kamu memenangkan permainan!");
     }
 
     public void scheduleAtFixedRate(TimerTask timerTask, int i, int j) {

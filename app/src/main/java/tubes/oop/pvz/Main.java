@@ -436,8 +436,10 @@ public class Main {
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
                                 map.placePlant(plant, (x), (y-1));
-                                if (map.getValidationMain() == true){
-                                    player.decreaseSun(plant.getCostPlant());
+                                if(!map.getTile(x, y-1).isEmpty()){
+                                    if(map.getTile(x, y-1).getPlant().getName().equals(plant.getName())){
+                                        player.decreaseSun(plant.getCostPlant());
+                                    }
                                 }
                                 // map.setValidationMain(false);
                                 // System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
@@ -481,7 +483,7 @@ public class Main {
             map.getTotalZombie();
 
             
-            if (time>160 &&zombieLose()){
+            if (time>160 && zombieLose()){
                 String lose = GREEN +
                 " ▄████▄   ▒█████   ███▄    █   ▄████  ██▀███   ▄▄▄     ▄▄▄█████▓  ██████    ▓██   ██▓ ▒█████   █    ██     █     █░ ██▓ ███▄    █  ▐██▌ \n" +
                 "▒██▀ ▀█  ▒██▒  ██▒ ██ ▀█   █  ██▒ ▀█▒▓██ ▒ ██▒▒████▄   ▓  ██▒ ▓▒▒██    ▒     ▒██  ██▒▒██▒  ██▒ ██  ▓██▒   ▓█░ █ ░█░▓██▒ ██ ▀█   █  ▐██▌ \n" +
@@ -586,7 +588,7 @@ public class Main {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 11; j++) {
                 Tile tile = map.getTile(i, j);
-                if (!tile.noZombie()) {
+                if (!tile.noZombie() && time > 160) {
                     isZombieLost=false;
                 }
             }

@@ -129,7 +129,7 @@ public class Map {
                     }            
                     if (notYet) {
                         if (getTile(x, y).getTileType().equals("WATER")) {
-                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
+                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tanglekelp")) {
                                 // Tanaman air di tile air
                                 getTile(x, y).setPlant(plant);
                                 plant.setLastPlantTime(System.currentTimeMillis()); 
@@ -152,7 +152,7 @@ public class Map {
                                 }
                             }
                         } else if (getTile(x, y).getTileType().equals("GRASS")) {
-                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
+                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tanglekelp")) {
                                 // Tanaman air di tile rumput tidak bisa ditanam
                                 System.out.println("Invalid input: Can't place this plant here!");
                             } else {
@@ -214,7 +214,7 @@ public class Map {
                     }
                     else if (!isStillCooldown(plant)) {
                         if (getTile(x, y).getTileType().equals("WATER")) {
-                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
+                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tanglekelp")) {
                                 // Tanaman air di tile air
                                 getTile(x, y).setPlant(plant);
                                 plant.setLastPlantTime(System.currentTimeMillis()); 
@@ -236,7 +236,7 @@ public class Map {
                                 }
                             }
                         } else if (getTile(x, y).getTileType().equals("GRASS")) {
-                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
+                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tanglekelp")) {
                                 // Tanaman air di tile rumput tidak bisa ditanam
                                 System.out.println("Invalid input: Can't place this plant here!");
                             } else {
