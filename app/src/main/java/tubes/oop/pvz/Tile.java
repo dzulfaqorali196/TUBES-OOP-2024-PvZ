@@ -44,7 +44,13 @@ public class Tile {
             this.plant = plant;
             this.plant.currentTile = this;
             // plant.map = map;
-            System.out.println("x: " + this.getX() + " y: " + this.getY());
+            System.out.println("x: " + this.getX() + " y: " + (this.getY()+1));
+
+            if (plant instanceof Sunflower) {
+                Sunflower sunflower = (Sunflower) plant;
+                sunflower.produceSun();
+
+            }
 
             // plant.startAttackZombie();
 

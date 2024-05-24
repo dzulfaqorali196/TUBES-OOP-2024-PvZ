@@ -5,12 +5,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Main {
     public static Map map = new Map(11, 6);
-    public static Inventory inventory = new Inventory();
     public static PlantDeck plantDeck = new PlantDeck(map);
     public static ListZombie listZombie = new ListZombie();
     public static Player player = new Player();
+    public static Inventory inventory = new Inventory(player);
+
+    public static Timer sunTask;
+
     public static Sun sun;
     private static int time = 0;
 
@@ -352,22 +358,36 @@ public class Main {
         //         }
         //     }
         // };
+        
+        sunTask = new Timer();
+        int delay = 5 + (int)(Math.random() * ((10 - 5) + 1));
 
-        Runnable sunTask = new Runnable() {
+        sunTask.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                int delay = 5 + (int)(Math.random() * ((10 - 5) + 1)); 
-                scheduler.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        if((time % 200) <= 100){
-                            player.increaseSun(25); 
-                        }
-                        System.out.println("Sun: " + Player.getSunScore());
-                    }
-                }, delay, TimeUnit.SECONDS);
+                if((time % 200) <= 100){
+                    player.increaseSun(25); 
+                }
+                System.out.println("Sun: " + Player.getSunScore());
             }
-        };
+        }, delay*1000, delay*1000);
+
+
+        // Runnable sunTask = new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         int delay = 5 + (int)(Math.random() * ((10 - 5) + 1)); 
+        //         scheduler.schedule(new Runnable() {
+        //             @Override
+        //             public void run() {
+        //                 if((time % 200) <= 100){
+        //                     player.increaseSun(25); 
+        //                 }
+        //                 System.out.println("Sun: " + Player.getSunScore());
+        //             }
+        //         }, delay, TimeUnit.SECONDS);
+        //     }
+        // };
 
         // Runnable attackTask = new Runnable() {
         //     @Override
@@ -393,7 +413,7 @@ public class Main {
 
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
         // scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
-        scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
+        // scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
         // scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
         // scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
 
@@ -417,6 +437,7 @@ public class Main {
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
                                 map.placePlant(plant, (x), (y-1));
+                                player.decreaseSun(plant.getCostPlant());
                                 
                                 // System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
                                 System.out.println("Sun tersisa: " + Sun.getSunScore());
@@ -442,7 +463,7 @@ public class Main {
                     try {
                         int x = Integer.parseInt(parts[1]);
                         int y = Integer.parseInt(parts[2]);
-                        map.getTile(x-1, y-1).removePlant();
+                        map.getTile(x, y-1).removePlant();
                         System.out.println("Digging plant on (" + x + ", " + y + ")");
                     } catch (NumberFormatException | IndexOutOfBoundsException e) {
                         System.out.println("Perintah tidak valid.");

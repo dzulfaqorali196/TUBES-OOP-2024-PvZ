@@ -4,11 +4,12 @@ import java.util.List;
 
 public class Inventory {
     private List<Plant> listPlant;
+    
     Map map;
     
-    public Inventory() {
+    public Inventory(Player player) {
         listPlant = new ArrayList<>();
-        listPlant.add(new Sunflower(0, 0));
+        listPlant.add(new Sunflower(0, 0, player));
         listPlant.add(new PeaShooter(0, 0));
         listPlant.add(new Wallnut(0, 0));
         listPlant.add(new SnowPea(0, 0));
@@ -16,7 +17,7 @@ public class Inventory {
         listPlant.add(new Lilypad(0, 0));
         listPlant.add(new TallWallnut(0, 0));
         listPlant.add(new RepeaterPea(0, 0));
-        listPlant.add(new Sunflower(0, 0));
+        listPlant.add(new TangleKelp(0, 0));
         listPlant.add(new Jalapeno(0, 0));
     }
 
