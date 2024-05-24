@@ -139,6 +139,8 @@ public abstract class Zombie extends PlantandZombie {
 
     public void startAttacking(Plant plant) {
         isAttacking = true;
+        moveTimer.cancel();
+        moveTimer = null;
         attackTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
