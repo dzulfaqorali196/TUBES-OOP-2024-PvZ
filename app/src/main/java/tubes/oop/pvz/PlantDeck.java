@@ -14,6 +14,14 @@ public class PlantDeck {
         this.map = map;
     }
 
+    public void makeDeckEmpty(Map map){
+        this.deck = new ArrayList<Plant>(6);
+        for (int i = 0; i < 6; i++) {
+            deck.add(null);
+        }
+        this.map = map;
+    }
+
     public boolean isPlantExist(Plant plant){
         for(Plant currentPlant : deck){
             if(currentPlant == plant){

@@ -26,14 +26,21 @@ public class ListZombie {
     }
 
     public void printZombieInfo() {
+        List<Zombie> zombies = getListZombie();
+        
+        // Print table header with border
+        System.out.println("+-----+----------------------+------------+-----------------+-----------------+----------------------+");
+        System.out.printf("| %-3s | %-20s | %-10s | %-15s | %-15s | %-20s |%n", 
+            "No", "Nama", "Health", "Attack Damage", "Attack Speed", "Is Aquatic Zombie");
+        System.out.println("+-----+----------------------+------------+-----------------+-----------------+----------------------+");
+    
         int i = 0;
-        for(Zombie currentZombie : getListZombie()){
-            System.out.println("----- " + currentZombie.getName() + " -----");
-            System.out.println("Nama : " + currentZombie.getName());
-            System.out.println("Health : " + currentZombie.getHp());
-            System.out.println("Attack damage : " + currentZombie.getAttackDamage());
-            System.out.println("Attack speed : " + currentZombie.getAttackSpeed());
-            System.out.println("Is Aquatic Zombie : " + currentZombie.getIsAquatic());
+        for (Zombie currentZombie : zombies) {
+            System.out.printf("| %-3d | %-20s | %-10d | %-15d | %-15d | %-20s |%n", 
+                i + 1, currentZombie.getName(), currentZombie.getHp(), 
+                currentZombie.getAttackDamage(), currentZombie.getAttackSpeed(), 
+                currentZombie.getIsAquatic() ? "Yes" : "No");
+            System.out.println("+-----+----------------------+------------+-----------------+-----------------+----------------------+");
             i++;
         }
     }

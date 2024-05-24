@@ -61,7 +61,7 @@ public class Tile {
                 throw new IllegalStateException("Invalid coordinates!");
             }
         } else {
-            throw new IllegalStateException("Tile already occupied!");
+            System.out.println("Tile already occupied!");
         }
     }
 

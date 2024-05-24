@@ -26,6 +26,10 @@ public class Main {
     public static final String RESET = "\033[0m";
     public static final String GREEN = "\033[0;32m";
     public static final String RED = "\033[0;31m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+
 
     public static void main(String[] args) throws InvalidDeckException{
         String michael = GREEN +
@@ -369,7 +373,7 @@ public class Main {
 
             @Override
             public void run() {
-                zombieLost();
+                zombieLose();
             }
         };
         
@@ -402,13 +406,15 @@ public class Main {
 
             if (command.equalsIgnoreCase("E")) {
                 System.out.println("Permainan berakhir.");
-                player.resetSunScore();
+                Player.resetSunScore();
                 scheduler.shutdown();
-                time    = 0;
+                time = 0;
             
                 
                 sunTask.cancel();
+                plantDeck.makeDeckEmpty(map);
                 map.stopGame();
+
                 
                 try {
                     main(arguments);
@@ -470,10 +476,22 @@ public class Main {
             }
 
             map.printMap();
+            map.getTotalZombie();
 
             
-            if (time>160 &&zombieLost()){
-                System.out.println("Permainan berakhir, kamu menang!");
+            if (time>160 &&zombieLose()){
+                String lose = GREEN +
+                " ▄████▄   ▒█████   ███▄    █   ▄████  ██▀███   ▄▄▄     ▄▄▄█████▓  ██████    ▓██   ██▓ ▒█████   █    ██     █     █░ ██▓ ███▄    █  ▐██▌ \n" +
+                "▒██▀ ▀█  ▒██▒  ██▒ ██ ▀█   █  ██▒ ▀█▒▓██ ▒ ██▒▒████▄   ▓  ██▒ ▓▒▒██    ▒     ▒██  ██▒▒██▒  ██▒ ██  ▓██▒   ▓█░ █ ░█░▓██▒ ██ ▀█   █  ▐██▌ \n" +
+                "▒▓█    ▄ ▒██░  ██▒▓██  ▀█ ██▒▒██░▄▄▄░▓██ ░▄█ ▒▒██  ▀█▄ ▒ ▓██░ ▒░░ ▓██▄        ▒██ ██░▒██░  ██▒▓██  ▒██░   ▒█░ █ ░█ ▒██▒▓██  ▀█ ██▒ ▐██▌ \n" +
+                "▒▓▓▄ ▄██▒▒██   ██░▓██▒  ▐▌██▒░▓█  ██▓▒██▀▀█▄  ░██▄▄▄▄██░ ▓██▓ ░   ▒   ██▒     ░ ▐██▓░▒██   ██░▓▓█  ░██░   ░█░ █ ░█ ░██░▓██▒  ▐▌██▒ ▓██▒ \n" +
+                "▒ ▓███▀ ░░ ████▓▒░▒██░   ▓██░░▒▓███▀▒░██▓ ▒██▒ ▓█   ▓██▒ ▒██▒ ░ ▒██████▒▒     ░ ██▒▓░░ ████▓▒░▒▒█████▓    ░░██▒██▓ ░██░▒██░   ▓██░ ▒▄▄  \n" +
+                "░ ░▒ ▒  ░░ ▒░▒░▒░ ░ ▒░   ▒ ▒  ░▒   ▒ ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░ ▒ ░░   ▒ ▒▓▒ ▒ ░      ██▒▒▒ ░ ▒░▒░▒░ ░▒▓▒ ▒ ▒    ░ ▓░▒ ▒  ░▓  ░ ▒░   ▒ ▒  ░▀▀▒ \n" +
+                "  ░  ▒     ░ ▒ ▒░ ░ ░░   ░ ▒░  ░   ░   ░▒ ░ ▒░  ▒   ▒▒ ░   ░    ░ ░▒  ░ ░    ▓██ ░▒░   ░ ▒ ▒░ ░░▒░ ░ ░      ▒ ░ ░   ▒ ░░ ░░   ░ ▒░ ░  ░ \n" +
+                "░        ░ ░ ░ ▒     ░   ░ ░ ░ ░   ░   ░░   ░   ░   ▒    ░      ░  ░  ░      ▒ ▒ ░░  ░ ░ ░ ▒   ░░░ ░ ░      ░   ░   ▒ ░   ░   ░ ░     ░ \n" +
+                "░ ░          ░ ░           ░       ░    ░           ░  ░              ░      ░ ░         ░ ░     ░            ░     ░           ░  ░    \n" +
+                "░                                                                            ░ ░                                                        \n";
+                System.out.print(lose);
                 scheduler.shutdown();
                 map.stopGame();
                 sunTask.cancel();
@@ -489,8 +507,20 @@ public class Main {
                 // break;
             }
             else if(zombieWin()){
-                System.out.println("Permainan berakhir, kamu kalah");
+                String win = RED +
+                "  ██████  ▒█████   ██▀███   ██▀███ ▓██   ██▓   ▓██   ██▓ ▒█████   █    ██     ██▓     ▒█████    ██████ ▓█████  ▐██▌ \n" +
+                "▒██    ▒ ▒██▒  ██▒▓██ ▒ ██▒▓██ ▒ ██▒▒██  ██▒    ▒██  ██▒▒██▒  ██▒ ██  ▓██▒   ▓██▒    ▒██▒  ██▒▒██    ▒ ▓█   ▀  ▐██▌ \n" +
+                "░ ▓██▄   ▒██░  ██▒▓██ ░▄█ ▒▓██ ░▄█ ▒ ▒██ ██░     ▒██ ██░▒██░  ██▒▓██  ▒██░   ▒██░    ▒██░  ██▒░ ▓██▄   ▒███    ▐██▌ \n" +
+                "  ▒   ██▒▒██   ██░▒██▀▀█▄  ▒██▀▀█▄   ░ ▐██▓░     ░ ▐██▓░▒██   ██░▓▓█  ░██░   ▒██░    ▒██   ██░  ▒   ██▒▒▓█  ▄  ▓██▒ \n" +
+                "▒██████▒▒░ ████▓▒░░██▓ ▒██▒░██▓ ▒██▒ ░ ██▒▓░     ░ ██▒▓░░ ████▓▒░▒▒█████▓    ░██████▒░ ████▓▒░▒██████▒▒░▒████▒ ▒▄▄  \n" +
+                "▒ ▒▓▒ ▒ ░░ ▒░▒░▒░ ░ ▒▓ ░▒▓░░ ▒▓ ░▒▓░  ██▒▒▒       ██▒▒▒ ░ ▒░▒░▒░ ░▒▓▒ ▒ ▒    ░ ▒░▓  ░░ ▒░▒░▒░ ▒ ▒▓▒ ▒ ░░░ ▒░ ░ ░▀▀▒ \n" +
+                "░ ░▒  ░ ░  ░ ▒ ▒░   ░▒ ░ ▒░  ░▒ ░ ▒░▓██ ░▒░     ▓██ ░▒░   ░ ▒ ▒░ ░░▒░ ░ ░    ░ ░ ▒  ░  ░ ▒ ▒░ ░ ░▒  ░ ░ ░ ░  ░ ░  ░ \n" +
+                "░  ░  ░  ░ ░ ░ ▒    ░░   ░   ░░   ░ ▒ ▒ ░░      ▒ ▒ ░░  ░ ░ ░ ▒   ░░░ ░ ░      ░ ░   ░ ░ ░ ▒  ░  ░  ░     ░       ░ \n" +
+                "      ░      ░ ░     ░        ░     ░ ░         ░ ░         ░ ░     ░            ░  ░    ░ ░        ░     ░  ░ ░    \n" +
+                "                                    ░ ░         ░ ░                                                                 \n";
+                System.out.print(win);
                 scheduler.shutdown();
+                plantDeck.makeDeckEmpty(map);
                 map.stopGame();
                 sunTask.cancel();
 
@@ -550,7 +580,7 @@ public class Main {
         return isZombieWin;
     }
 
-    public static boolean zombieLost() {
+    public static boolean zombieLose() {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 11; j++) {
                 Tile tile = map.getTile(i, j);
@@ -653,7 +683,12 @@ public class Main {
     }
 
     public static void showPlantList() {
-        System.out.println("\nDaftar Plant :\n");
+        String asciiArt = 
+            "  ___        __ _              ___ _          _   \n" +
+            " |   \\ __ _ / _| |_ __ _ _ _  | _ \\ |__ _ _ _| |_ \n" +
+            " | |) / _` |  _|  _/ _` | '_| |  _/ / _` | ' \\  _|\n" +
+            " |___/\\__,_|_|  \\__\\__,_|_|   |_| |_\\__,_|_||_\\__|\n" ;
+        System.out.println(ANSI_GREEN + asciiArt + ANSI_RESET);
         try {
             inventory.printPlantInfo();
             System.out.println("\n");
@@ -675,7 +710,14 @@ public class Main {
     }
 
     public static void showZombieList() {
-        System.out.println("\nDaftar Zombie :\n");
+        String asciiArt = 
+        "  ___        __ _              ____          _    _     \n" +
+        " |   \\ __ _ / _| |_ __ _ _ _  |_  /___ _ __ | |__(_)___ \n" +
+        " | |) / _` |  _|  _/ _` | '_|  / // _ \\ '  \\| '_ \\ / -_)\n" +
+        " |___/\\__,_|_|  \\__\\__,_|_|   /___\\___/_|_|_|_.__/_\\___|\n";
+
+        System.out.println(ANSI_RED + asciiArt + ANSI_RESET);
+        
         try {
             listZombie.printZombieInfo();
             System.out.println("\n");

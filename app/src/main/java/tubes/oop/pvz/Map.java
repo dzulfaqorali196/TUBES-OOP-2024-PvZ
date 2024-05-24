@@ -21,6 +21,8 @@ public class Map {
     private final Tile[][] tiles;
     private Random random;
     private static int totalZombie = 0;
+    
+    private static int targetTotalZombie;
 
     private Timer spawnTimer;
     private Timer removeTimer;
@@ -101,101 +103,102 @@ public class Map {
     public void placePlant(Plant plant, int x, int y) {
         boolean notYet = true;
         if (isValidCoordinate(x, y)) {
-            if(!(x == 10)){
-                for (int i = 0; i < (tiles.length); i++) {
-                    for (int j = 0; j < tiles[0].length; j++) {
-                        if (!getTile(j, i).isEmpty()) {
-                            Plant thereIsPlant = getTile(j, i).getPlant();
-                            if (thereIsPlant.getName().equals(plant.getName())) {
-                                notYet = false;
-                                break;
-                            }
-                        }
-                    }
-                    if (!notYet) {
-                        break;
-                    }
-                }            
-                if (notYet) {
-                    if (getTile(x, y).getTileType().equals("WATER")) {
-                        if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
-                            // Tanaman air di tile air
-                            getTile(x, y).setPlant(plant);
-                            plant.setLastPlantTime(System.currentTimeMillis()); 
-                            System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
-                        } else {
-                            // Tanaman darat di tile air, harus menggunakan Lilypad
-                            if (!getTile(x, y).isEmpty() && getTile(x, y).getPlant() instanceof Lilypad) {
-                                Lilypad lilyPad = (Lilypad) getTile(x, y).getPlant();
-                                try {
-                                    lilyPad.setLilypadPlant(plant);
-                                    plant.setLastPlantTime(System.currentTimeMillis()); 
-                                    System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
-                                    lilyPad.water();
-                                } catch (InvalidInputException e) {
-                                    System.out.println("Can't place plant here: " + e.getMessage());
+            if(getTile(x, y).isEmpty() || getTile(x, y).getPlant().getName().equals("Lilypad")){
+                if(!(x == 10)){
+                    for (int i = 0; i < (tiles.length); i++) {
+                        for (int j = 0; j < tiles[0].length; j++) {
+                            if (!getTile(j, i).isEmpty()) {
+                                Plant thereIsPlant = getTile(j, i).getPlant();
+                                if (thereIsPlant.getName().equals(plant.getName())) {
+                                    notYet = false;
+                                    break;
                                 }
-                            } else {
-                                System.out.println("Place Lilypad first");
                             }
                         }
-                    } else if (getTile(x, y).getTileType().equals("GRASS")) {
-                        if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
-                            // Tanaman air di tile rumput tidak bisa ditanam
-                            System.out.println("Invalid input: Can't place this plant here!");
-                        } else {
-                            // Tanaman darat di tile rumput
-                            getTile(x, y).setPlant(plant);
-                            plant.setLastPlantTime(System.currentTimeMillis()); 
-                            System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
+                        if (!notYet) {
+                            break;
                         }
-                    }
-                    
-                    // if (getTile(x, y).getTileType().equals("WATER") && plant.getIsAquatic()==true) {
-                    //     getTile(x, y).setPlant(plant);
-                    //     plant.setLastPlantTime(System.currentTimeMillis()); 
-                    //     System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
+                    }            
+                    if (notYet) {
+                        if (getTile(x, y).getTileType().equals("WATER")) {
+                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
+                                // Tanaman air di tile air
+                                getTile(x, y).setPlant(plant);
+                                plant.setLastPlantTime(System.currentTimeMillis()); 
+                                System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
+                            } else {
+                                // Tanaman darat di tile air, harus menggunakan Lilypad
+                                if (!getTile(x, y).isEmpty() && getTile(x, y).getPlant() instanceof Lilypad) {
+                                    Lilypad lilyPad = (Lilypad) getTile(x, y).getPlant();
+                                    try {
+                                        lilyPad.setLilypadPlant(plant);
+                                        plant.setLastPlantTime(System.currentTimeMillis()); 
+                                        System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
+                                        lilyPad.water();
+                                    } catch (InvalidInputException e) {
+                                        System.out.println("Can't place plant here: " + e.getMessage());
+                                    }
+                                } else {
+                                    System.out.println("Place Lilypad first");
+                                }
+                            }
+                        } else if (getTile(x, y).getTileType().equals("GRASS")) {
+                            if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
+                                // Tanaman air di tile rumput tidak bisa ditanam
+                                System.out.println("Invalid input: Can't place this plant here!");
+                            } else {
+                                // Tanaman darat di tile rumput
+                                getTile(x, y).setPlant(plant);
+                                plant.setLastPlantTime(System.currentTimeMillis()); 
+                                System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
+                            }
+                        }
                         
-                    // } else if (getTile(x, y).getTileType().equals("WATER") && plant.getIsAquatic()==false) {
-                    //     if (!getTile(x, y).isEmpty()){
-                    //         if (getTile(x, y).getPlant() instanceof Lilypad) {
-                    //             Lilypad lilyPad = (Lilypad) getTile(x, y).getPlant();
-                    //             try {
-                    //                 lilyPad.setLilypadPlant(plant);
-                    //                 plant.setLastPlantTime(System.currentTimeMillis()); 
-                    //                 System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
-                    //                 lilyPad.water();
-                    //             } catch (InvalidInputException e) {
-                    //                 // Handle the exception here, e.g. log the error or display a message to the user
-                    //                 System.out.println("Can't place plant here: " + e.getMessage());
-                    //             }
-                    //             // lilyPad.setLilypadPlant(plant);
-                    //             // plant.setLastPlantTime(System.currentTimeMillis()); 
-                    //             // System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
-                    //             // lilyPad.water();
-                    //         } else {
-                    //             throw new IllegalStateException("Tile already has a plant");
-                    //         }
-                    //     }else {
-                    //         System.out.println("Place Lilypad first");
-                    //     }
-                    // } else if (getTile(x, y).getTileType().equals("GRASS") && plant.getIsAquatic()==false) {
-                    //     getTile(x, y).setPlant(plant);
-                    //     plant.setLastPlantTime(System.currentTimeMillis()); 
-                    //     System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
-                    // } else if (getTile(x, y).getTileType().equals("GRASS") && plant.getIsAquatic()==true) {
-                    //     try {
-                    //         if (getTile(x, y).getTileType().equals("GRASS") && plant.getIsAquatic()==true) {
-                    //             throw new InvalidInputException("Can't place this plant here!");
-                    //         }
-                    //     } catch (InvalidInputException e) {
-                    //         // Handle the exception here
-                    //         System.out.println("Invalid input: " + e.getMessage());
-                    //     }
-                    //     // throw new InvalidInputException("Can't place this plant here!");
-                    // }
-                    
-                } 
+                        // if (getTile(x, y).getTileType().equals("WATER") && plant.getIsAquatic()==true) {
+                        //     getTile(x, y).setPlant(plant);
+                        //     plant.setLastPlantTime(System.currentTimeMillis()); 
+                        //     System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
+                            
+                        // } else if (getTile(x, y).getTileType().equals("WATER") && plant.getIsAquatic()==false) {
+                        //     if (!getTile(x, y).isEmpty()){
+                        //         if (getTile(x, y).getPlant() instanceof Lilypad) {
+                        //             Lilypad lilyPad = (Lilypad) getTile(x, y).getPlant();
+                        //             try {
+                        //                 lilyPad.setLilypadPlant(plant);
+                        //                 plant.setLastPlantTime(System.currentTimeMillis()); 
+                        //                 System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
+                        //                 lilyPad.water();
+                        //             } catch (InvalidInputException e) {
+                        //                 // Handle the exception here, e.g. log the error or display a message to the user
+                        //                 System.out.println("Can't place plant here: " + e.getMessage());
+                        //             }
+                        //             // lilyPad.setLilypadPlant(plant);
+                        //             // plant.setLastPlantTime(System.currentTimeMillis()); 
+                        //             // System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
+                        //             // lilyPad.water();
+                        //         } else {
+                        //             throw new IllegalStateException("Tile already has a plant");
+                        //         }
+                        //     }else {
+                        //         System.out.println("Place Lilypad first");
+                        //     }
+                        // } else if (getTile(x, y).getTileType().equals("GRASS") && plant.getIsAquatic()==false) {
+                        //     getTile(x, y).setPlant(plant);
+                        //     plant.setLastPlantTime(System.currentTimeMillis()); 
+                        //     System.out.println("Plant " + plant.getName() + " (" + x + ", " + y + ")");
+                        // } else if (getTile(x, y).getTileType().equals("GRASS") && plant.getIsAquatic()==true) {
+                        //     try {
+                        //         if (getTile(x, y).getTileType().equals("GRASS") && plant.getIsAquatic()==true) {
+                        //             throw new InvalidInputException("Can't place this plant here!");
+                        //         }
+                        //     } catch (InvalidInputException e) {
+                        //         // Handle the exception here
+                        //         System.out.println("Invalid input: " + e.getMessage());
+                        //     }
+                        //     // throw new InvalidInputException("Can't place this plant here!");
+                        // }
+                        
+                    } 
                 else if(!notYet){
                     if (isStillCooldown(plant)){
                         System.out.println("Plant is still in cooldown");
@@ -278,17 +281,21 @@ public class Map {
                         // } catch (IllegalStateException e) {
                         //     System.out.println("Tile already has a plant");
                         // }
-                    } 
+                        } 
+                    }
+                }
+                else{
+                    System.out.println("Tidak bisa ditanam, untuk zombie ngespawn!");
                 }
             }
             else{
-                System.out.println("Tidak bisa ditanam, untuk zombie ngespawn!");
+                System.out.println("Tidak bisa ditanam, sudah ada tanaman!");
             }
-        } 
+        }
         else {
             System.out.println("Invalid coordinates!");
         }
-    }
+    }   
 
 
     
@@ -316,10 +323,10 @@ public class Map {
     public void spawnRandomZombie(){
         if((Time.getCurrentTime()>= 20) && (Time.getCurrentTime() <= 160)){
 
-            if (totalZombie <= 10) {
+            if (totalZombie <= getTotalZombieTarget()) {
                 for (int y= 0; y<6; y++) {
                     double spawnPorbability = random.nextDouble();
-                    if ((spawnPorbability<=0.3) && (totalZombie < 10)){
+                    if ((spawnPorbability<=0.3) && (totalZombie < getTotalZombieTarget())){
                         int probability = (int) (Math.random() * 10); 
                         Zombie zombie;
 
@@ -415,7 +422,9 @@ public class Map {
 
     public void startSpawnZombie () {
         spawnTimer = new Timer();
+
         if (Time.getCurrentTime()<=140) {
+            setTotalZombieTarget(10);
             spawnTimer.scheduleAtFixedRate(new TimerTask() {
 
                 @Override
@@ -425,6 +434,7 @@ public class Map {
             }, 0, 3000);
         } else {
             System.out.println("Flag Zombie is starting to attack your fields!");
+            setTotalZombieTarget(25);
             spawnTimer.scheduleAtFixedRate(new TimerTask() {
 
                 @Override
@@ -434,6 +444,14 @@ public class Map {
             }, 0, 1000);
         }
         
+    }
+
+    public int getTotalZombieTarget(){
+        return targetTotalZombie;
+    }
+
+    public int setTotalZombieTarget(int x){
+        return targetTotalZombie = x;
     }
 
     // public void startFlagZombie () {
@@ -495,7 +513,6 @@ public class Map {
         removeTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                // Menggunakan iterator untuk menghindari ConcurrentModificationException
                 for (int i = 5; i >= 0; i--) {
                     for (int j = 1; j < 11; j++) {
                         Tile currentTile = getTile(j, i);
@@ -503,7 +520,7 @@ public class Map {
                         while (iterator.hasNext()) {
                             Zombie zombie = iterator.next();
                             if (zombie.getHp() <= 0) {
-                                iterator.remove();  // Menghapus zombie dengan cara yang aman
+                                iterator.remove();
                                 setTotalZombie(totalZombie - 1);
                                 System.out.println("Zombie removed at (" + j + "," + i + ")");
                             }

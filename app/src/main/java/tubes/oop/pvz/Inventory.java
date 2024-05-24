@@ -38,16 +38,22 @@ public class Inventory {
     }
 
     public void printPlantInfo() {
+        List<Plant> plants = getListPlant();
+        
+        // Print table header with border
+        System.out.println("+-----+----------------------+------------+-----------------+-----------------+--------+--------+-----------+");
+        System.out.printf("| %-3s | %-20s | %-10s | %-15s | %-15s | %-6s | %-6s | %-9s |%n", 
+            "No", "Nama", "Health", "Attack Damage", "Attack Speed", "Cost", "Range", "Cooldown");
+        System.out.println("+-----+----------------------+------------+-----------------+-----------------+--------+--------+-----------+");
+    
         int i = 0;
-        for(Plant currentPlant : getListPlant()){
-            System.out.println("----- " + currentPlant.getName() + " -----");
-            System.out.println("Nama : " + currentPlant.getName());
-            System.out.println("Health : " + currentPlant.getHp());
-            System.out.println("Attack damage : " + currentPlant.getAttackDamage());
-            System.out.println("Attack speed : " + currentPlant.getAttackSpeed());
-            System.out.println("Cost : " + currentPlant.getCostPlant());
-            System.out.println("Range : " + currentPlant.getRange());
-            System.out.println("Cooldown : " + currentPlant.getCooldown());
+        for (Plant currentPlant : plants) {
+            System.out.printf("| %-3d | %-20s | %-10d | %-15d | %-15d | %-6d | %-6d | %-9d |%n", 
+                i + 1, currentPlant.getName(), currentPlant.getHp(), 
+                currentPlant.getAttackDamage(), currentPlant.getAttackSpeed(), 
+                currentPlant.getCostPlant(), currentPlant.getRange(), 
+                currentPlant.getCooldown());
+            System.out.println("+-----+----------------------+------------+-----------------+-----------------+--------+--------+-----------+");
             i++;
         }
     }
