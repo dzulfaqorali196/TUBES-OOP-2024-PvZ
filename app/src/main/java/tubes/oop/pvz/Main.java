@@ -441,7 +441,10 @@ public class Main {
                                         if(map.getTile(x, y-1).getPlant().getName().equals(plant.getName())){
                                             player.decreaseSun(plant.getCostPlant());
                                         }
+                                    }
                                 }
+                                else{
+                                    System.out.println("Tidak bisa ditanam, sudah terdapat tanaman.");
                                 }
                                 // map.setValidationMain(false);
                                 // System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
