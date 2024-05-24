@@ -1,10 +1,12 @@
 package tubes.oop.pvz;
 
 public class Lilypad extends Aquatic{
-    private Plant plantOnWater;
+    public Plant plantOnWater;
 
     public Lilypad(int x, int y) {
         super("Lilypad", 100, 0, 0, 25, 0, 10000, true, x, y);
+
+
     }
 
     @Override
@@ -38,7 +40,7 @@ public class Lilypad extends Aquatic{
     // }
 
     public void setLilypadPlant(Plant plantOnWater) throws InvalidInputException{
-        if (isEmpty()) {
+        if (this.plantOnWater == null) {
             
             this.plantOnWater = plantOnWater;
             this.plantOnWater.currentTile = this.currentTile;
@@ -58,7 +60,7 @@ public class Lilypad extends Aquatic{
     }
 
     public boolean isEmpty() {
-        return getPlant()==null;
+        return this.plantOnWater == null;
     }
 
 }

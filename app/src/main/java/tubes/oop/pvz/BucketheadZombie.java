@@ -32,8 +32,5 @@ public class BucketheadZombie extends Zombie {
                 }
             }, movement_speed, movement_speed); 
         }
-
-        
     }
-
 }

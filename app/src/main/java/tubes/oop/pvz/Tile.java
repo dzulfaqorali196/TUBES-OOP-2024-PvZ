@@ -50,6 +50,9 @@ public class Tile {
                 Sunflower sunflower = (Sunflower) plant;
                 sunflower.produceSun();
 
+            } else if (plant instanceof Lilypad) {
+                Lilypad lilypad = (Lilypad) plant;
+                lilypad.plantOnWater = null;
             }
 
             // plant.startAttackZombie();

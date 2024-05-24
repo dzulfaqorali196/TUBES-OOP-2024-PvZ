@@ -439,7 +439,7 @@ public class Main {
                                 if (map.getValidationMain() == true){
                                     player.decreaseSun(plant.getCostPlant());
                                 }
-                                map.setValidationMain(false);
+                                // map.setValidationMain(false);
                                 // System.out.println("Plant" + plant.getName() + "(" + x + ", " + y + ")");
                                 System.out.println("Sun tersisa: " + Sun.getSunScore());
                             }

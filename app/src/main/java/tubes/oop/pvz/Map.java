@@ -148,13 +148,12 @@ public class Map {
                                         System.out.println("Can't place plant here: " + e.getMessage());
                                     }
                                 } else {
-                                    setValidationMain(false);
                                     System.out.println("Place Lilypad first");
                                 }
                             }
                         } else if (getTile(x, y).getTileType().equals("GRASS")) {
                             if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
-                                setValidationMain(false);
+                                // Tanaman air di tile rumput tidak bisa ditanam
                                 System.out.println("Invalid input: Can't place this plant here!");
                             } else {
                                 // Tanaman darat di tile rumput
@@ -230,17 +229,15 @@ public class Map {
                                         System.out.println("Plant " + plant.getName() + " (" + x + ", " + (y+1) + ")");
                                         lilyPad.water();
                                     } catch (InvalidInputException e) {
-                                        setValidationMain(false);
                                         System.out.println("Can't place plant here: " + e.getMessage());
                                     }
                                 } else {
-                                    setValidationMain(false);
                                     System.out.println("Place Lilypad first");
                                 }
                             }
                         } else if (getTile(x, y).getTileType().equals("GRASS")) {
                             if (plant.getName().equals("Lilypad") || plant.getName().equals("Tangle Kelp")) {
-                                setValidationMain(false);
+                                // Tanaman air di tile rumput tidak bisa ditanam
                                 System.out.println("Invalid input: Can't place this plant here!");
                             } else {
                                 // Tanaman darat di tile rumput
@@ -297,17 +294,14 @@ public class Map {
                     }
                 }
                 else{
-                    setValidationMain(false);
                     System.out.println("Tidak bisa ditanam, untuk zombie ngespawn!");
                 }
             }
             else{
-
                 System.out.println("Tidak bisa ditanam, sudah ada tanaman!");
             }
         }
         else {
-            setValidationMain(false);
             System.out.println("Invalid coordinates!");
         }
     }   

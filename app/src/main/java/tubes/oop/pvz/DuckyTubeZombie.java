@@ -32,5 +32,4 @@ public class DuckyTubeZombie extends Zombie {
             }, movement_speed, movement_speed); 
         }
     }
-
 }
