@@ -435,7 +435,7 @@ public class Main {
                         Plant plant = plantDeck.getPlant(deckIndex-1);
                         if (plant != null){
                             if(Player.getSunScore() >= plant.getCostPlant()){
-                                if(map.getTile(x, y-1).isEmpty()){
+                                if(map.getTile(x, y-1).isEmpty() || (map.getTile(x, y-1).getTileType().equals("WATER"))){
                                     map.placePlant(plant, (x), (y-1));
                                     if(!map.getTile(x, y-1).isEmpty()){
                                         if(map.getTile(x, y-1).getPlant().getName().equals(plant.getName())){
@@ -590,15 +590,16 @@ public class Main {
     }
 
     public static boolean zombieLose() {
+        isZombieLost = true;
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 11; j++) {
                 Tile tile = map.getTile(i, j);
                 if (!tile.noZombie() && time > 160) {
-                    isZombieLost=false;
+                    return false;
                 }
             }
         }
-        return isZombieLost;
+        return true;
     }
 
     public static void showHelp() {
