@@ -49,13 +49,39 @@ public class Map {
     }
 
     public void stopGame() {
+        Time.stop();
+        Time.resetCurrentTime();
+
         if (spawnTimer != null) {
             spawnTimer.cancel();
             spawnTimer.purge();   
         }
-        if (removeTimer != null) {
-            removeTimer.cancel();
-            removeTimer.purge();
+
+
+
+        // if (removeTimer != null) {
+        //     removeTimer.cancel();
+        //     removeTimer.purge();
+        // }
+
+        for (int y = 0; y < 6; y++) {
+            for (int x = 0; x < 11; x++) {
+                if (!getTile(x, y).noZombie()) {
+                    for (Zombie zombie : getTile(x, y).getZombie()) {
+                        zombie.stopZombie();
+                    }
+                    getTile(x, y).removeAllZombie();              
+                } else if (!getTile(x, y).isEmpty()){
+                    if (getTile(x, y).getPlant() instanceof Sunflower) {
+                        ((Sunflower) getTile(x, y).getPlant()).stopProduce();
+                        getTile(x, y).removePlant();
+
+                    } else {
+                        getTile(x, y).removePlant();
+
+                    }
+                }
+            }
         }
         System.out.println("Game has been stopped.");
     }

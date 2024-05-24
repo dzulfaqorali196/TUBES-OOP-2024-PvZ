@@ -1,6 +1,7 @@
 package tubes.oop.pvz;
 
 import java.util.TimerTask;
+import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -13,10 +14,16 @@ public class Time {
 
     private static int currentTime = 0;
     private static boolean isMorning = true;
-    private static ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private static Timer startTime;
+    // ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
 
     public static int getCurrentTime() {
         return currentTime;
+    }
+
+    public static void resetCurrentTime () {
+        currentTime = 0;
     }
 
     public static boolean isMorning() {
@@ -24,24 +31,58 @@ public class Time {
     }
 
     public static void start() {
-        scheduler.scheduleAtFixedRate(() -> {
-            currentTime++;
+        startTime = new Timer();
+        startTime.scheduleAtFixedRate(new TimerTask() {
 
-            if (99 < currentTime && currentTime <= gameDuration) {
-                isMorning = !isMorning;
-            }
-
-            if (currentTime % intervalZombie == 0) {
-                if (Math.random() * 100 < zombieProbability) {
-                    // BENERIN!! tinggal manggil random dari map
+            @Override
+            public void run() {
+                currentTime++;
+                if (99 < currentTime && currentTime <= gameDuration) {
+                    isMorning = !isMorning;
                 }
             }
+            
+        }, 0, 1000);
 
-        }, 0, 1, TimeUnit.SECONDS);
+        // ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        // Runnable startTime = new Runnable() {
+        //     //private int time = 0;
+
+        //     @Override
+        //     public void run() {
+        //         currentTime++;
+        //         if (99 < currentTime && currentTime <= gameDuration) {
+        //             isMorning = !isMorning;
+        //         }
+    
+                
+        //     }
+        // };
+        // scheduler.scheduleAtFixedRate(startTime, 0, 1, TimeUnit.SECONDS);
+
+
+        // scheduler.scheduleAtFixedRate(() -> {
+        //     currentTime++;
+
+        //     if (99 < currentTime && currentTime <= gameDuration) {
+        //         isMorning = !isMorning;
+        //     }
+
+        //     if (currentTime % intervalZombie == 0) {
+        //         if (Math.random() * 100 < zombieProbability) {
+        //             // BENERIN!! tinggal manggil random dari map
+        //         }
+        //     }
+
+        // }, 0, 1, TimeUnit.SECONDS);
     }
 
-    public static void endGame() {
-        scheduler.shutdown();
+    public static void stop() {
+        if (startTime != null) {
+            startTime.cancel();
+            startTime.purge();
+        }
         System.out.println("Selamat, kamu memenangkan permainan!");
     }
 

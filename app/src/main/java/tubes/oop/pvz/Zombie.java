@@ -49,6 +49,19 @@ public abstract class Zombie extends PlantandZombie {
         return jarak;
     }
 
+    public void stopZombie () {
+        if (moveTimer != null) {
+            moveTimer.cancel();
+            moveTimer = null;
+        } else if (attackTimer != null) {
+            attackTimer.cancel();
+            attackTimer = null;
+        } else if (getdamaged != null) {
+            getdamaged.cancel();
+            getdamaged = null;
+        }
+    }
+
     public void setJarak(int jarak){
         this.jarak = jarak;
     }

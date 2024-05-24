@@ -98,6 +98,10 @@ public class Tile {
         zombieList.remove(zombie);
     }
 
+    public void removeAllZombie () {
+        zombieList.clear();
+    }
+
     public String getDisplayChar() {
         StringBuilder output = new StringBuilder();
 

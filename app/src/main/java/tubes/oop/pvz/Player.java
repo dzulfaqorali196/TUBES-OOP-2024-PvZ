@@ -14,6 +14,10 @@ package tubes.oop.pvz;
       public void decreaseSun(int value){
          this.sunScore -= value;
       }
+
+      public static void resetSunScore(){
+         sunScore = 50;
+      }
    
       public static int getSunScore(){
          if(sunScore > 0){

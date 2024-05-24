@@ -20,6 +20,9 @@ public class Main {
     public static Sun sun;
     private static int time = 0;
 
+    private static boolean isZombieLost = true;
+    private static boolean isZombieWin = false;
+
     public static final String RESET = "\033[0m";
     public static final String GREEN = "\033[0;32m";
     public static final String RED = "\033[0;31m";
@@ -113,8 +116,11 @@ public class Main {
 
                 switch (pilihan) {
                     case 1:
+                        
                         inventoryGame(scanner);
+                        
                         break;
+                        
                     case 2:
                         showHelp();
                         break;
@@ -327,9 +333,11 @@ public class Main {
 
         System.out.println("Selamat bermain!");
         gameLoop(scanner);
+        
     }
 
     public static void gameLoop(Scanner scanner) {
+        String[] arguments = {};
         map.gameStart();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
 
@@ -347,17 +355,23 @@ public class Main {
             }
         };
 
-        //NGUBAH INI, NYOBA
-        // Runnable spawnZombieTask = new Runnable() {
-        //     // private int time = 0;
+        Runnable gameLost = new Runnable() {
+            //private int time = 0;
 
-        //     @Override
-        //     public void run() {
-        //         if(time >= 20 && time <= 160) {
-        //             map.startSpawnZombie();
-        //         }
-        //     }
-        // };
+            @Override
+            public void run() {
+                zombieWin();
+            }
+        };
+
+        Runnable gameWin = new Runnable() {
+            //private int time = 0;
+
+            @Override
+            public void run() {
+                zombieLost();
+            }
+        };
         
         sunTask = new Timer();
         int delay = 5 + (int)(Math.random() * ((10 - 5) + 1));
@@ -373,49 +387,14 @@ public class Main {
         }, delay*1000, delay*1000);
 
 
-        // Runnable sunTask = new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         int delay = 5 + (int)(Math.random() * ((10 - 5) + 1)); 
-        //         scheduler.schedule(new Runnable() {
-        //             @Override
-        //             public void run() {
-        //                 if((time % 200) <= 100){
-        //                     player.increaseSun(25); 
-        //                 }
-        //                 System.out.println("Sun: " + Player.getSunScore());
-        //             }
-        //         }, delay, TimeUnit.SECONDS);
-        //     }
-        // };
-
-        // Runnable attackTask = new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         for (int x = 0; x < 6; x++) {
-        //             for (int y = 0; y < 11; y++) {
-        //                 Tile tile = map.getTile(y, x);
-        //                 Plant plant = tile.getPlant();
-        //                 if (map != null) {
-        //                     plant.getZombieInRange(map);
-        //                 }
-        //             }
-        //         }                //map.moveZombies();
-        //     }
-        // };
-
-        // Runnable removeDeadZombiesTask = new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         map.removeZombieMap();
-        //     }
-        // };
+        
 
         scheduler.scheduleAtFixedRate(timeGamePlay, 0, 1, TimeUnit.SECONDS);
-        // scheduler.scheduleAtFixedRate(spawnZombieTask, 0, 3, TimeUnit.SECONDS);
-        // scheduler.scheduleAtFixedRate(sunTask, 0, 10, TimeUnit.SECONDS);
-        // scheduler.scheduleAtFixedRate(attackTask, 0, 1, TimeUnit.SECONDS);
-        // scheduler.scheduleAtFixedRate(removeDeadZombiesTask, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(gameLost, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(gameWin, 160, 1, TimeUnit.SECONDS);
+
+
+        
 
         while (!scheduler.isShutdown()) {
             System.out.println("Masukkan perintah (P/D/E): ");
@@ -423,8 +402,22 @@ public class Main {
 
             if (command.equalsIgnoreCase("E")) {
                 System.out.println("Permainan berakhir.");
+                player.resetSunScore();
                 scheduler.shutdown();
-                sun.stopSunGeneration();
+                time    = 0;
+            
+                
+                sunTask.cancel();
+                map.stopGame();
+                
+                try {
+                    main(arguments);
+                
+                } catch (InvalidDeckException e) {
+                    // Handle the exception here
+                }
+                // main(arguments);
+                // break;
             } 
             else if (command.startsWith("P")) {
                 String[] parts = command.split(" ");
@@ -479,16 +472,34 @@ public class Main {
             map.printMap();
 
             
-            if (map.getTotalZombie() <= 0 && time > 160){
+            if (time>160 &&zombieLost()){
                 System.out.println("Permainan berakhir, kamu menang!");
                 scheduler.shutdown();
-                sun.stopSunGeneration();
+                map.stopGame();
+                sunTask.cancel();
+
+                try {
+                    main(arguments);
+                } catch (InvalidDeckException e) {
+                    // Handle the exception here
+                }
+                // sun.stopSunGeneration();
+                // map.stopGame();
+                
+                // break;
             }
             else if(zombieWin()){
                 System.out.println("Permainan berakhir, kamu kalah");
                 scheduler.shutdown();
-                sun.stopSunGeneration();
                 map.stopGame();
+                sunTask.cancel();
+
+                try {
+                    main(arguments);
+                } catch (InvalidDeckException e) {
+                    // Handle the exception here
+                }
+                // break;
             }
 
             // main();
@@ -508,19 +519,12 @@ public class Main {
             //     sun.stopSunGeneration();
             // }
         }
+
     }
 
-    // private static boolean zombieLose() {
-    //     for (int y = 0; y < 6; y++) {
-    //         for (int x = 0; x < 11; x++)  {
-    //             Tile tile = map.getTile(y, x);
-    //             if (!tile.noZombie()) {
-    //                 return false;
-    //             }
-    //         }
-    //     }
-    //     return true;
-    // }
+    
+
+   
 
     public class Task implements Runnable {
         private volatile boolean running = true;
@@ -539,11 +543,23 @@ public class Main {
     public static boolean zombieWin() {
         for (int i = 0; i < 6; i++) {
             Tile tile = map.getTile(0, i);
-            if (!tile.getZombie().isEmpty()) { 
-                return true;
+            if (!tile.noZombie()) { 
+                isZombieWin=true;
             }
         }
-        return false;
+        return isZombieWin;
+    }
+
+    public static boolean zombieLost() {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 11; j++) {
+                Tile tile = map.getTile(i, j);
+                if (!tile.noZombie()) {
+                    isZombieLost=false;
+                }
+            }
+        }
+        return isZombieLost;
     }
 
     public static void showHelp() {

@@ -3,9 +3,14 @@ package tubes.oop.pvz;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Executors;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Sunflower extends SunProduce{
     private Player player;
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    Timer produceTimer;
 
     public Sunflower(int x, int y, Player player) {
         super("Sunflower", 100, 0, 0, 50, 0, 10000, false, x, y);
@@ -19,7 +24,7 @@ public class Sunflower extends SunProduce{
 
     
     public void produceSun() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        
 
         Runnable sunTask = new Runnable() {
 
@@ -31,6 +36,10 @@ public class Sunflower extends SunProduce{
             }
         };
         scheduler.scheduleAtFixedRate(sunTask, 3, 3, TimeUnit.SECONDS);
+    }
+
+    public void stopProduce() {
+        scheduler.shutdown();
     }
 
         
